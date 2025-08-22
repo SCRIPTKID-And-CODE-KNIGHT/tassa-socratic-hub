@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -69,23 +70,30 @@ const RegistrationPage = () => {
                   <li>• Contact us if you have any questions</li>
                 </ul>
               </div>
-              <Button 
-                onClick={() => {
-                  setIsSubmitted(false);
-                  setFormData({
-                    fullName: '',
-                    schoolName: '',
-                    phoneNumber: '',
-                    email: '',
-                    region: '',
-                    district: '',
-                    message: ''
-                  });
-                }}
-                variant="outline"
-              >
-                Register Another School
-              </Button>
+              <div className="flex gap-4 justify-center">
+                <Button 
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    setFormData({
+                      fullName: '',
+                      schoolName: '',
+                      phoneNumber: '',
+                      email: '',
+                      region: '',
+                      district: '',
+                      message: ''
+                    });
+                  }}
+                  variant="outline"
+                >
+                  Register Another School
+                </Button>
+                <Button asChild>
+                  <Link to="/registered-schools">
+                    View All Registered Schools
+                  </Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>

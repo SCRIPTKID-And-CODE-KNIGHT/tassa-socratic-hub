@@ -15,6 +15,7 @@ const Navigation = () => {
     { href: '/results', label: 'Results' },
     { href: '/past-results', label: 'Past Results' },
     { href: '/registration', label: 'Registration' },
+    { href: '/registered-schools', label: 'Registered Schools' },
     { href: '/participation', label: 'Participation' },
     { href: '/contact', label: 'Contact' },
   ];
