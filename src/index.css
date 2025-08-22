@@ -2,41 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* TASSA Educational Design System - Tanzania Socratic Series Association
+All colors MUST be HSL for proper theming.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Educational color palette */
+    --background: 210 20% 98%;
+    --foreground: 210 10% 23%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 10% 23%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 210 10% 23%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Tanzania education blue */
+    --primary: 210 100% 35%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 210 100% 30%;
+    --primary-light: 210 100% 92%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Educational secondary - warm gray */
+    --secondary: 210 16% 93%;
+    --secondary-foreground: 210 10% 23%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 16% 95%;
+    --muted-foreground: 210 10% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Success green - academic achievement */
+    --success: 120 60% 35%;
+    --success-foreground: 0 0% 98%;
+    --success-light: 120 60% 92%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Warning amber - announcements */
+    --warning: 35 100% 50%;
+    --warning-foreground: 0 0% 98%;
+    --warning-light: 35 100% 92%;
+
+    --accent: 210 16% 93%;
+    --accent-foreground: 210 10% 23%;
+
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 210 100% 35%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
+
+    /* Educational gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 35%), hsl(210 100% 45%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 35%), hsl(180 60% 40%));
+    --gradient-announcement: linear-gradient(135deg, hsl(35 100% 50%), hsl(35 100% 60%));
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px 0 hsl(210 20% 0% / 0.1);
+    --shadow-md: 0 4px 6px -1px hsl(210 20% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(210 20% 0% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(210 20% 0% / 0.25);
+
+    /* Typography */
+    --font-heading: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+
+    --radius: 0.625rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +88,47 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 210 30% 8%;
+    --foreground: 210 20% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 210 30% 10%;
+    --card-foreground: 210 20% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 210 30% 10%;
+    --popover-foreground: 210 20% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 210 100% 55%;
+    --primary-foreground: 210 30% 8%;
+    --primary-hover: 210 100% 50%;
+    --primary-light: 210 100% 20%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 20% 18%;
+    --secondary-foreground: 210 20% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 20% 15%;
+    --muted-foreground: 210 10% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --success: 120 60% 45%;
+    --success-foreground: 210 30% 8%;
+    --success-light: 120 60% 15%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --warning: 35 100% 55%;
+    --warning-foreground: 210 30% 8%;
+    --warning-light: 35 100% 20%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --accent: 210 20% 18%;
+    --accent-foreground: 210 20% 95%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 20% 95%;
+
+    --border: 210 20% 18%;
+    --input: 210 20% 18%;
+    --ring: 210 100% 55%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 55%), hsl(210 100% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 55%), hsl(180 60% 50%));
+    --gradient-announcement: linear-gradient(135deg, hsl(35 100% 55%), hsl(35 100% 65%));
   }
 }
 
@@ -100,6 +138,71 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold;
+  }
+}
+
+@layer components {
+  /* Educational component styles */
+  .hero-section {
+    @apply bg-gradient-to-br from-primary to-primary/80 text-primary-foreground;
+  }
+
+  .announcement-card {
+    @apply bg-gradient-to-r from-warning to-warning/90 text-warning-foreground rounded-lg p-4 shadow-lg;
+  }
+
+  .results-card {
+    @apply bg-card border border-border rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow;
+  }
+
+  .nav-link {
+    @apply text-foreground/80 hover:text-foreground transition-colors duration-200 font-medium;
+  }
+
+  .nav-link-active {
+    @apply text-primary font-semibold;
+  }
+
+  .btn-educational {
+    @apply bg-gradient-to-r from-primary to-primary-hover text-primary-foreground px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02];
+  }
+
+  .form-section {
+    @apply bg-card rounded-lg p-6 shadow-md border border-border;
+  }
+
+  .grade-excellent {
+    @apply text-success font-semibold;
+  }
+
+  .grade-good {
+    @apply text-primary font-semibold;
+  }
+
+  .grade-average {
+    @apply text-warning font-semibold;
+  }
+
+  .grade-poor {
+    @apply text-destructive font-semibold;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent;
+  }
+
+  .shadow-educational {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-educational-lg {
+    box-shadow: var(--shadow-lg);
   }
 }
