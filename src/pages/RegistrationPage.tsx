@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { UserPlus, School, Phone, Mail, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -32,19 +33,40 @@ const RegistrationPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // Insert school registration into Supabase
+      const { data, error } = await supabase
+        .from('schools')
+        .insert({
+          contact_name: formData.fullName,
+          school_name: formData.schoolName,
+          phone_number: formData.phoneNumber,
+          email: formData.email || null,
+          region: formData.region,
+          district: formData.district,
+          message: formData.message || null
+        });
 
-    // Here you would typically send the data to your backend
-    console.log('Registration submitted:', formData);
+      if (error) {
+        throw error;
+      }
 
-    toast({
-      title: "Registration Successful!",
-      description: "Your school has been registered successfully. You will receive a confirmation email shortly.",
-    });
+      toast({
+        title: "Registration Successful!",
+        description: "Your school has been registered successfully. You will receive a confirmation email shortly.",
+      });
 
-    setIsSubmitted(true);
-    setIsSubmitting(false);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Error registering school:', error);
+      toast({
+        title: "Registration Failed",
+        description: "There was an error registering your school. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
