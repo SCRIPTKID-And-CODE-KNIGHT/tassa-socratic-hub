@@ -1,191 +1,227 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Lock, User, Shield, AlertTriangle } from 'lucide-react';
+import { Shield, Users, FileText, MessageSquare, Store, DollarSign, BarChart3, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const AdminPage = () => {
-  const [credentials, setCredentials] = useState({
-    username: '',
-    password: ''
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCredentials(prev => ({ ...prev, [name]: value }));
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate('/auth');
+        return;
+      }
+
+      setUser(session.user);
+
+      // Check if user has admin role
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id);
+
+      const isAdmin = roles?.some(r => r.role === 'admin');
+      if (!isAdmin) {
+        toast({
+          title: "Access Denied",
+          description: "You need admin privileges to access this page.",
+          variant: "destructive"
+        });
+        navigate('/');
+        return;
+      }
+
+      setUserRole('admin');
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [navigate, toast]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Simulate login process
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Here you would typically validate against your backend
-    if (credentials.username === 'admin' && credentials.password === 'tassa2024') {
-      toast({
-        title: "Login Successful",
-        description: "Welcome to TASSA Admin Dashboard",
-      });
-      // In a real app, you would redirect to the admin dashboard
-    } else {
-      setLoginAttempts(prev => prev + 1);
-      toast({
-        title: "Login Failed",
-        description: "Invalid username or password. Please try again.",
-        variant: "destructive"
-      });
-    }
-    
-    setIsLoading(false);
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen py-16 bg-muted/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verifying admin access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-16 bg-muted/20">
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
-        
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-            <Shield className="h-8 w-8 text-primary" />
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
+              TASSA Admin Dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Welcome, {user?.email} | Manage your TASSA platform
+            </p>
           </div>
-          <h1 className="text-2xl font-heading font-bold text-foreground mb-2">
-            TASSA Admin Portal
-          </h1>
-          <p className="text-muted-foreground">
-            Secure access to administration dashboard
-          </p>
+          <Button onClick={handleLogout} variant="outline" className="flex items-center space-x-2">
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </Button>
         </div>
 
-        {/* Login Form */}
-        <Card className="form-section">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Lock className="h-5 w-5 text-primary" />
-              <span>Administrator Login</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <Label htmlFor="username">Username</Label>
-                <div className="relative mt-1">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="username"
-                    name="username"
-                    type="text"
-                    value={credentials.username}
-                    onChange={handleInputChange}
-                    placeholder="Enter admin username"
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <div className="relative mt-1">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={credentials.password}
-                    onChange={handleInputChange}
-                    placeholder="Enter admin password"
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-
-              {loginAttempts > 0 && (
-                <Alert variant="destructive">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    Login attempt failed. {loginAttempts >= 3 && "Multiple failed attempts detected."}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              <Button 
-                type="submit" 
-                className="w-full btn-educational" 
-                disabled={isLoading || loginAttempts >= 5}
-              >
-                {isLoading ? 'Authenticating...' : 'Sign In'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Demo Credentials Info */}
-        <Card className="mt-6 border-warning/20 bg-warning-light/10">
-          <CardContent className="pt-4">
-            <div className="text-center">
-              <h3 className="font-semibold text-warning mb-2">Demo Access</h3>
-              <p className="text-xs text-muted-foreground mb-3">
-                For demonstration purposes only
+        {/* Admin Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Announcements */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <MessageSquare className="h-5 w-5 text-primary" />
+                <span>Announcements</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Create and manage announcements for teachers and schools
               </p>
-              <div className="text-xs space-y-1 font-mono bg-card p-3 rounded border">
-                <p><strong>Username:</strong> admin</p>
-                <p><strong>Password:</strong> tassa2024</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              <Button className="w-full btn-educational">
+                Manage Announcements
+              </Button>
+            </CardContent>
+          </Card>
 
-        {/* Admin Features Preview */}
-        <Card className="mt-6 border-primary/20 bg-primary-light/10">
-          <CardHeader>
-            <CardTitle className="text-center text-lg">Admin Dashboard Features</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span>Manage announcements and notifications</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span>Upload and organize examination results</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span>View and manage school registrations</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span>Monitor participation confirmations</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span>Access contact form submissions</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span>Generate reports and analytics</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Payment Status */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <DollarSign className="h-5 w-5 text-primary" />
+                <span>Payment Status</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                View and manage school payment status for Series 1-4
+              </p>
+              <Button className="w-full btn-educational">
+                View Payments
+              </Button>
+            </CardContent>
+          </Card>
 
-        {/* Security Notice */}
-        <Alert className="mt-6">
-          <Shield className="h-4 w-4" />
-          <AlertDescription className="text-xs">
-            This is a secure area. All login attempts are monitored and logged for security purposes.
-          </AlertDescription>
-        </Alert>
+          {/* Store Materials */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Store className="h-5 w-5 text-primary" />
+                <span>Store Materials</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Publish books, lesson notes, schemes, and lesson plans
+              </p>
+              <Button className="w-full btn-educational">
+                Manage Store
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Results Management */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                <span>Results System</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Publish results, top 10 students, and best schools
+              </p>
+              <Button className="w-full btn-educational">
+                Manage Results
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* School Registrations */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="h-5 w-5 text-primary" />
+                <span>School Management</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                View registrations and confirmed schools for coming series
+              </p>
+              <Button className="w-full btn-educational">
+                View Schools
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Contact Management */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="h-5 w-5 text-primary" />
+                <span>Contact Settings</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Update contact information and headquarters location
+              </p>
+              <Button className="w-full btn-educational">
+                Update Contact
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <h3 className="text-2xl font-bold text-primary">0</h3>
+              <p className="text-sm text-muted-foreground">Total Schools</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <h3 className="text-2xl font-bold text-primary">0</h3>
+              <p className="text-sm text-muted-foreground">Confirmed Participations</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <h3 className="text-2xl font-bold text-primary">0</h3>
+              <p className="text-sm text-muted-foreground">Published Results</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <h3 className="text-2xl font-bold text-primary">0</h3>
+              <p className="text-sm text-muted-foreground">Active Announcements</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

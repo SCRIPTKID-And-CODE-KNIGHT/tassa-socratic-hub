@@ -1,34 +1,48 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, ChevronDown, User, LogOut, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, GraduationCap } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { supabase } from '@/integrations/supabase/client';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const navigationItems = [
-    { href: '/', label: 'Home' },
-    { href: '/announcements', label: 'Announcements' },
-    { href: '/about', label: 'About' },
-    { href: '/results', label: 'Results' },
-    { href: '/past-results', label: 'Past Results' },
-    { href: '/registration', label: 'Registration' },
-    { href: '/registered-schools', label: 'Registered Schools' },
-    { href: '/participation', label: 'Participation' },
-    { href: '/contact', label: 'Contact' },
-  ];
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
 
-  const isActiveLink = (href: string) => {
-    if (href === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.startsWith(href);
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
   };
 
   return (
-    <nav className="bg-card border-b border-border shadow-educational sticky top-0 z-50">
+    <nav className="bg-card border-b border-border shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -41,24 +55,123 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={cn(
-                  'nav-link px-3 py-2 rounded-md text-sm',
-                  isActiveLink(item.href) && 'nav-link-active'
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link to="/admin">
-              <Button variant="outline" size="sm" className="ml-4">
-                Admin Login
-              </Button>
+          <div className="hidden md:flex items-center space-x-8">
+            <Link 
+              to="/" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+              }`}
+            >
+              Home
             </Link>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className={`text-sm font-medium flex items-center space-x-1 ${
+                    ['/results', '/past-results'].some(path => isActive(path)) 
+                      ? 'text-primary' 
+                      : 'text-foreground'
+                  }`}
+                >
+                  <span>Results</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link to="/results">Current Results</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/past-results">Past Results</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className={`text-sm font-medium flex items-center space-x-1 ${
+                    ['/registration', '/participation', '/registered-schools'].some(path => isActive(path)) 
+                      ? 'text-primary' 
+                      : 'text-foreground'
+                  }`}
+                >
+                  <span>Schools</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link to="/registration">Register School</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/participation">Confirm Participation</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/registered-schools">View Registered Schools</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Link 
+              to="/announcements" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/announcements') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+              }`}
+            >
+              Announcements
+            </Link>
+            
+            <Link 
+              to="/about" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/about') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+              }`}
+            >
+              About
+            </Link>
+            
+            <Link 
+              to="/contact" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/contact') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+              }`}
+            >
+              Contact
+            </Link>
+
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center space-x-1">
+                    <User className="h-4 w-4" />
+                    <span className="text-sm">{user.email?.split('@')[0]}</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin">Admin Panel</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link 
+                to="/auth" 
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  isActive('/auth') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+                }`}
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -77,24 +190,122 @@ const Navigation = () => {
         {isOpen && (
           <div className="md:hidden pb-4 border-t border-border mt-2">
             <div className="flex flex-col space-y-1 pt-2">
-              {navigationItems.map((item) => (
+              <Link
+                to="/"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                to="/results"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/results') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Current Results
+              </Link>
+              <Link
+                to="/past-results"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/past-results') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Past Results
+              </Link>
+              <Link
+                to="/registration"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/registration') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Register School
+              </Link>
+              <Link
+                to="/participation"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/participation') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Confirm Participation
+              </Link>
+              <Link
+                to="/registered-schools"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/registered-schools') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                View Registered Schools
+              </Link>
+              <Link
+                to="/announcements"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/announcements') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Announcements
+              </Link>
+              <Link
+                to="/about"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/about') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                to="/contact"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/contact') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Contact
+              </Link>
+              
+              {user ? (
+                <>
+                  <Link
+                    to="/admin"
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                      isActive('/admin') ? 'text-primary bg-primary/10' : 'text-foreground'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Admin Panel
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    className="text-left justify-start px-3 py-2"
+                    onClick={() => {
+                      handleLogout();
+                      setIsOpen(false);
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
                 <Link
-                  key={item.href}
-                  to={item.href}
-                  className={cn(
-                    'nav-link px-3 py-2 rounded-md text-sm block',
-                    isActiveLink(item.href) && 'nav-link-active'
-                  )}
+                  to="/auth"
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    isActive('/auth') ? 'text-primary bg-primary/10' : 'text-foreground'
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
-                  {item.label}
+                  Login
                 </Link>
-              ))}
-              <Link to="/admin" onClick={() => setIsOpen(false)}>
-                <Button variant="outline" size="sm" className="mt-2 w-full">
-                  Admin Login
-                </Button>
-              </Link>
+              )}
             </div>
           </div>
         )}
