@@ -346,7 +346,7 @@ const AnnouncementsManagementPage = () => {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={announcement.is_published ? 'success' : 'secondary'}>
+                          <Badge variant={announcement.is_published ? 'default' : 'secondary'}>
                             {announcement.is_published ? 'Published' : 'Draft'}
                           </Badge>
                         </TableCell>
@@ -365,7 +365,6 @@ const AnnouncementsManagementPage = () => {
                             <Switch
                               checked={announcement.is_published}
                               onCheckedChange={() => togglePublishStatus(announcement)}
-                              size="sm"
                             />
                             <Button
                               size="sm"

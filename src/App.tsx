@@ -12,6 +12,7 @@ import PastResultsPage from "./pages/PastResultsPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import RegisteredSchoolsPage from "./pages/RegisteredSchoolsPage";
 import ParticipationPage from "./pages/ParticipationPage";
+import ParticipationConfirmationPage from "./pages/ParticipationConfirmationPage";
 import ContactPage from "./pages/ContactPage";
 import PaymentStatusPage from './pages/admin/PaymentStatusPage';
 import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
@@ -39,7 +40,8 @@ const App = () => (
             <Route path="/past-results" element={<PastResultsPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
             <Route path="/registered-schools" element={<RegisteredSchoolsPage />} />
-            <Route path="/participation" element={<ParticipationPage />} />
+          <Route path="/participation" element={<ParticipationPage />} />
+          <Route path="/participation-confirmation" element={<ParticipationConfirmationPage />} />
             <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/payments" element={<PaymentStatusPage />} />

@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, Phone, MapPin, Send, CheckCircle, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -30,19 +31,39 @@ const ContactPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // Insert contact message into Supabase
+      const { data, error } = await supabase
+        .from('contact_messages')
+        .insert({
+          name: formData.name,
+          school: formData.school || null,
+          email: formData.email,
+          phone: formData.phone || null,
+          subject: formData.subject,
+          message: formData.message
+        });
 
-    // Here you would typically send the data to your backend
-    console.log('Contact form submitted:', formData);
+      if (error) {
+        throw error;
+      }
 
-    toast({
-      title: "Message Sent Successfully!",
-      description: "Your message has been received. We will respond within 24 hours.",
-    });
+      toast({
+        title: "Message Sent Successfully!",
+        description: "Your message has been received. We will respond within 24 hours.",
+      });
 
-    setIsSubmitted(true);
-    setIsSubmitting(false);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Error sending contact message:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -119,7 +140,7 @@ const ContactPage = () => {
                   <Mail className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold">Email Address</h4>
-                    <p className="text-sm text-muted-foreground">info@tassa.ac.tz</p>
+                    <p className="text-sm text-muted-foreground">coordinator@tassa.ac.tz</p>
                     <p className="text-sm text-muted-foreground">admin@tassa.ac.tz</p>
                   </div>
                 </div>
@@ -127,8 +148,8 @@ const ContactPage = () => {
                   <Phone className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold">Phone Numbers</h4>
-                    <p className="text-sm text-muted-foreground">+255 XX XXX XXXX</p>
-                    <p className="text-sm text-muted-foreground">+255 XX XXX XXXX</p>
+                    <p className="text-sm text-muted-foreground">+255 757 123 456</p>
+                    <p className="text-sm text-muted-foreground">+255 684 789 012</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">

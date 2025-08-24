@@ -401,9 +401,9 @@ const StoreMaterialsPage = () => {
                             {material.price ? `TZS ${material.price.toLocaleString()}` : 'Free'}
                           </TableCell>
                           <TableCell>
-                            <Badge variant={material.is_published ? 'success' : 'secondary'}>
-                              {material.is_published ? 'Published' : 'Draft'}
-                            </Badge>
+                          <Badge variant={material.is_published ? 'default' : 'secondary'}>
+                            {material.is_published ? 'Published' : 'Draft'}
+                          </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-2">
@@ -417,7 +417,6 @@ const StoreMaterialsPage = () => {
                               <Switch
                                 checked={material.is_published}
                                 onCheckedChange={() => togglePublishStatus(material)}
-                                size="sm"
                               />
                             </div>
                           </TableCell>

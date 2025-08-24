@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,56 +6,46 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Filter, Calendar, Megaphone, Clock } from 'lucide-react';
 import AnnouncementCard from '@/components/AnnouncementCard';
+import { supabase } from '@/integrations/supabase/client';
 
 const AnnouncementsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterPriority, setFilterPriority] = useState('all');
 
-  // Sample announcements data
-  const allAnnouncements = [
-    {
-      id: '1',
-      title: 'Registration Open for 2024 Socratic Series',
-      content: 'We are pleased to announce that registration is now open for the 2024 Tanzania Socratic Series. All secondary schools are invited to participate in this prestigious academic competition. The series will cover multiple subjects with special emphasis on Geography, History, and Social Sciences. Registration deadline is March 31st, 2024.',
-      date: '2024-01-15',
-      priority: 'high' as const
-    },
-    {
-      id: '2',
-      title: 'Geography Focus for March Series',
-      content: 'The upcoming March series will focus primarily on Physical and Human Geography. Schools should prepare their students accordingly. Recommended study materials and past papers are available on our resources page.',
-      date: '2024-01-10',
-      priority: 'medium' as const
-    },
-    {
-      id: '3',
-      title: 'New Results Portal Features',
-      content: 'We have updated our results portal with new features including downloadable PDF reports, detailed analytics, and improved search functionality. All schools can now access comprehensive performance reports.',
-      date: '2024-01-08',
-      priority: 'low' as const
-    },
-    {
-      id: '4',
-      title: 'Participation Confirmation Deadline',
-      content: 'All registered schools must confirm their participation for the upcoming April series by March 15th, 2024. Use the participation confirmation page on our website.',
-      date: '2024-01-05',
-      priority: 'high' as const
-    },
-    {
-      id: '5',
-      title: 'Study Materials Update',
-      content: 'New study materials for the 2024 series are now available. The materials include updated geography textbook references, sample questions, and detailed syllabi for all subjects.',
-      date: '2024-01-03',
-      priority: 'medium' as const
-    },
-    {
-      id: '6',
-      title: 'Regional Coordinators Appointment',
-      content: 'We are pleased to announce the appointment of new regional coordinators for Mwanza, Arusha, and Dodoma regions. Contact details will be shared with registered schools in these regions.',
-      date: '2024-01-01',
-      priority: 'low' as const
+  const [allAnnouncements, setAllAnnouncements] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  const fetchAnnouncements = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('announcements')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      const formattedData = data?.map(announcement => ({
+        id: announcement.id,
+        title: announcement.title,
+        content: announcement.content,
+        date: new Date(announcement.created_at).toISOString().split('T')[0],
+        priority: announcement.priority as 'high' | 'medium' | 'low'
+      })) || [];
+      
+      setAllAnnouncements(formattedData);
+    } catch (error) {
+      console.error('Error fetching announcements:', error);
+      // Fallback to static data if database fails
+      setAllAnnouncements([]);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
   const filteredAnnouncements = allAnnouncements.filter(announcement => {
     const matchesSearch = announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -133,7 +123,9 @@ const AnnouncementsPage = () => {
 
         {/* Announcements List */}
         <div className="space-y-6">
-          {filteredAnnouncements.length > 0 ? (
+          {isLoading ? (
+            <div className="text-center py-8">Loading announcements...</div>
+          ) : filteredAnnouncements.length > 0 ? (
             filteredAnnouncements.map((announcement) => (
               <AnnouncementCard key={announcement.id} announcement={announcement} />
             ))
@@ -145,7 +137,7 @@ const AnnouncementsPage = () => {
                 <p className="text-muted-foreground">
                   {searchTerm || filterPriority !== 'all' 
                     ? 'Try adjusting your search or filter criteria.'
-                    : 'No announcements available at the moment.'}
+                    : 'No published announcements available at the moment.'}
                 </p>
               </CardContent>
             </Card>

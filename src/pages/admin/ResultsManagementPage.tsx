@@ -558,9 +558,9 @@ const ResultsManagementPage = () => {
                             <TableCell>{student.subject}</TableCell>
                             <TableCell>{student.marks}%</TableCell>
                             <TableCell>
-                              <Badge variant={student.is_published ? 'success' : 'secondary'}>
-                                {student.is_published ? 'Published' : 'Draft'}
-                              </Badge>
+                            <Badge variant={student.is_published ? 'default' : 'secondary'}>
+                              {student.is_published ? 'Published' : 'Draft'}
+                            </Badge>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center space-x-2">
@@ -574,7 +574,6 @@ const ResultsManagementPage = () => {
                                 <Switch
                                   checked={student.is_published}
                                   onCheckedChange={() => toggleStudentPublishStatus(student)}
-                                  size="sm"
                                 />
                               </div>
                             </TableCell>
@@ -736,7 +735,7 @@ const ResultsManagementPage = () => {
                           <TableCell>{school.average_marks}%</TableCell>
                           <TableCell>{school.total_students || '-'}</TableCell>
                           <TableCell>
-                            <Badge variant={school.is_published ? 'success' : 'secondary'}>
+                            <Badge variant={school.is_published ? 'default' : 'secondary'}>
                               {school.is_published ? 'Published' : 'Draft'}
                             </Badge>
                           </TableCell>
@@ -752,7 +751,6 @@ const ResultsManagementPage = () => {
                               <Switch
                                 checked={school.is_published}
                                 onCheckedChange={() => toggleSchoolPublishStatus(school)}
-                                size="sm"
                               />
                             </div>
                           </TableCell>
