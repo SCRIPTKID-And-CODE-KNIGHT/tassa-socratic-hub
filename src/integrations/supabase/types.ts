@@ -14,6 +14,270 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_published: boolean | null
+          priority: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_published?: boolean | null
+          priority?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_published?: boolean | null
+          priority?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      best_schools: {
+        Row: {
+          average_marks: number
+          created_at: string
+          district: string
+          id: string
+          is_published: boolean | null
+          position: number
+          published_by: string | null
+          region: string
+          school_name: string
+          series_number: number
+          total_students: number | null
+          updated_at: string
+        }
+        Insert: {
+          average_marks: number
+          created_at?: string
+          district: string
+          id?: string
+          is_published?: boolean | null
+          position: number
+          published_by?: string | null
+          region: string
+          school_name: string
+          series_number: number
+          total_students?: number | null
+          updated_at?: string
+        }
+        Update: {
+          average_marks?: number
+          created_at?: string
+          district?: string
+          id?: string
+          is_published?: boolean | null
+          position?: number
+          published_by?: string | null
+          region?: string
+          school_name?: string
+          series_number?: number
+          total_students?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          school: string | null
+          status: string | null
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          school?: string | null
+          status?: string | null
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          school?: string | null
+          status?: string | null
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      participation_confirmations: {
+        Row: {
+          confirmed_by: string
+          confirmed_date: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          number_of_students: number | null
+          school_id: string | null
+          series_number: number
+          updated_at: string
+        }
+        Insert: {
+          confirmed_by: string
+          confirmed_date?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          number_of_students?: number | null
+          school_id?: string | null
+          series_number: number
+          updated_at?: string
+        }
+        Update: {
+          confirmed_by?: string
+          confirmed_date?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          number_of_students?: number | null
+          school_id?: string | null
+          series_number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participation_confirmations_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_status: {
+        Row: {
+          amount: number | null
+          created_at: string
+          id: string
+          notes: string | null
+          payment_date: string | null
+          payment_method: string | null
+          receipt_number: string | null
+          school_id: string | null
+          series_number: number
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          receipt_number?: string | null
+          school_id?: string | null
+          series_number: number
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          receipt_number?: string | null
+          school_id?: string | null
+          series_number?: number
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_status_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      results: {
+        Row: {
+          created_at: string
+          district: string
+          grade: string
+          id: string
+          marks: number
+          position: number | null
+          region: string
+          school_id: string | null
+          series_number: number
+          student_name: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          district: string
+          grade: string
+          id?: string
+          marks: number
+          position?: number | null
+          region: string
+          school_id?: string | null
+          series_number: number
+          student_name: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          district?: string
+          grade?: string
+          id?: string
+          marks?: number
+          position?: number | null
+          region?: string
+          school_id?: string | null
+          series_number?: number
+          student_name?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "results_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schools: {
         Row: {
           contact_name: string
@@ -49,6 +313,99 @@ export type Database = {
           phone_number?: string
           region?: string
           school_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      store_materials: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_url: string | null
+          grade_level: string | null
+          id: string
+          is_published: boolean | null
+          material_type: string
+          price: number | null
+          published_by: string | null
+          subject: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_url?: string | null
+          grade_level?: string | null
+          id?: string
+          is_published?: boolean | null
+          material_type: string
+          price?: number | null
+          published_by?: string | null
+          subject?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_url?: string | null
+          grade_level?: string | null
+          id?: string
+          is_published?: boolean | null
+          material_type?: string
+          price?: number | null
+          published_by?: string | null
+          subject?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      top_students: {
+        Row: {
+          created_at: string
+          district: string
+          id: string
+          is_published: boolean | null
+          marks: number
+          position: number
+          published_by: string | null
+          region: string
+          school_name: string
+          series_number: number
+          student_name: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          district: string
+          id?: string
+          is_published?: boolean | null
+          marks: number
+          position: number
+          published_by?: string | null
+          region: string
+          school_name: string
+          series_number: number
+          student_name: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          district?: string
+          id?: string
+          is_published?: boolean | null
+          marks?: number
+          position?: number
+          published_by?: string | null
+          region?: string
+          school_name?: string
+          series_number?: number
+          student_name?: string
+          subject?: string
           updated_at?: string
         }
         Relationships: []

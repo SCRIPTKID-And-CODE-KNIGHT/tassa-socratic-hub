@@ -13,6 +13,10 @@ import RegistrationPage from "./pages/RegistrationPage";
 import RegisteredSchoolsPage from "./pages/RegisteredSchoolsPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import ContactPage from "./pages/ContactPage";
+import PaymentStatusPage from './pages/admin/PaymentStatusPage';
+import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
+import AnnouncementsManagementPage from './pages/admin/AnnouncementsManagementPage';
+import ResultsManagementPage from './pages/admin/ResultsManagementPage';
 import AdminPage from "./pages/AdminPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
@@ -37,8 +41,12 @@ const App = () => (
             <Route path="/registered-schools" element={<RegisteredSchoolsPage />} />
             <Route path="/participation" element={<ParticipationPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/auth" element={<AuthPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/payments" element={<PaymentStatusPage />} />
+          <Route path="/admin/store" element={<StoreMaterialsPage />} />
+          <Route path="/admin/announcements" element={<AnnouncementsManagementPage />} />
+          <Route path="/admin/results" element={<ResultsManagementPage />} />
+          <Route path="/auth" element={<AuthPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

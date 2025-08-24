@@ -87,7 +87,7 @@ const AdminPage = () => {
         {/* Admin Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Announcements */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/announcements')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <MessageSquare className="h-5 w-5 text-primary" />
@@ -105,7 +105,7 @@ const AdminPage = () => {
           </Card>
 
           {/* Payment Status */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/payments')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <DollarSign className="h-5 w-5 text-primary" />
@@ -123,7 +123,7 @@ const AdminPage = () => {
           </Card>
 
           {/* Store Materials */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/store')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Store className="h-5 w-5 text-primary" />
@@ -141,7 +141,7 @@ const AdminPage = () => {
           </Card>
 
           {/* Results Management */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/results')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <BarChart3 className="h-5 w-5 text-primary" />
@@ -159,7 +159,7 @@ const AdminPage = () => {
           </Card>
 
           {/* School Registrations */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/registered-schools')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-5 w-5 text-primary" />
@@ -177,7 +177,7 @@ const AdminPage = () => {
           </Card>
 
           {/* Contact Management */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/contact')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <FileText className="h-5 w-5 text-primary" />
@@ -186,10 +186,10 @@ const AdminPage = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                Update contact information and headquarters location
+                View contact messages and update information
               </p>
               <Button className="w-full btn-educational">
-                Update Contact
+                View Messages
               </Button>
             </CardContent>
           </Card>

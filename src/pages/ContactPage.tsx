@@ -138,7 +138,7 @@ const ContactPage = () => {
                     <p className="text-sm text-muted-foreground">
                       TASSA Headquarters<br />
                       Education District<br />
-                      Dar es Salaam, Tanzania
+                      Geita Region, Tanzania
                     </p>
                   </div>
                 </div>
