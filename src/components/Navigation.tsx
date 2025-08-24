@@ -117,6 +117,15 @@ const Navigation = () => {
             </DropdownMenu>
 
             <Link 
+              to="/payment-status" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/payment-status') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+              }`}
+            >
+              Payment Status
+            </Link>
+            
+            <Link 
               to="/announcements" 
               className={`text-sm font-medium transition-colors hover:text-primary ${
                 isActive('/announcements') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
@@ -243,6 +252,15 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 View Registered Schools
+              </Link>
+              <Link
+                to="/payment-status"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/payment-status') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Payment Status
               </Link>
               <Link
                 to="/announcements"
