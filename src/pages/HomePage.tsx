@@ -12,23 +12,23 @@ const HomePage = () => {
     {
       id: '1',
       title: 'Registration Open for 2024 Socratic Series',
-      content: 'We are pleased to announce that registration is now open for the 2024 Tanzania Socratic Series. All secondary schools are invited to participate in this prestigious academic competition.',
-      date: '2024-01-15',
+      content: 'We are pleased to announce that registration is now open for the 2025 Tanzania Socratic Series. All secondary schools are invited to participate in this prestigious academic competition.',
+      date: '2025-09-15',
       priority: 'high' as const
     },
     {
       id: '2',
       title: 'Geography Focus for March Series',
-      content: 'The upcoming March series will focus primarily on Physical and Human Geography. Schools should prepare their students accordingly.',
+      content: 'The upcoming September series will focus primarily on Physical and Human Geography. Schools should prepare their students accordingly.',
       date: '2024-01-10',
       priority: 'medium' as const
     }
   ];
 
   const quickStats = [
-    { icon: Users, label: 'Registered Schools', value: '450+' },
+    { icon: Users, label: 'Registered Schools', value: '25+' },
     { icon: Trophy, label: 'Annual Series', value: '12' },
-    { icon: BookOpen, label: 'Subjects Covered', value: '8' },
+    { icon: BookOpen, label: 'Subjects Covered', value: '1' },
     { icon: FileText, label: 'Past Papers', value: '200+' }
   ];
 
