@@ -140,7 +140,7 @@ const ContactPage = () => {
                   <Mail className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold">Email Address</h4>
-                    <p className="text-sm text-muted-foreground">coordinator@tassa.ac.tz</p>
+                    <p className="text-sm text-muted-foreground">manumbadaudi@gmail.com</p>
                     <p className="text-sm text-muted-foreground">admin@tassa.ac.tz</p>
                   </div>
                 </div>
@@ -148,8 +148,8 @@ const ContactPage = () => {
                   <Phone className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold">Phone Numbers</h4>
-                    <p className="text-sm text-muted-foreground">+255 757 123 456</p>
-                    <p className="text-sm text-muted-foreground">+255 684 789 012</p>
+                    <p className="text-sm text-muted-foreground">+255 757 837 561 </p>
+                    <p className="text-sm text-muted-foreground">+255 757 837 561</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
