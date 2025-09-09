@@ -6,25 +6,20 @@ import { School, Archive, ExternalLink } from 'lucide-react';
 const SchoolsResultsPage = () => {
   const [selectedSchool, setSelectedSchool] = useState('');
 
-  // Updated list of schools from your sheet
+  // List of schools
   const schools = [
-    'OLD SHINYANGA SS',
-    'DR OLSEN',
-    'BEROYA SS',
-    'TUKUYU SS',
+    'CHATO TECH SS',
     'RUBYA SEMINARY',
-    'ARUSHA SCIENCE SS',
-    'CHATO SS',
-    'MWATULOLE SS',
-    'MASWA GIRLS SS',
-    'JIKOMBOE GIRLS HIGH SCHOOL',
-    'NYABUSOZI SS',
-    'MULBADAW SS',
     'KAGANGO SS',
-    'NYANKUMBU GIRLS SS',
-    'MPEMBA HIGH SCHOOL',
+    'CAMEL MOUNT GIRLS',
+    'MUUNGANO BOYS',
+    'JANETH MAGUFULI HIGH SCHOOL',
     'NATA HIGH SCHOOL',
-    'CARMEL MOUNT GIRLS SS'
+    'MALBADAW SS',
+    'NYANKUMBU SS',
+    'LAUREATE SCHOOL OF ZANZIBAR',
+    'MASWA GIRLS',
+    'ARUSHA SCIENCE'
   ];
 
   // One general Google Sheet link for all schools
