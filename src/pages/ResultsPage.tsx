@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { School, Archive } from 'lucide-react';
+import { School, Archive, ExternalLink } from 'lucide-react';
 
 const SchoolsResultsPage = () => {
   const [selectedSchool, setSelectedSchool] = useState('');
@@ -21,6 +21,10 @@ const SchoolsResultsPage = () => {
     'MASWA GIRLS',
     'ARUSHA SCIENCE'
   ];
+
+  // One general Google Sheet link for all schools
+  const generalResultsUrl =
+    'https://docs.google.com/spreadsheets/d/15LjCTexLA3angy99vV3Q-9S4eAmGS2wv_OdVyakmj4M/edit?usp=drivesdk';
 
   return (
     <div className="min-h-screen py-8 flex flex-col items-center justify-start">
@@ -50,15 +54,21 @@ const SchoolsResultsPage = () => {
         </CardContent>
       </Card>
 
-      {/* No results message */}
+      {/* Results Link */}
       {selectedSchool && (
         <Card className="text-center py-12 w-full max-w-md">
           <CardContent>
             <Archive className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">{selectedSchool}</h3>
-            <p className="text-muted-foreground">
-              No results have been released for this school yet.
-            </p>
+            <h3 className="text-lg font-semibold mb-4">{selectedSchool}</h3>
+            <a
+              href={generalResultsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-primary font-semibold hover:underline"
+            >
+              View General Results
+              <ExternalLink className="h-4 w-4 ml-2" />
+            </a>
           </CardContent>
         </Card>
       )}
@@ -66,4 +76,4 @@ const SchoolsResultsPage = () => {
   );
 };
 
-export default SchoolsResultsPage;        
+export default SchoolsResultsPage;
