@@ -24,7 +24,7 @@ const SchoolsResultsPage = () => {
 
   // One general Google Sheet link for all schools
   const generalResultsUrl =
-    'https://docs.google.com/spreadsheets/d/15LjCTexLA3angy99vV3Q-9S4eAmGS2wv_OdVyakmj4M/edit?usp=drivesdk';
+    'https://docs.google.com/spreadsheets/d/1_CC87mgmgdDjmtB0lxsxbnXCIImnBZ_71HQsbV2cKm4/edit?usp=drivesdk';
 
   return (
     <div className="min-h-screen py-8 flex flex-col items-center justify-start">
