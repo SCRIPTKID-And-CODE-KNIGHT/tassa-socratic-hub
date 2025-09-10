@@ -13,14 +13,14 @@ const HomePage = () => {
       id: '1',
       title: 'Registration Open for 2024 Socratic Series',
       content: 'We are pleased to announce that registration is now open for the 2025 Tanzania Socratic Series. All secondary schools are invited to participate in this prestigious academic competition.',
-      date: '2025-09-15',
+      date: '2025-09-19',
       priority: 'high' as const
     },
     {
       id: '2',
       title: 'Geography Focus for March Series',
       content: 'The upcoming September series will focus primarily on Physical and Human Geography. Schools should prepare their students accordingly.',
-      date: '2024-01-10',
+      date: '2025-09-19',
       priority: 'medium' as const
     }
   ];
