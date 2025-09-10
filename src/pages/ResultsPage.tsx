@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { School, Archive, ExternalLink, Trophy } from 'lucide-react';
@@ -41,12 +40,7 @@ const SchoolsResultsPage = () => {
       </h1>
 
       {/* School Selection Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-md px-4 sm:px-0"
-      >
+      <div className="w-full max-w-md px-4 sm:px-0 animate-fade-in">
         <Card className="rounded-2xl shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 text-base sm:text-lg font-semibold">
@@ -69,16 +63,11 @@ const SchoolsResultsPage = () => {
             </Select>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
       {/* Empty State Announcement */}
       {!selectedSchool && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="w-full max-w-2xl mt-8 px-4 sm:px-0"
-        >
+        <div className="w-full max-w-2xl mt-8 px-4 sm:px-0 animate-fade-in">
           <Card className="text-center py-10 px-6 rounded-2xl shadow-xl bg-white/90 backdrop-blur-sm">
             <CardContent>
               <School className="h-12 w-12 text-blue-600 mx-auto mb-4" />
@@ -100,17 +89,12 @@ const SchoolsResultsPage = () => {
               <p className="text-gray-500 font-medium">— TASSA IT Department</p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       )}
 
       {/* Results Section */}
       {selectedSchool && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="w-full max-w-md mt-8 px-4 sm:px-0 space-y-6"
-        >
+        <div className="w-full max-w-md mt-8 px-4 sm:px-0 space-y-6 animate-scale-in">
           {/* General Results */}
           <Card className="text-center py-8 rounded-2xl shadow-xl bg-white/80 backdrop-blur-sm">
             <CardContent>
@@ -144,7 +128,7 @@ const SchoolsResultsPage = () => {
               </a>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       )}
     </div>
   );
