@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { School, Archive, ExternalLink, Trophy, BarChart3 } from 'lucide-react';
+import { School, Archive, ExternalLink, Trophy } from 'lucide-react';
 
 const SchoolsResultsPage = () => {
   const [selectedSchool, setSelectedSchool] = useState('');
@@ -27,15 +27,11 @@ const SchoolsResultsPage = () => {
     'CARMEL MOUNT GIRLS SS'
   ];
 
-  // Links (shared for all schools right now)
   const generalResultsUrl =
     'https://docs.google.com/spreadsheets/d/1_CC87mgmgdDjmtB0lxsxbnXCIImnBZ_71HQsbV2cKm4/edit?usp=drivesdk';
 
   const topTenResultsUrl =
     'https://docs.google.com/spreadsheets/d/1guVsB1ZKRLKRZlhKDfTXGlDx78XXF1VQdijfhp0NC9w/edit?usp=drivesdk';
-
-  const schoolRankUrl =
-    'https://docs.google.com/spreadsheets/d/1dQh9lQ4uYoqj8KfgkLZ8aV5Ed0abcXYZ/edit?usp=drivesdk'; // replace with your actual sheet
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 py-8 flex flex-col items-center">
@@ -91,12 +87,11 @@ const SchoolsResultsPage = () => {
               </h3>
               <p className="text-gray-700 leading-relaxed mb-6 text-sm sm:text-base">
                 The results have been released and currently we have the
-                <span className="font-semibold"> General Results</span>,
-                <span className="font-semibold"> Top Ten Students</span> and
-                <span className="font-semibold"> Rank Performance</span>.
+                <span className="font-semibold"> General Results</span> and
+                <span className="font-semibold"> Top Ten Students</span>.
                 <br /><br />
                 Later on we will upload each school’s individual results, but for now
-                each school shows the General Results, Ranking Performance and Top Ten Students.
+                each school shows the General Results and Top Ten Students.
                 <br /><br />
                 <span className="font-semibold text-purple-600">
                   Thanks for being with us.
@@ -145,23 +140,6 @@ const SchoolsResultsPage = () => {
                 className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition"
               >
                 View Top Ten
-                <ExternalLink className="h-5 w-5 ml-2" />
-              </a>
-            </CardContent>
-          </Card>
-
-          {/* School Rank Performance */}
-          <Card className="text-center py-8 rounded-2xl shadow-xl bg-white/80 backdrop-blur-sm">
-            <CardContent>
-              <BarChart3 className="h-12 w-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-lg sm:text-xl font-bold mb-6">School Rank Performance</h3>
-              <a
-                href={schoolRankUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition"
-              >
-                View School Ranking
                 <ExternalLink className="h-5 w-5 ml-2" />
               </a>
             </CardContent>
