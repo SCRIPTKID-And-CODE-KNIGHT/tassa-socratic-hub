@@ -28,7 +28,7 @@ const SchoolsResultsPage = () => {
   ];
 
   const generalResultsUrl =
-    'https://docs.google.com/spreadsheets/d/15LjCTexLA3angy99vV3Q-9S4eAmGS2wv_OdVyakmj4M/edit?usp=drivesdk';
+    'https://docs.google.com/spreadsheets/d/1_CC87mgmgdDjmtB0lxsxbnXCIImnBZ_71HQsbV2cKm4/edit?usp=drivesdk';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 py-8 flex flex-col items-center">
