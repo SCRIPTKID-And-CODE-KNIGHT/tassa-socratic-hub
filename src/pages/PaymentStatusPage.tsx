@@ -7,34 +7,34 @@ import { School } from 'lucide-react';
 const PaymentStatusPage = () => {
   const [selectedSchool, setSelectedSchool] = useState('');
 
-  // Schools list, all with Pending status
+  // Schools list with mixed statuses
   const schools = [
-    'Beroya SS',
-    'Twiwhulumile SS',
-    'Tukuyu SS',
-    'Tosamaganga SS',
-    'Nyankumanga Girls SS',
-    'Nyabusozi SS',
-    'Old Shinyanga SS',
-    'Nata High School',
-    'Mwatulole SS',
-    'Arusha Science SS',
-    'Mpemba High School',
-    'Lucas Maria High School',
-    'Korona High School',
-    'Kagango SS',
-    'Jikomboe Girls High School',
-    'Chato SS',
-    'High View School of Zanzibar',
-    'Rubya Seminary',
-    'Dr Olsen',
-    'Mwisi SS',
-    'Bukama SS',
-    'Carmel Mount Girls SS',
-    'Golden Ridge SS',
-    'Mulbadaw SS',
-    'Maswa SS'
-  ].map(name => ({ name, status: 'Pending' })); // All Pending
+    { name: 'Beroya SS', status: 'Pending' },
+    { name: 'Twihulumile SS', status: 'Paid' },
+    { name: 'Tukuyu SS', status: 'Pending' },
+    { name: 'Tosamaganga SS', status: 'Paid' },
+    { name: 'Nyankumbu Girls SS', status: 'Pending' },
+    { name: 'Nyabusozi SS', status: 'Pending' },
+    { name: 'Old Shinyanga SS', status: 'Paid' },
+    { name: 'Nata High School', status: 'Pending' },
+    { name: 'Mwatulole SS', status: 'Pending' },
+    { name: 'Arusha Science SS', status: 'Paid' },
+    { name: 'Mpemba High School', status: 'Paid' },
+    { name: 'Lucas Maria High School', status: 'Pending' },
+    { name: 'Korona High School', status: 'Paid' },
+    { name: 'Kagango SS', status: 'Paid' },
+    { name: 'Jikomboe Girls High School', status: 'Paid' },
+    { name: 'Chato SS', status: 'Paid' }, // Treated as Chato Technical
+    { name: 'High View School of Zanzibar', status: 'Pending' },
+    { name: 'Rubya Seminary', status: 'Pending' },
+    { name: 'Dr Olsen', status: 'Pending' },
+    { name: 'Mwisi SS', status: 'Pending' },
+    { name: 'Bukama SS', status: 'Pending' },
+    { name: 'Carmel Mount Girls SS', status: 'Pending' },
+    { name: 'Golden Ridge SS', status: 'Pending' },
+    { name: 'Mulbadaw SS', status: 'Pending' },
+    { name: 'Maswa SS', status: 'Pending' }
+  ];
 
   const schoolData = schools.find(s => s.name === selectedSchool);
 
@@ -88,7 +88,9 @@ const PaymentStatusPage = () => {
               {schoolData.status}
             </Badge>
             <p className="mt-4 text-muted-foreground text-sm">
-              School has not completed payment yet.
+              {schoolData.status === 'Paid'
+                ? 'School has completed payment.'
+                : 'School has not completed payment yet.'}
             </p>
           </CardContent>
         </Card>
