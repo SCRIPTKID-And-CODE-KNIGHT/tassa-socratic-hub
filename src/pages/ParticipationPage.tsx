@@ -27,7 +27,7 @@ const ParticipationPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [confirmedSchools, setConfirmedSchools] = useState<School[]>([]); // dynamic list
+  const [confirmedSchools, setConfirmedSchools] = useState<School[]>([]);
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +39,6 @@ const ParticipationPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     const newSchool: School = {
@@ -49,7 +48,6 @@ const ParticipationPage = () => {
       students: Number(formData.numberOfStudents)
     };
 
-    // Add the new school to confirmedSchools
     setConfirmedSchools(prev => [...prev, newSchool]);
 
     toast({
@@ -122,7 +120,6 @@ const ParticipationPage = () => {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Confirmation Form */}
           <div className="lg:col-span-2">
             <Card className="form-section">
               <CardHeader>
@@ -145,7 +142,6 @@ const ParticipationPage = () => {
                       className="mt-1"
                     />
                   </div>
-
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <Label htmlFor="contactPerson">Contact Person *</Label>
@@ -173,7 +169,6 @@ const ParticipationPage = () => {
                       />
                     </div>
                   </div>
-
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <Label htmlFor="region">Region *</Label>
@@ -200,7 +195,6 @@ const ParticipationPage = () => {
                       />
                     </div>
                   </div>
-
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <Label htmlFor="numberOfStudents">Number of Students *</Label>
@@ -251,8 +245,8 @@ const ParticipationPage = () => {
             </Card>
           </div>
 
-          {/* Series Information */}
           <div className="lg:col-span-1 space-y-6">
+            {/* Series Information */}
             <Card className="form-section">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
@@ -334,3 +328,18 @@ const ParticipationPage = () => {
                       <p className="text-xs text-muted-foreground">
                         {school.district}, {school.region}
                       </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center">No schools have confirmed yet.</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ParticipationPage;
