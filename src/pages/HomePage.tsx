@@ -7,28 +7,14 @@ import VoiceGreeting from '@/components/VoiceGreeting';
 import geographyBooks from '@/assets/geography-books.jpg';
 
 const HomePage = () => {
-  // Fixed announcements data
+  // Only one announcement
   const sampleAnnouncements = [
     {
       id: '1',
-      title: 'Registration Open for 2025 Socratic Series',
-      content: 'We are pleased to announce that registration is now open for the 2025 Tanzania Socratic Series. All secondary schools are invited to participate in this prestigious academic competition.',
-      date: '2025-09-19',
-      priority: 'high' as const
-    },
-    {
-      id: '2',
       title: 'KUKAMILIKA KWA SERIES NAMBA TATU',
-      content: 'NATOA PONGEZI NYINGI SANA KWA WAALIMU WOTE AMBAO MUMEFANIKISHA KUFANYISHA MTIHANI SERIES NO 3 ASANTENI SANA TUENDELEE NA HATUA ZINAZOFUATA KAMA ALMANAC YETU INAVYOJIELEZA  MATOKEO YATATOKA TAREHE 9/10/2025  TUJITAHIDI NDUGU WAALIMU.',
+      content: 'NATOA PONGEZI NYINGI SANA KWA WAALIMU WOTE AMBAO MMEFANIKISHA KUFANYISHA MTIHANI SERIES NO 3 ASANTENI SANA TUENDELEE NA HATUA ZINAZOFUATA KAMA ALMANAC YETU INAVYOJIELEZA  MATOKEO YATATOKA TAREHE 9/10/2025  TUJITAHIDI NDUGU WAALIMU.',
       date: '2025-09-22',
       priority: 'high' as const
-    },
-    {
-      id: '3',
-      title: 'Geography Focus for Upcoming Series',
-      content: 'The upcoming September series will focus primarily on Physical and Human Geography. Schools should prepare their students accordingly.',
-      date: '2025-09-22',
-      priority: 'medium' as const
     }
   ];
 
@@ -88,12 +74,10 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Announcements */}
+      {/* Announcement */}
       <section className="announcements-section py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          {sampleAnnouncements.map((announcement) => (
-            <AnnouncementCard key={announcement.id} announcement={announcement} />
-          ))}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AnnouncementCard announcement={sampleAnnouncements[0]} />
         </div>
       </section>
     </div>
