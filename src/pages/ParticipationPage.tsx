@@ -5,8 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, School, Calendar, Users, Clock, FileCheck } from 'lucide-react';
+import { CheckCircle, Calendar, Users, Clock, FileCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+interface School {
+  name: string;
+  region: string;
+  district: string;
+  students: number;
+}
 
 const ParticipationPage = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +27,7 @@ const ParticipationPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [confirmedSchools, setConfirmedSchools] = useState<School[]>([]); // dynamic list
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,8 +42,15 @@ const ParticipationPage = () => {
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Here you would typically send the data to your backend
-    console.log('Participation confirmation submitted:', formData);
+    const newSchool: School = {
+      name: formData.schoolName,
+      region: formData.region,
+      district: formData.district,
+      students: Number(formData.numberOfStudents)
+    };
+
+    // Add the new school to confirmedSchools
+    setConfirmedSchools(prev => [...prev, newSchool]);
 
     toast({
       title: "Participation Confirmed!",
@@ -45,15 +60,6 @@ const ParticipationPage = () => {
     setIsSubmitted(true);
     setIsSubmitting(false);
   };
-
-  // Sample confirmed schools data
-  const confirmedSchools = [
-    { name: 'Azania Secondary School', region: 'Dar es Salaam', district: 'Kinondoni', students: 25 },
-    { name: 'Mount Meru Secondary', region: 'Arusha', district: 'Arusha City', students: 30 },
-    { name: 'Lake Victoria Secondary', region: 'Mwanza', district: 'Nyamagana', students: 22 },
-    { name: 'Benjamin Mkapa Secondary', region: 'Dar es Salaam', district: 'Ilala', students: 28 },
-    { name: 'Nelson Mandela Secondary', region: 'Arusha', district: 'Arusha City', students: 35 }
-  ];
 
   if (isSubmitted) {
     return (
@@ -317,30 +323,14 @@ const ParticipationPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {confirmedSchools.map((school, index) => (
-                  <div key={index} className="border rounded-lg p-4 bg-muted/20">
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-sm">{school.name}</h4>
-                      <Badge variant="outline" className="text-xs">{school.students} students</Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {school.district}, {school.region}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 text-center">
-                <p className="text-sm text-muted-foreground">
-                  <strong>{confirmedSchools.length} schools</strong> have confirmed participation so far.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default ParticipationPage;
+              {confirmedSchools.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {confirmedSchools.map((school, index) => (
+                    <div key={index} className="border rounded-lg p-4 bg-muted/20">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="font-semibold text-sm">{school.name}</h4>
+                        <Badge variant="outline" className="text-xs">{school.students} students</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {school.district}, {school.region}
+                      </p>
