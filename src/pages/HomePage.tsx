@@ -29,6 +29,18 @@ const HomePage = () => {
     <div className="min-h-screen">
       <VoiceGreeting />
 
+      {/* Top Hyperlink */}
+      <div className="bg-blue-600 text-white py-2 text-center">
+        <a
+          href="https://tassa-geo-ematerials-irs3.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold underline hover:text-yellow-300"
+        >
+          TASSA E-RESOURCES AND ANNOUNCEMENTS
+        </a>
+      </div>
+
       {/* Hero Section */}
       <section
         className="hero-section py-20 relative overflow-hidden"
