@@ -11,16 +11,22 @@ const HomePage = () => {
   const sampleAnnouncements = [
     {
       id: '1',
+ main
       title: 'Registration Open for 2025 Socratic Series',
       content: 'We are pleased to announce that registration is now open for the 2025 Tanzania Socratic Series. All secondary schools are invited to participate in this prestigious academic competition.',
       date: '2025-09-19',
+
+      title: 'KUKAMILIKA KWA SERIES NAMBA TATU',
+      content: 'NATOA PONGEZI NYINGI SANA KWA WAALIMU WOTE AMBAO MUMEFANIKISHA KUFANYISHA MTIHANI SERIES NO 3 ASANTENI SANA TUENDELEE NA HATUA ZINAZOFUATA KAMA ALMANAC YETU INAVYOJIELEZA  MATOKEO YATATOKA TAREHE 9/10/2025  TUJITAHIDI NDUGU WAALIMU.',
+      date: '2025-09-22',
+ main
       priority: 'high' as const
     },
     {
       id: '2',
-      title: 'Geography Focus for March Series',
+      title: 'Geography Focus for upcoming Series',
       content: 'The upcoming September series will focus primarily on Physical and Human Geography. Schools should prepare their students accordingly.',
-      date: '2025-09-19',
+      date: '2025-09-22',
       priority: 'medium' as const
     }
   ];
