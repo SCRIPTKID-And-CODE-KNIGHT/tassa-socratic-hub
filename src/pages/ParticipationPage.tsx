@@ -71,7 +71,7 @@ const ParticipationPage = () => {
               </h1>
               <p className="text-muted-foreground mb-6">
                 <strong>{formData.schoolName}</strong> has been successfully confirmed for participation 
-                in the upcoming TASSA Socratic Series 2024.
+                in the upcoming TASSA Socratic Series October 2025.
               </p>
               <div className="bg-card p-4 rounded-lg border mb-6">
                 <h3 className="font-semibold mb-2">Confirmation Details</h3>
@@ -114,7 +114,7 @@ const ParticipationPage = () => {
             Participation Confirmation
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Confirm your school's participation in the upcoming TASSA Socratic Series 2024. 
+            Confirm your school's participation in the upcoming TASSA Socratic Series October 2025. 
             Registered schools must confirm participation for each series.
           </p>
         </div>
@@ -228,8 +228,8 @@ const ParticipationPage = () => {
                   <Alert>
                     <Calendar className="h-4 w-4" />
                     <AlertDescription>
-                      <strong>Upcoming Series: April 2024</strong><br />
-                      Confirmation deadline: March 15th, 2024. Subject focus: Physical and Human Geography.
+                      <strong>Upcoming Series: October 2025</strong><br />
+                      Confirmation deadline: September 15th, 2025. Subject focus: Physical and Human Geography.
                     </AlertDescription>
                   </Alert>
 
@@ -256,21 +256,21 @@ const ParticipationPage = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-primary">April 2024 Series</h4>
+                  <h4 className="font-semibold text-primary">October 2025 Series</h4>
                   <p className="text-sm text-muted-foreground">Physical & Human Geography Focus</p>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Confirmation Deadline:</span>
-                    <Badge variant="outline">March 15, 2024</Badge>
+                    <Badge variant="outline">September 15, 2025</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Competition Dates:</span>
-                    <Badge variant="outline">April 20-25, 2024</Badge>
+                    <Badge variant="outline">October 20-25, 2025</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Results Release:</span>
-                    <Badge variant="outline">May 1, 2024</Badge>
+                    <Badge variant="outline">November 1, 2025</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -295,11 +295,11 @@ const ParticipationPage = () => {
                   </div>
                   <div className="flex items-center justify-between p-2 rounded bg-muted/30">
                     <span>Study Materials Release</span>
-                    <Badge variant="outline">March 20, 2024</Badge>
+                    <Badge variant="outline">September 20, 2025</Badge>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded bg-muted/30">
                     <span>Competition Week</span>
-                    <Badge variant="outline">April 20-25, 2024</Badge>
+                    <Badge variant="outline">October 20-25, 2025</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -313,7 +313,7 @@ const ParticipationPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-6 w-6 text-primary" />
-                <span>Confirmed Schools for April 2024 Series</span>
+                <span>Confirmed Schools for October 2025 Series</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
