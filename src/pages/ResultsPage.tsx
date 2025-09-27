@@ -1,7 +1,23 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { School, Archive, ExternalLink, Trophy } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  School,
+  Archive,
+  ExternalLink,
+  Trophy,
+} from 'lucide-react';
 
 const SchoolsResultsPage = () => {
   const [selectedSchool, setSelectedSchool] = useState('');
@@ -23,8 +39,29 @@ const SchoolsResultsPage = () => {
     'NYANKUMBU GIRLS SS',
     'MPEMBA HIGH SCHOOL',
     'NATA HIGH SCHOOL',
-    'CARMEL MOUNT GIRLS SS'
+    'CARMEL MOUNT GIRLS SS',
   ];
+
+  // ✅ REPLACE the FILE_ID_x values with actual Google Drive file IDs
+  const schoolDriveLinks = {
+    'OLD SHINYANGA SS': 'https://drive.google.com/file/d/FILE_ID_1/view?usp=drivesdk',
+    'DR OLSEN': 'https://drive.google.com/file/d/FILE_ID_2/view?usp=drivesdk',
+    'BEROYA SS': 'https://drive.google.com/file/d/FILE_ID_3/view?usp=drivesdk',
+    'TUKUYU SS': 'https://drive.google.com/file/d/FILE_ID_4/view?usp=drivesdk',
+    'RUBYA SEMINARY': 'https://drive.google.com/file/d/FILE_ID_5/view?usp=drivesdk',
+    'ARUSHA SCIENCE SS': 'https://drive.google.com/file/d/FILE_ID_6/view?usp=drivesdk',
+    'CHATO SS': 'https://drive.google.com/file/d/FILE_ID_7/view?usp=drivesdk',
+    'MWATULOLE SS': 'https://drive.google.com/file/d/FILE_ID_8/view?usp=drivesdk',
+    'MASWA GIRLS SS': 'https://drive.google.com/file/d/FILE_ID_9/view?usp=drivesdk',
+    'JIKOMBOE GIRLS HIGH SCHOOL': 'https://drive.google.com/file/d/FILE_ID_10/view?usp=drivesdk',
+    'NYABUSOZI SS': 'https://drive.google.com/file/d/FILE_ID_11/view?usp=drivesdk',
+    'MULBADAW SS': 'https://drive.google.com/file/d/FILE_ID_12/view?usp=drivesdk',
+    'KAGANGO SS': 'https://drive.google.com/file/d/FILE_ID_13/view?usp=drivesdk',
+    'NYANKUMBU GIRLS SS': 'https://drive.google.com/file/d/FILE_ID_14/view?usp=drivesdk',
+    'MPEMBA HIGH SCHOOL': 'https://drive.google.com/file/d/FILE_ID_15/view?usp=drivesdk',
+    'NATA HIGH SCHOOL': 'https://drive.google.com/file/d/FILE_ID_16/view?usp=drivesdk',
+    'CARMEL MOUNT GIRLS SS': 'https://drive.google.com/file/d/FILE_ID_17/view?usp=drivesdk',
+  };
 
   const generalResultsUrl =
     'https://docs.google.com/spreadsheets/d/1_CC87mgmgdDjmtB0lxsxbnXCIImnBZ_71HQsbV2cKm4/edit?usp=drivesdk';
@@ -78,10 +115,12 @@ const SchoolsResultsPage = () => {
                 The results have been released and currently we have the
                 <span className="font-semibold"> General Results</span> and
                 <span className="font-semibold"> Top Ten Students</span>.
-                <br /><br />
+                <br />
+                <br />
                 Later on we will upload each school’s individual results, but for now
                 each school shows the General Results and Top Ten Students.
-                <br /><br />
+                <br />
+                <br />
                 <span className="font-semibold text-purple-600">
                   Thanks for being with us.
                 </span>
@@ -92,7 +131,7 @@ const SchoolsResultsPage = () => {
         </div>
       )}
 
-      {/* Results Section */}
+      {/* Results Section (general + top ten) */}
       {selectedSchool && (
         <div className="w-full max-w-md mt-8 px-4 sm:px-0 space-y-6 animate-scale-in">
           {/* General Results */}
@@ -129,6 +168,35 @@ const SchoolsResultsPage = () => {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* Individual School Link */}
+      {selectedSchool && schoolDriveLinks[selectedSchool] && (
+        <div className="mt-8 w-full max-w-md px-4 sm:px-0 animate-fade-in">
+          <Card className="text-center py-8 rounded-2xl shadow-xl bg-white/90 backdrop-blur-sm">
+            <CardContent>
+              <h3 className="text-lg sm:text-xl font-bold mb-6">
+                {selectedSchool} – Individual Results
+              </h3>
+              <a
+                href={schoolDriveLinks[selectedSchool]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition"
+              >
+                Open School Results
+                <ExternalLink className="h-5 w-5 ml-2" />
+              </a>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* No link fallback */}
+      {selectedSchool && !schoolDriveLinks[selectedSchool] && (
+        <p className="text-center text-gray-500 mt-6">
+          Individual results for <strong>{selectedSchool}</strong> will be uploaded soon.
+        </p>
       )}
     </div>
   );
