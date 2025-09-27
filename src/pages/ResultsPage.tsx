@@ -43,7 +43,7 @@ const SchoolsResultsPage = () => {
   ];
 
   const schoolDriveLinks: Record<string, string> = {
-    'OLD SHINYANGA SS': 'https://drive.google.com/file/d/FILE_ID_1/view?usp=drivesdk',
+    'OLD SHINYANGA SS': 'https://drive.google.com/file/d/1r9mhTft2mGM_VppicO_FqomqV_l0Up-k/view?usp=sharing',
     'DR OLSEN': 'https://docs.google.com/spreadsheets/d/1MAY5pAPJq5tPOHBjvtMPoRytpa0kzDCo/edit?usp=drive_link&ouid=102623279819468923794&rtpof=true&sd=true',
     'BEROYA SS': 'https://drive.google.com/file/d/FILE_ID_3/view?usp=drivesdk',
     'TUKUYU SS': 'https://drive.google.com/file/d/FILE_ID_4/view?usp=drivesdk',
