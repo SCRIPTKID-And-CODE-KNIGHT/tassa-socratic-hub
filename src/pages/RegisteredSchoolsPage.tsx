@@ -20,42 +20,69 @@ interface School {
   updated_at: string;
 }
 
+interface ParticipationConfirmation {
+  id: string;
+  school_id: string;
+  series_number: number;
+  confirmed_date: string;
+  confirmed_by: string;
+  number_of_students: number | null;
+}
+
 const RegisteredSchoolsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRegion, setFilterRegion] = useState('all');
+  const [filterConfirmation, setFilterConfirmation] = useState('all');
   const [schools, setSchools] = useState<School[]>([]);
+  const [confirmations, setConfirmations] = useState<ParticipationConfirmation[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchSchools();
+    fetchData();
   }, []);
 
-  const fetchSchools = async () => {
+  const fetchData = async () => {
     try {
-      const { data, error } = await supabase
-        .from('schools')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const [schoolsResponse, confirmationsResponse] = await Promise.all([
+        supabase
+          .from('schools')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('participation_confirmations')
+          .select('*')
+          .order('confirmed_date', { ascending: false })
+      ]);
 
-      if (error) {
-        throw error;
-      }
+      if (schoolsResponse.error) throw schoolsResponse.error;
+      if (confirmationsResponse.error) throw confirmationsResponse.error;
 
-      setSchools(data || []);
+      setSchools(schoolsResponse.data || []);
+      setConfirmations(confirmationsResponse.data || []);
     } catch (error) {
-      console.error('Error fetching schools:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  const getSchoolConfirmation = (schoolId: string) => {
+    return confirmations.find(conf => conf.school_id === schoolId);
+  };
+
+  const confirmedSchools = schools.filter(school => getSchoolConfirmation(school.id));
+  
   const filteredSchools = schools.filter(school => {
     const matchesSearch = school.school_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          school.contact_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          school.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          school.region.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRegion = filterRegion === 'all' || school.region === filterRegion;
-    return matchesSearch && matchesRegion;
+    const hasConfirmation = getSchoolConfirmation(school.id) !== undefined;
+    const matchesConfirmation = filterConfirmation === 'all' || 
+                               (filterConfirmation === 'confirmed' && hasConfirmation) ||
+                               (filterConfirmation === 'pending' && !hasConfirmation);
+    return matchesSearch && matchesRegion && matchesConfirmation;
   });
 
   const regions = [...new Set(schools.map(school => school.region))];
@@ -107,11 +134,9 @@ const RegisteredSchoolsPage = () => {
           </Card>
           <Card className="text-center results-card">
             <CardContent className="pt-6">
-              <Calendar className="h-8 w-8 text-warning mx-auto mb-3" />
-              <div className="text-2xl font-bold text-warning mb-1">
-                {schools.length > 0 ? new Date(schools[schools.length - 1].created_at).toLocaleDateString() : "N/A"}
-              </div>
-              <div className="text-sm text-muted-foreground">Latest Registration</div>
+              <Users className="h-8 w-8 text-warning mx-auto mb-3" />
+              <div className="text-2xl font-bold text-warning mb-1">{confirmedSchools.length}</div>
+              <div className="text-sm text-muted-foreground">Confirmed for Participation</div>
             </CardContent>
           </Card>
         </div>
@@ -134,7 +159,7 @@ const RegisteredSchoolsPage = () => {
                   <div className="flex items-center space-x-2">
                     <Filter className="h-4 w-4 text-muted-foreground" />
                     <Select value={filterRegion} onValueChange={setFilterRegion}>
-                      <SelectTrigger className="w-[180px]">
+                      <SelectTrigger className="w-[140px]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -142,6 +167,16 @@ const RegisteredSchoolsPage = () => {
                         {regions.map(region => (
                           <SelectItem key={region} value={region}>{region}</SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                    <Select value={filterConfirmation} onValueChange={setFilterConfirmation}>
+                      <SelectTrigger className="w-[160px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Schools</SelectItem>
+                        <SelectItem value="confirmed">Confirmed Only</SelectItem>
+                        <SelectItem value="pending">Pending Confirmation</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -169,10 +204,35 @@ const RegisteredSchoolsPage = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <Badge className="bg-success text-success-foreground">
-                            ACTIVE
-                          </Badge>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          {(() => {
+                            const confirmation = getSchoolConfirmation(school.id);
+                            if (confirmation) {
+                              return (
+                                <div className="space-y-2">
+                                  <Badge className="bg-success text-success-foreground">
+                                    ✓ CONFIRMED
+                                  </Badge>
+                                  <div className="text-xs text-muted-foreground">
+                                    <p>Series {confirmation.series_number}</p>
+                                    <p>{confirmation.number_of_students ? `${confirmation.number_of_students} students` : ''}</p>
+                                    <p>By: {confirmation.confirmed_by}</p>
+                                  </div>
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div className="space-y-2">
+                                  <Badge variant="outline" className="border-warning text-warning">
+                                    PENDING
+                                  </Badge>
+                                  <p className="text-xs text-muted-foreground">
+                                    Needs confirmation
+                                  </p>
+                                </div>
+                              );
+                            }
+                          })()}
+                          <p className="text-xs text-muted-foreground mt-2">
                             Registered: {new Date(school.created_at).toLocaleDateString('en-GB')}
                           </p>
                         </div>
