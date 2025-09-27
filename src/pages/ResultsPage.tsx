@@ -44,10 +44,10 @@ const SchoolsResultsPage = () => {
 
   const schoolDriveLinks: Record<string, string> = {
     'OLD SHINYANGA SS': 'https://drive.google.com/file/d/FILE_ID_1/view?usp=drivesdk',
-    'DR OLSEN': 'https://drive.google.com/file/d/FILE_ID_2/view?usp=drivesdk',
+    'DR OLSEN': 'https://docs.google.com/spreadsheets/d/1MAY5pAPJq5tPOHBjvtMPoRytpa0kzDCo/edit?usp=drive_link&ouid=102623279819468923794&rtpof=true&sd=true',
     'BEROYA SS': 'https://drive.google.com/file/d/FILE_ID_3/view?usp=drivesdk',
     'TUKUYU SS': 'https://drive.google.com/file/d/FILE_ID_4/view?usp=drivesdk',
-    'RUBYA SEMINARY': 'https://drive.google.com/file/d/FILE_ID_5/view?usp=drivesdk',
+    'RUBYA SEMINARY': 'https://docs.google.com/spreadsheets/d/1OHzgo4UYA-dkmgrLsvemUoEIopDzVnDT/edit?usp=drive_link&ouid=102623279819468923794&rtpof=true&sd=true',
     'ARUSHA SCIENCE SS': 'https://docs.google.com/spreadsheets/d/1cnRkh2aEvvsarDIfPvScEBLlmpNJbwGU/edit?usp=drive_link&ouid=102623279819468923794&rtpof=true&sd=true',
     'CHATO SS': 'https://drive.google.com/file/d/FILE_ID_7/view?usp=drivesdk',
     'MWATULOLE SS': 'https://drive.google.com/file/d/FILE_ID_8/view?usp=drivesdk',
