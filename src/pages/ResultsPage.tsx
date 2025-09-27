@@ -42,8 +42,7 @@ const SchoolsResultsPage = () => {
     'CARMEL MOUNT GIRLS SS',
   ];
 
-  // ✅ REPLACE the FILE_ID_x values with actual Google Drive file IDs
-  const schoolDriveLinks = {
+  const schoolDriveLinks: Record<string, string> = {
     'OLD SHINYANGA SS': 'https://drive.google.com/file/d/FILE_ID_1/view?usp=drivesdk',
     'DR OLSEN': 'https://drive.google.com/file/d/FILE_ID_2/view?usp=drivesdk',
     'BEROYA SS': 'https://drive.google.com/file/d/FILE_ID_3/view?usp=drivesdk',
@@ -69,14 +68,16 @@ const SchoolsResultsPage = () => {
   const topTenResultsUrl =
     'https://docs.google.com/spreadsheets/d/1guVsB1ZKRLKRZlhKDfTXGlDx78XXF1VQdijfhp0NC9w/edit?usp=drivesdk';
 
+  const topTenSchoolsUrl =
+    'https://docs.google.com/spreadsheets/d/YOUR_TOP_TEN_SCHOOLS_FILE_ID/view?usp=drivesdk'; // Replace with your link
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 py-8 flex flex-col items-center">
-      {/* Heading */}
       <h1 className="text-2xl sm:text-4xl font-extrabold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm px-4">
         TASSA Results System
       </h1>
 
-      {/* School Selection Card */}
+      {/* School Selector */}
       <div className="w-full max-w-md px-4 sm:px-0 animate-fade-in">
         <Card className="rounded-2xl shadow-lg">
           <CardHeader>
@@ -102,28 +103,24 @@ const SchoolsResultsPage = () => {
         </Card>
       </div>
 
-      {/* Empty State Announcement */}
+      {/* Announcement */}
       {!selectedSchool && (
         <div className="w-full max-w-2xl mt-8 px-4 sm:px-0 animate-fade-in">
           <Card className="text-center py-10 px-6 rounded-2xl shadow-xl bg-white/90 backdrop-blur-sm">
             <CardContent>
               <School className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-4 text-gray-800">
-                Results Announcement
-              </h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-800">Results Announcement</h3>
               <p className="text-gray-700 leading-relaxed mb-6 text-sm sm:text-base">
-                The results have been released and currently we have the
-                <span className="font-semibold"> General Results</span> and
-                <span className="font-semibold"> Top Ten Students</span>.
+                The results have been released and currently we have:
+                <br />
+                <span className="font-semibold">• General Results</span>
+                <br />
+                <span className="font-semibold">• Top Ten Students</span>
+                <br />
+                <span className="font-semibold">• Top Ten Schools</span>
                 <br />
                 <br />
-                Later on we will upload each school’s individual results, but for now
-                each school shows the General Results and Top Ten Students.
-                <br />
-                <br />
-                <span className="font-semibold text-purple-600">
-                  Thanks for being with us.
-                </span>
+                Individual school results will be uploaded shortly.
               </p>
               <p className="text-gray-500 font-medium">— TASSA IT Department</p>
             </CardContent>
@@ -131,9 +128,9 @@ const SchoolsResultsPage = () => {
         </div>
       )}
 
-      {/* Results Section (general + top ten) */}
+      {/* Results Cards */}
       {selectedSchool && (
-        <div className="w-full max-w-md mt-8 px-4 sm:px-0 space-y-6 animate-scale-in">
+        <div className="w-full max-w-md mt-8 px-4 sm:px-0 space-y-6 animate-fade-in">
           {/* General Results */}
           <Card className="text-center py-8 rounded-2xl shadow-xl bg-white/80 backdrop-blur-sm">
             <CardContent>
@@ -167,36 +164,48 @@ const SchoolsResultsPage = () => {
               </a>
             </CardContent>
           </Card>
-        </div>
-      )}
 
-      {/* Individual School Link */}
-      {selectedSchool && schoolDriveLinks[selectedSchool] && (
-        <div className="mt-8 w-full max-w-md px-4 sm:px-0 animate-fade-in">
+          {/* Top Ten Schools */}
           <Card className="text-center py-8 rounded-2xl shadow-xl bg-white/90 backdrop-blur-sm">
             <CardContent>
-              <h3 className="text-lg sm:text-xl font-bold mb-6">
-                {selectedSchool} – Individual Results
-              </h3>
+              <Trophy className="h-12 w-12 text-indigo-500 mx-auto mb-4" />
+              <h3 className="text-lg sm:text-xl font-bold mb-6">Top Ten Schools</h3>
               <a
-                href={schoolDriveLinks[selectedSchool]}
+                href={topTenSchoolsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition"
+                className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition"
               >
-                Open School Results
+                View Top Schools
                 <ExternalLink className="h-5 w-5 ml-2" />
               </a>
             </CardContent>
           </Card>
-        </div>
-      )}
 
-      {/* No link fallback */}
-      {selectedSchool && !schoolDriveLinks[selectedSchool] && (
-        <p className="text-center text-gray-500 mt-6">
-          Individual results for <strong>{selectedSchool}</strong> will be uploaded soon.
-        </p>
+          {/* Individual Results */}
+          {schoolDriveLinks[selectedSchool] ? (
+            <Card className="text-center py-8 rounded-2xl shadow-xl bg-white/90 backdrop-blur-sm">
+              <CardContent>
+                <h3 className="text-lg sm:text-xl font-bold mb-6">
+                  {selectedSchool} – Individual Results
+                </h3>
+                <a
+                  href={schoolDriveLinks[selectedSchool]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition"
+                >
+                  Open School Results
+                  <ExternalLink className="h-5 w-5 ml-2" />
+                </a>
+              </CardContent>
+            </Card>
+          ) : (
+            <p className="text-center text-gray-500 mt-6">
+              Individual results for <strong>{selectedSchool}</strong> will be uploaded soon.
+            </p>
+          )}
+        </div>
       )}
     </div>
   );
