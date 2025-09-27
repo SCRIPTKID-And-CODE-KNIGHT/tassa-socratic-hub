@@ -1,62 +1,121 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CheckCircle, Calendar, Users, Clock, FileCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface School {
-  name: string;
+  id: string;
+  school_name: string;
+  region: string;
+  district: string;
+}
+
+interface ConfirmedSchool {
+  id: string;
+  school_name: string;
   region: string;
   district: string;
   students: number;
+  confirmed_by: string;
 }
 
 const ParticipationPage = () => {
+  const [schools, setSchools] = useState<School[]>([]);
   const [formData, setFormData] = useState({
-    schoolName: '',
+    school_id: '',
     contactPerson: '',
-    phoneNumber: '',
-    email: '',
     numberOfStudents: '',
-    region: '',
-    district: ''
+    series_number: 3
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [confirmedSchools, setConfirmedSchools] = useState<School[]>([]);
+  const [confirmedSchools, setConfirmedSchools] = useState<ConfirmedSchool[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [schoolsResponse, confirmationsResponse] = await Promise.all([
+        supabase.from('schools').select('*').order('school_name'),
+        supabase
+          .from('participation_confirmations')
+          .select(`
+            *,
+            schools!inner(school_name, region, district)
+          `)
+          .eq('series_number', 3)
+      ]);
+
+      if (schoolsResponse.error) throw schoolsResponse.error;
+      if (confirmationsResponse.error) throw confirmationsResponse.error;
+
+      setSchools(schoolsResponse.data || []);
+      
+      const confirmed = confirmationsResponse.data?.map((conf: any) => ({
+        id: conf.school_id,
+        school_name: conf.schools.school_name,
+        region: conf.schools.region,
+        district: conf.schools.district,
+        students: conf.number_of_students || 0,
+        confirmed_by: conf.confirmed_by
+      })) || [];
+      
+      setConfirmedSchools(confirmed);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const selectedSchool = schools.find(s => s.id === formData.school_id);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const { data, error } = await supabase
+        .from('participation_confirmations')
+        .insert({
+          school_id: formData.school_id,
+          series_number: formData.series_number,
+          confirmed_by: formData.contactPerson,
+          number_of_students: formData.numberOfStudents ? parseInt(formData.numberOfStudents) : null
+        });
 
-    const newSchool: School = {
-      name: formData.schoolName,
-      region: formData.region,
-      district: formData.district,
-      students: Number(formData.numberOfStudents)
-    };
+      if (error) throw error;
 
-    setConfirmedSchools(prev => [...prev, newSchool]);
+      toast({
+        title: "Participation Confirmed!",
+        description: "Your school's participation has been confirmed for Series 3.",
+      });
 
-    toast({
-      title: "Participation Confirmed!",
-      description: "Your school's participation has been confirmed for the upcoming series.",
-    });
-
-    setIsSubmitted(true);
-    setIsSubmitting(false);
+      setIsSubmitted(true);
+      fetchData(); // Refresh the confirmed schools list
+    } catch (error: any) {
+      console.error('Error confirming participation:', error);
+      toast({
+        title: "Confirmation Failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -70,29 +129,27 @@ const ParticipationPage = () => {
                 Participation Confirmed!
               </h1>
               <p className="text-muted-foreground mb-6">
-                <strong>{formData.schoolName}</strong> has been successfully confirmed for participation 
-                in the upcoming TASSA Socratic Series October 2025.
+                <strong>{selectedSchool?.school_name}</strong> has been successfully confirmed for participation 
+                in TASSA Socratic Series 3 - October 2025.
               </p>
               <div className="bg-card p-4 rounded-lg border mb-6">
                 <h3 className="font-semibold mb-2">Confirmation Details</h3>
                 <div className="text-left text-sm space-y-1 text-muted-foreground">
-                  <p><strong>School:</strong> {formData.schoolName}</p>
+                  <p><strong>School:</strong> {selectedSchool?.school_name}</p>
                   <p><strong>Contact:</strong> {formData.contactPerson}</p>
                   <p><strong>Students:</strong> {formData.numberOfStudents}</p>
-                  <p><strong>Location:</strong> {formData.district}, {formData.region}</p>
+                  <p><strong>Location:</strong> {selectedSchool?.district}, {selectedSchool?.region}</p>
+                  <p><strong>Series:</strong> Series 3</p>
                 </div>
               </div>
               <Button 
                 onClick={() => {
                   setIsSubmitted(false);
                   setFormData({
-                    schoolName: '',
+                    school_id: '',
                     contactPerson: '',
-                    phoneNumber: '',
-                    email: '',
                     numberOfStudents: '',
-                    region: '',
-                    district: ''
+                    series_number: 3
                   });
                 }}
                 variant="outline"
@@ -114,8 +171,8 @@ const ParticipationPage = () => {
             Participation Confirmation
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Confirm your school's participation in the upcoming TASSA Socratic Series October 2025. 
-            Registered schools must confirm participation for each series.
+            Confirm your school's participation in TASSA Socratic Series 3 - October 2025. 
+            Only registered schools can confirm participation for this series.
           </p>
         </div>
 
@@ -131,17 +188,29 @@ const ParticipationPage = () => {
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <Label htmlFor="schoolName">School Name *</Label>
-                    <Input
-                      id="schoolName"
-                      name="schoolName"
-                      value={formData.schoolName}
-                      onChange={handleInputChange}
-                      placeholder="Enter your school name"
-                      required
-                      className="mt-1"
-                    />
+                    <Label htmlFor="school_id">Select School *</Label>
+                    <Select 
+                      value={formData.school_id} 
+                      onValueChange={(value) => setFormData({...formData, school_id: value})}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Choose your school" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {schools.map((school) => (
+                          <SelectItem key={school.id} value={school.id}>
+                            {school.school_name} - {school.region}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {schools.length === 0 && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        No registered schools found. Please register your school first.
+                      </p>
+                    )}
                   </div>
+                  
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <Label htmlFor="contactPerson">Contact Person *</Label>
@@ -150,76 +219,21 @@ const ParticipationPage = () => {
                         name="contactPerson"
                         value={formData.contactPerson}
                         onChange={handleInputChange}
-                        placeholder="Teacher/coordinator name"
+                        placeholder="Your full name"
                         required
                         className="mt-1"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="phoneNumber">Phone Number *</Label>
-                      <Input
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        type="tel"
-                        value={formData.phoneNumber}
-                        onChange={handleInputChange}
-                        placeholder="+255 XXX XXX XXX"
-                        required
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="region">Region *</Label>
-                      <Input
-                        id="region"
-                        name="region"
-                        value={formData.region}
-                        onChange={handleInputChange}
-                        placeholder="School region"
-                        required
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="district">District *</Label>
-                      <Input
-                        id="district"
-                        name="district"
-                        value={formData.district}
-                        onChange={handleInputChange}
-                        placeholder="School district"
-                        required
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="numberOfStudents">Number of Students *</Label>
+                      <Label htmlFor="numberOfStudents">Number of Students</Label>
                       <Input
                         id="numberOfStudents"
                         name="numberOfStudents"
                         type="number"
                         min="1"
-                        max="50"
                         value={formData.numberOfStudents}
                         onChange={handleInputChange}
-                        placeholder="How many students?"
-                        required
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="school@example.com"
+                        placeholder="Expected participants"
                         className="mt-1"
                       />
                     </div>
@@ -228,7 +242,7 @@ const ParticipationPage = () => {
                   <Alert>
                     <Calendar className="h-4 w-4" />
                     <AlertDescription>
-                      <strong>Upcoming Series: October 2025</strong><br />
+                      <strong>Series 3: October 2025</strong><br />
                       Confirmation deadline: September 15th, 2025. Subject focus: Physical and Human Geography.
                     </AlertDescription>
                   </Alert>
@@ -236,7 +250,7 @@ const ParticipationPage = () => {
                   <Button 
                     type="submit" 
                     className="w-full btn-educational" 
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !formData.school_id || !formData.contactPerson}
                   >
                     {isSubmitting ? 'Confirming Participation...' : 'Confirm Participation'}
                   </Button>
@@ -313,26 +327,31 @@ const ParticipationPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-6 w-6 text-primary" />
-                <span>Confirmed Schools for October 2025 Series</span>
+                <span>Confirmed Schools for Series 3 - October 2025</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               {confirmedSchools.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {confirmedSchools.map((school, index) => (
-                    <div key={index} className="border rounded-lg p-4 bg-muted/20">
+                  {confirmedSchools.map((school) => (
+                    <div key={school.id} className="border rounded-lg p-4 bg-muted/20">
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-semibold text-sm">{school.name}</h4>
-                        <Badge variant="outline" className="text-xs">{school.students} students</Badge>
+                        <h4 className="font-semibold text-sm">{school.school_name}</h4>
+                        <Badge variant="outline" className="text-xs">
+                          {school.students > 0 ? `${school.students} students` : 'TBD'}
+                        </Badge>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-muted-foreground mb-1">
                         {school.district}, {school.region}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Confirmed by: {school.confirmed_by}
                       </p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground text-center">No schools have confirmed yet.</p>
+                <p className="text-sm text-muted-foreground text-center">No schools have confirmed for Series 3 yet.</p>
               )}
             </CardContent>
           </Card>
