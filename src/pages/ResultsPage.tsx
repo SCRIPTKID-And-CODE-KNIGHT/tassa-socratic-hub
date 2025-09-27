@@ -48,7 +48,7 @@ const SchoolsResultsPage = () => {
     'BEROYA SS': 'https://drive.google.com/file/d/FILE_ID_3/view?usp=drivesdk',
     'TUKUYU SS': 'https://drive.google.com/file/d/FILE_ID_4/view?usp=drivesdk',
     'RUBYA SEMINARY': 'https://drive.google.com/file/d/FILE_ID_5/view?usp=drivesdk',
-    'ARUSHA SCIENCE SS': 'https://drive.google.com/file/d/FILE_ID_6/view?usp=drivesdk',
+    'ARUSHA SCIENCE SS': 'https://docs.google.com/spreadsheets/d/1cnRkh2aEvvsarDIfPvScEBLlmpNJbwGU/edit?usp=drive_link&ouid=102623279819468923794&rtpof=true&sd=true',
     'CHATO SS': 'https://drive.google.com/file/d/FILE_ID_7/view?usp=drivesdk',
     'MWATULOLE SS': 'https://drive.google.com/file/d/FILE_ID_8/view?usp=drivesdk',
     'MASWA GIRLS SS': 'https://drive.google.com/file/d/FILE_ID_9/view?usp=drivesdk',
