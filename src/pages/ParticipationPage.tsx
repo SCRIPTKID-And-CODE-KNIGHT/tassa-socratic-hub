@@ -171,7 +171,7 @@ const ParticipationPage = () => {
             Participation Confirmation
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Confirm your school's participation in TASSA Socratic Series 3 - October 2025. 
+            Confirm your school's participation in TASSA Socratic Series 4 - October 2025. 
             Only registered schools can confirm participation for this series.
           </p>
         </div>
@@ -243,7 +243,7 @@ const ParticipationPage = () => {
                     <Calendar className="h-4 w-4" />
                     <AlertDescription>
                       <strong>Series 3: October 2025</strong><br />
-                      Confirmation deadline: September 15th, 2025. Subject focus: Physical and Human Geography.
+                      Confirmation deadline:OCTOBER 2025 . Subject focus: Physical and Human Geography.
                     </AlertDescription>
                   </Alert>
 
@@ -327,7 +327,7 @@ const ParticipationPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-6 w-6 text-primary" />
-                <span>Confirmed Schools for Series 3 - October 2025</span>
+                <span>Confirmed Schools for Series 4 - October 2025</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
