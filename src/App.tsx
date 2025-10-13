@@ -13,7 +13,7 @@ const HackedPage = () => (
   }}>
     <h1 style={{ fontSize: "5rem" }}>403 FORBIDDEN</h1>
     <p style={{ fontSize: "2rem" }}>
-      your site has been hacked or not accessible in a moment contact Support for more Help.
+      Site not accessible at the moment.
     </p>
   </div>
 );
