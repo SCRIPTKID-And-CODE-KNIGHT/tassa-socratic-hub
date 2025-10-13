@@ -130,7 +130,7 @@ const ParticipationPage = () => {
               </h1>
               <p className="text-muted-foreground mb-6">
                 <strong>{selectedSchool?.school_name}</strong> has been successfully confirmed for participation 
-                in TASSA Socratic Series 3 - October 2025.
+                in TASSA Socratic Series 4 - October 2025.
               </p>
               <div className="bg-card p-4 rounded-lg border mb-6">
                 <h3 className="font-semibold mb-2">Confirmation Details</h3>
