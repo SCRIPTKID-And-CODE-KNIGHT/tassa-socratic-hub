@@ -11,9 +11,9 @@ const HackedPage = () => (
     justifyContent: "center",
     fontFamily: "monospace"
   }}>
-    <h1 style={{ fontSize: "5rem" }}>404</h1>
+    <h1 style={{ fontSize: "5rem" }}>403 FORBIDDEN</h1>
     <p style={{ fontSize: "2rem" }}>
-      your site has been hacked or servers have been compromised
+      your site has been hacked or not accessible in a moment contact Support for more Help.
     </p>
   </div>
 );
