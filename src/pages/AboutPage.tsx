@@ -5,10 +5,10 @@ import geographyBooks from '@/assets/geography-books.jpg';
 
 const AboutPage = () => {
   const achievements = [
-    { icon: Users, title: '450+ Schools', description: 'Registered across Tanzania' },
+    { icon: Users, title: '30+ Schools', description: 'Registered across Tanzania' },
     { icon: Trophy, title: '12 Annual Series', description: 'Comprehensive competitions yearly' },
-    { icon: BookOpen, title: '8 Subjects', description: 'Covered in competitions' },
-    { icon: Award, title: '15+ Years', description: 'Of academic excellence' }
+    { icon: BookOpen, title: 'Geography Subject', description: 'Covered in competitions' },
+    { icon: Award, title: '5+ Years', description: 'Of academic excellence' }
   ];
 
   const objectives = [
