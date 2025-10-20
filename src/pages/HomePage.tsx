@@ -38,7 +38,7 @@ const HomePage = () => {
           rel="noopener noreferrer"
           className="font-semibold tracking-wide underline hover:text-yellow-300 transition"
         >
-          ACCESS GEOGRAPHY STUDY MATERIALS AND RESOURCES
+          STUDY MATERIALS AND RESOURCES
         </a>
       </div>
 
