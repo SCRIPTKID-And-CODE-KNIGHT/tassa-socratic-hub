@@ -37,7 +37,7 @@ const HomePage = () => {
           rel="noopener noreferrer"
           className="font-semibold underline hover:text-yellow-300"
         >
-          TASSA E-RESOURCES AND ANNOUNCEMENTS
+           ACCESS GEOGRAPHY STUDY MATERIALS AND RESOURCES
         </a>
       </div>
 
