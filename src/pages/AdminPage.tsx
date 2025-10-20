@@ -72,7 +72,7 @@ const AdminPage = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
-              TASSA Admin Dashboard
+               Admin Access Only
             </h1>
             <p className="text-muted-foreground">
               Welcome, {user?.email} | Manage your TASSA platform
