@@ -19,6 +19,7 @@ import AdminPaymentStatusPage from './pages/admin/PaymentStatusPage';
 import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
 import AnnouncementsManagementPage from './pages/admin/AnnouncementsManagementPage';
 import ResultsManagementPage from './pages/admin/ResultsManagementPage';
+import AdminToolsPage from './pages/admin/AdminToolsPage';
 import AdminPage from "./pages/AdminPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/admin/store" element={<StoreMaterialsPage />} />
           <Route path="/admin/announcements" element={<AnnouncementsManagementPage />} />
           <Route path="/admin/results" element={<ResultsManagementPage />} />
+          <Route path="/admin/tools" element={<AdminToolsPage />} />
           <Route path="/auth" element={<AuthPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
