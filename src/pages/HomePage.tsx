@@ -42,6 +42,16 @@ const HomePage = () => {
         </a>
       </div>
 
+      {/* Moving Marquee */}
+      <div className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-blue-900 py-4 overflow-hidden shadow-lg">
+        <div className="animate-marquee whitespace-nowrap">
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section
         className="hero-section py-24 relative overflow-hidden text-center text-white"
