@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, Users, Trophy, FileText, ArrowRight } from 'lucide-react';
 import AnnouncementCard from '@/components/AnnouncementCard';
 import VoiceGreeting from '@/components/VoiceGreeting';
+import AchievementsSection from '@/components/AchievementsSection';
 import geographyBooks from '@/assets/geography-books.jpg';
 import { motion } from 'framer-motion';
 
@@ -132,6 +133,9 @@ const HomePage = () => {
           ))}
         </div>
       </section>
+
+      {/* Achievements Section */}
+      <AchievementsSection />
 
       {/* Announcement */}
       <section className="announcements-section py-20 bg-blue-50 border-t border-blue-100">
