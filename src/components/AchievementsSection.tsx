@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Trophy, Award, TrendingUp, Star } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -29,11 +27,28 @@ interface BestSchool {
 
 const AnimatedCounter = ({ end, duration = 2 }: { end: number; duration?: number }) => {
   const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!isInView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
 
     let startTime: number;
     let animationFrame: number;
@@ -52,7 +67,7 @@ const AnimatedCounter = ({ end, duration = 2 }: { end: number; duration?: number
     animationFrame = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationFrame);
-  }, [end, duration, isInView]);
+  }, [end, duration, isVisible]);
 
   return <span ref={ref}>{count}</span>;
 };
@@ -107,43 +122,29 @@ const AchievementsSection = () => {
   return (
     <section className="py-20 bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-4xl font-bold text-blue-900 mb-4 font-heading">
             Hall of Excellence
           </h2>
           <p className="text-lg text-blue-700 max-w-2xl mx-auto">
             Celebrating outstanding academic achievements and exceptional performance
           </p>
-        </motion.div>
+        </div>
 
         {/* Top Students */}
         {topStudents.length > 0 && (
           <div className="mb-16">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-3 mb-6"
-            >
+            <div className="flex items-center gap-3 mb-6 animate-fade-in">
               <Trophy className="h-8 w-8 text-yellow-500" />
               <h3 className="text-2xl font-bold text-blue-900">Top Performing Students</h3>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {topStudents.map((student, index) => (
-                <motion.div
+                <div
                   key={student.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  viewport={{ once: true }}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-blue-50">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-bl-[100%] flex items-start justify-end p-3">
@@ -172,7 +173,7 @@ const AchievementsSection = () => {
                       </p>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -181,25 +182,17 @@ const AchievementsSection = () => {
         {/* Best Schools */}
         {bestSchools.length > 0 && (
           <div>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-3 mb-6"
-            >
+            <div className="flex items-center gap-3 mb-6 animate-fade-in">
               <TrendingUp className="h-8 w-8 text-blue-600" />
               <h3 className="text-2xl font-bold text-blue-900">Top Performing Schools</h3>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {bestSchools.map((school, index) => (
-                <motion.div
+                <div
                   key={school.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  viewport={{ once: true }}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-yellow-50">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-800 rounded-bl-[100%] flex items-start justify-end p-3">
@@ -232,25 +225,19 @@ const AchievementsSection = () => {
                       </p>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         )}
 
         {topStudents.length === 0 && bestSchools.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-center py-12"
-          >
+          <div className="text-center py-12 animate-fade-in">
             <Trophy className="h-16 w-16 text-blue-300 mx-auto mb-4" />
             <p className="text-blue-600 text-lg">
               Achievements will be displayed once results are published
             </p>
-          </motion.div>
+          </div>
         )}
       </div>
     </section>
