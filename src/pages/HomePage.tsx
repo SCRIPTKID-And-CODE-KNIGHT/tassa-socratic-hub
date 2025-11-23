@@ -6,7 +6,6 @@ import AnnouncementCard from '@/components/AnnouncementCard';
 import VoiceGreeting from '@/components/VoiceGreeting';
 import AchievementsSection from '@/components/AchievementsSection';
 import geographyBooks from '@/assets/geography-books.jpg';
-import { motion } from 'framer-motion';
 
 const HomePage = () => {
   const sampleAnnouncements = [
@@ -63,29 +62,14 @@ const HomePage = () => {
         }}
       >
         <div className="max-w-5xl mx-auto px-6">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-5xl md:text-6xl font-bold mb-6 font-heading"
-          >
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 font-heading animate-fade-in">
             Tanzania Socratic Series Association
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-lg md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto"
-          >
+          </h1>
+          <p className="text-lg md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
             Empowering academic excellence through comprehensive educational
             competitions across Tanzania
-          </motion.p>
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '400ms' }}>
             <Link to="/registration">
               <Button
                 size="lg"
@@ -104,7 +88,7 @@ const HomePage = () => {
                 View Results
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -112,11 +96,10 @@ const HomePage = () => {
       <section className="stats-section py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {quickStats.map((stat, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <Card className="rounded-2xl border-blue-200 shadow-md hover:shadow-xl transition-shadow duration-300 p-6 text-center bg-gradient-to-b from-blue-50 to-white">
                 <stat.icon className="mx-auto mb-3 h-10 w-10 text-blue-600" />
@@ -129,7 +112,7 @@ const HomePage = () => {
                   {stat.label}
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
