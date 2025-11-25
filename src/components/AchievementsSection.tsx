@@ -132,13 +132,13 @@ const AchievementsSection = () => {
         </div>
 
         {/* Top Students */}
-        {topStudents.length > 0 && (
-          <div className="mb-16">
-            <div className="flex items-center gap-3 mb-6 animate-fade-in">
-              <Trophy className="h-8 w-8 text-yellow-500" />
-              <h3 className="text-2xl font-bold text-blue-900">Top Performing Students</h3>
-            </div>
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-6 animate-fade-in">
+            <Trophy className="h-8 w-8 text-yellow-500" />
+            <h3 className="text-2xl font-bold text-blue-900">Top Performing Students</h3>
+          </div>
 
+          {topStudents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {topStudents.map((student, index) => (
                 <div
@@ -176,17 +176,29 @@ const AchievementsSection = () => {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <Card className="text-center py-12 bg-gradient-to-br from-yellow-50 to-white border-2 border-yellow-200">
+              <CardContent>
+                <Trophy className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
+                <p className="text-blue-900 text-lg font-semibold mb-2">
+                  Top Performing Students
+                </p>
+                <p className="text-blue-600">
+                  Will be uploaded soon
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
         {/* Best Schools */}
-        {bestSchools.length > 0 && (
-          <div>
-            <div className="flex items-center gap-3 mb-6 animate-fade-in">
-              <TrendingUp className="h-8 w-8 text-blue-600" />
-              <h3 className="text-2xl font-bold text-blue-900">Top Performing Schools</h3>
-            </div>
+        <div>
+          <div className="flex items-center gap-3 mb-6 animate-fade-in">
+            <TrendingUp className="h-8 w-8 text-blue-600" />
+            <h3 className="text-2xl font-bold text-blue-900">Top Performing Schools</h3>
+          </div>
 
+          {bestSchools.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {bestSchools.map((school, index) => (
                 <div
@@ -228,17 +240,20 @@ const AchievementsSection = () => {
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {topStudents.length === 0 && bestSchools.length === 0 && (
-          <div className="text-center py-12 animate-fade-in">
-            <Trophy className="h-16 w-16 text-blue-300 mx-auto mb-4" />
-            <p className="text-blue-600 text-lg">
-              Achievements will be displayed once results are published
-            </p>
-          </div>
-        )}
+          ) : (
+            <Card className="text-center py-12 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+              <CardContent>
+                <TrendingUp className="h-16 w-16 text-blue-400 mx-auto mb-4" />
+                <p className="text-blue-900 text-lg font-semibold mb-2">
+                  Top Performing Schools
+                </p>
+                <p className="text-blue-600">
+                  Will be uploaded soon
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     </section>
   );
