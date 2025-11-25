@@ -184,7 +184,7 @@ const AchievementsSection = () => {
                   Top Performing Students
                 </p>
                 <p className="text-blue-600">
-                  Will be uploaded soon
+                  Will be nominated soon
                 </p>
               </CardContent>
             </Card>
