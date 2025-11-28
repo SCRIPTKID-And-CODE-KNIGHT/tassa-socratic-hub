@@ -33,10 +33,10 @@ const HomePage = () => {
       {/* Moving Marquee */}
       <div className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-blue-900 py-4 overflow-hidden shadow-lg">
         <div className="animate-marquee whitespace-nowrap">
-          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
-          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
-          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
-          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC ASSOCIATION</span>
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION</span>
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION</span>
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION</span>
+          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION</span>
         </div>
       </div>
 
@@ -51,7 +51,7 @@ const HomePage = () => {
       >
         <div className="max-w-5xl mx-auto px-6">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 font-heading animate-fade-in">
-            Tanzania Socratic Series Association
+            Tanzania Advanced Socratic Schools Association
           </h1>
           <p className="text-lg md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
             Empowering academic excellence through comprehensive educational
@@ -111,7 +111,7 @@ const HomePage = () => {
       {/* Footer */}
       <footer className="bg-blue-900 text-blue-100 py-6 text-center">
         <p className="text-sm">
-          © 2025 Tanzania Socratic Series Association. All Rights Reserved.
+          © 2025 Tanzania Advanced Socratic Schools Association. All Rights Reserved.
         </p>
       </footer>
     </div>

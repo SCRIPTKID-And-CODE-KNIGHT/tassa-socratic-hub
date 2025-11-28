@@ -40,7 +40,7 @@ const AboutPage = () => {
             About TASSA
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Tanzania Socratic Series Association - Empowering minds, building futures through academic excellence
+            Tanzania Advanced Socratic Schools Association - Empowering minds, building futures through academic excellence
           </p>
         </div>
 
