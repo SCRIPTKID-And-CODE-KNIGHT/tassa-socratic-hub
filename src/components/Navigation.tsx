@@ -50,7 +50,7 @@ const Navigation = () => {
             <GraduationCap className="h-8 w-8 text-primary" />
             <div className="flex flex-col">
               <span className="font-heading font-bold text-lg text-primary">TASSA</span>
-              <span className="text-xs text-muted-foreground leading-none">Tanzania Socratic Series</span>
+              <span className="text-xs text-muted-foreground leading-none">Socratic Schools</span>
             </div>
           </Link>
 
