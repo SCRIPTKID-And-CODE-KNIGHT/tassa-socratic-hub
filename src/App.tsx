@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
-import AnnouncementsPage from "./pages/AnnouncementsPage";
 import ResultsPage from "./pages/ResultsPage";
 import PastResultsPage from "./pages/PastResultsPage";
 import RegistrationPage from "./pages/RegistrationPage";
@@ -17,7 +16,7 @@ import ParticipationConfirmationPage from "./pages/ParticipationConfirmationPage
 import ContactPage from "./pages/ContactPage";
 import AdminPaymentStatusPage from './pages/admin/PaymentStatusPage';
 import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
-import AnnouncementsManagementPage from './pages/admin/AnnouncementsManagementPage';
+import HallOfExcellenceManagementPage from './pages/admin/HallOfExcellenceManagementPage';
 import ResultsManagementPage from './pages/admin/ResultsManagementPage';
 import AdminToolsPage from './pages/admin/AdminToolsPage';
 import AdminPage from "./pages/AdminPage";
@@ -37,7 +36,6 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/announcements" element={<AnnouncementsPage />} />
             <Route path="/results" element={<ResultsPage />} />
             <Route path="/past-results" element={<PastResultsPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
@@ -49,7 +47,7 @@ const App = () => (
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/payments" element={<AdminPaymentStatusPage />} />
           <Route path="/admin/store" element={<StoreMaterialsPage />} />
-          <Route path="/admin/announcements" element={<AnnouncementsManagementPage />} />
+          <Route path="/admin/hall-of-excellence" element={<HallOfExcellenceManagementPage />} />
           <Route path="/admin/results" element={<ResultsManagementPage />} />
           <Route path="/admin/tools" element={<AdminToolsPage />} />
           <Route path="/auth" element={<AuthPage />} />
