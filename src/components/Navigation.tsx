@@ -126,15 +126,6 @@ const Navigation = () => {
             </Link>
             
             <Link 
-              to="/announcements" 
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                isActive('/announcements') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
-              }`}
-            >
-              Announcements
-            </Link>
-            
-            <Link 
               to="/about" 
               className={`text-sm font-medium transition-colors hover:text-primary ${
                 isActive('/about') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
@@ -261,15 +252,6 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Payment Status
-              </Link>
-              <Link
-                to="/announcements"
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  isActive('/announcements') ? 'text-primary bg-primary/10' : 'text-foreground'
-                }`}
-                onClick={() => setIsOpen(false)}
-              >
-                Announcements
               </Link>
               <Link
                 to="/about"

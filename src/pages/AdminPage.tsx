@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Users, FileText, MessageSquare, Store, DollarSign, BarChart3, LogOut, Settings } from 'lucide-react';
+import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -86,20 +86,20 @@ const AdminPage = () => {
 
         {/* Admin Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Announcements */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/announcements')}>
+          {/* Hall of Excellence */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/hall-of-excellence')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <MessageSquare className="h-5 w-5 text-primary" />
-                <span>Announcements</span>
+                <Shield className="h-5 w-5 text-primary" />
+                <span>Hall of Excellence</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                Create and manage announcements for teachers and schools
+                Add and manage top performing students and schools
               </p>
               <Button className="w-full btn-educational">
-                Manage Announcements
+                Manage Excellence
               </Button>
             </CardContent>
           </Card>
@@ -236,7 +236,7 @@ const AdminPage = () => {
           <Card>
             <CardContent className="p-4 text-center">
               <h3 className="text-2xl font-bold text-primary">0</h3>
-              <p className="text-sm text-muted-foreground">Active Announcements</p>
+              <p className="text-sm text-muted-foreground">Top Achievers</p>
             </CardContent>
           </Card>
         </div>

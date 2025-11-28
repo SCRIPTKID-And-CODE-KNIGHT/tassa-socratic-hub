@@ -2,23 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { BookOpen, Users, Trophy, FileText, ArrowRight } from 'lucide-react';
-import AnnouncementCard from '@/components/AnnouncementCard';
 import VoiceGreeting from '@/components/VoiceGreeting';
 import AchievementsSection from '@/components/AchievementsSection';
 import geographyBooks from '@/assets/geography-books.jpg';
 
 const HomePage = () => {
-  const sampleAnnouncements = [
-    {
-      id: '1',
-      title: 'KUKAMILIKA KWA SERIES NAMBA TATU',
-      content:
-        'NATOA PONGEZI NYINGI SANA KWA WAALIMU WOTE AMBAO MMEFANIKISHA KUFANYISHA MTIHANI SERIES NO 3 ASANTENI SANA TUENDELEE NA HATUA ZINAZOFUATA KAMA ALMANAC YETU INAVYOJIELEZA  MATOKEO YATATOKA TAREHE 9/10/2025  TUJITAHIDI NDUGU WAALIMU.',
-      date: '2025-09-22',
-      priority: 'high' as const,
-    },
-  ];
-
   const quickStats = [
     { icon: Users, label: 'Registered Schools', value: '25+' },
     { icon: Trophy, label: 'Annual Series', value: '12' },
@@ -119,16 +107,6 @@ const HomePage = () => {
 
       {/* Achievements Section */}
       <AchievementsSection />
-
-      {/* Announcement */}
-      <section className="announcements-section py-20 bg-blue-50 border-t border-blue-100">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-blue-900 mb-8 text-center">
-            Latest Announcement
-          </h2>
-          <AnnouncementCard announcement={sampleAnnouncements[0]} />
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-blue-900 text-blue-100 py-6 text-center">
