@@ -14,6 +14,7 @@ import PaymentStatusPage from "./pages/PaymentStatusPage";
 import ParticipationPage from "./pages/ParticipationPage";
 import ParticipationConfirmationPage from "./pages/ParticipationConfirmationPage";
 import ContactPage from "./pages/ContactPage";
+import StorePage from "./pages/StorePage";
 import AdminPaymentStatusPage from './pages/admin/PaymentStatusPage';
 import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
 import HallOfExcellenceManagementPage from './pages/admin/HallOfExcellenceManagementPage';
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/participation" element={<ParticipationPage />} />
           <Route path="/participation-confirmation" element={<ParticipationConfirmationPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/store" element={<StorePage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/payments" element={<AdminPaymentStatusPage />} />
           <Route path="/admin/store" element={<StoreMaterialsPage />} />

@@ -142,6 +142,15 @@ const Navigation = () => {
             >
               Contact
             </Link>
+            
+            <Link 
+              to="/store" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/store') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+              }`}
+            >
+              Store
+            </Link>
 
             {user ? (
               <DropdownMenu>
@@ -270,6 +279,15 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Contact
+              </Link>
+              <Link
+                to="/store"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/store') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Store
               </Link>
               
               {user ? (
