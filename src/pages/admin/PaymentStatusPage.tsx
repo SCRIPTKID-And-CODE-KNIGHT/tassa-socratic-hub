@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DollarSign, Plus, Edit, Search } from 'lucide-react';
+import { DollarSign, Plus, Edit, Search, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -36,6 +37,7 @@ const PaymentStatusPage = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingPayment, setEditingPayment] = useState<PaymentStatus | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     school_id: '',
@@ -49,9 +51,33 @@ const PaymentStatusPage = () => {
   });
 
   useEffect(() => {
+    checkAuth();
     fetchPayments();
     fetchSchools();
   }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      navigate('/auth');
+      return;
+    }
+
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', session.user.id);
+
+    const isAdmin = roles?.some(r => r.role === 'admin');
+    if (!isAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "You need admin privileges to access this page.",
+        variant: "destructive"
+      });
+      navigate('/');
+    }
+  };
 
   const fetchPayments = async () => {
     try {
@@ -178,11 +204,11 @@ const PaymentStatusPage = () => {
     setShowAddDialog(true);
   };
 
-  const getStatusBadgeVariant = (status: string) => {
+  const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
-      case 'paid': return 'success';
-      case 'pending': return 'warning';
-      case 'partial': return 'secondary';
+      case 'paid': return 'default';
+      case 'pending': return 'secondary';
+      case 'partial': return 'outline';
       case 'overdue': return 'destructive';
       default: return 'outline';
     }
@@ -200,6 +226,10 @@ const PaymentStatusPage = () => {
   return (
     <div className="min-h-screen py-8 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Button variant="ghost" onClick={() => navigate('/admin')} className="mb-4">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Admin
+        </Button>
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
@@ -392,7 +422,7 @@ const PaymentStatusPage = () => {
                         <TableCell>Series {payment.series_number}</TableCell>
                         <TableCell>{payment.amount ? `TZS ${payment.amount.toLocaleString()}` : '-'}</TableCell>
                         <TableCell>
-                          <Badge variant={getStatusBadgeVariant(payment.status) as any}>
+                          <Badge variant={getStatusBadgeVariant(payment.status)}>
                             {payment.status.toUpperCase()}
                           </Badge>
                         </TableCell>
