@@ -22,7 +22,8 @@ const HomePage = () => {
       <div className="bg-blue-700 text-white py-3 text-center shadow-md">
         <Button
           onClick={() => window.open('https://tassa-geo-ematerials-irs3.vercel.app', '_blank', 'noopener,noreferrer')}
-          className="bg-yellow-400 text-blue-900 font-semibold hover:bg-yellow-500 hover:scale-105 transition-transform"
+          className="bg-yellow-400 text-blue-900 font-semibold hover:bg-yellow-500 hover:scale-105 transition-transform no-underline"
+          size="lg"
         >
           STUDY MATERIALS AND RESOURCES
         </Button>
