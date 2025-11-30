@@ -18,16 +18,14 @@ const HomePage = () => {
     <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-blue-100">
       <VoiceGreeting />
 
-      {/* Top Hyperlink */}
+      {/* Top Study Materials Button */}
       <div className="bg-blue-700 text-white py-3 text-center shadow-md">
-        <a
-          href="https://tassa-geo-ematerials-irs3.vercel.app"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold tracking-wide underline hover:text-yellow-300 transition"
+        <Button
+          onClick={() => window.open('https://tassa-geo-ematerials-irs3.vercel.app', '_blank', 'noopener,noreferrer')}
+          className="bg-yellow-400 text-blue-900 font-semibold hover:bg-yellow-500 hover:scale-105 transition-transform"
         >
           STUDY MATERIALS AND RESOURCES
-        </a>
+        </Button>
       </div>
 
       {/* Moving Marquee */}
