@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Trophy, FileText, ArrowRight } from 'lucide-react';
+import { BookOpen, Users, Trophy, FileText, ArrowRight, ExternalLink } from 'lucide-react';
 import VoiceGreeting from '@/components/VoiceGreeting';
 import AchievementsSection from '@/components/AchievementsSection';
 import geographyBooks from '@/assets/geography-books.jpg';
@@ -25,7 +25,9 @@ const HomePage = () => {
           className="bg-yellow-400 text-blue-900 font-semibold hover:bg-yellow-500 hover:scale-105 transition-transform no-underline"
           size="lg"
         >
+          <BookOpen className="mr-2 h-5 w-5" />
           STUDY MATERIALS AND RESOURCES
+          <ExternalLink className="ml-2 h-5 w-5" />
         </Button>
       </div>
 
