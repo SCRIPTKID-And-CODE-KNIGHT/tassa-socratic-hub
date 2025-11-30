@@ -19,6 +19,7 @@ import AdminPaymentStatusPage from './pages/admin/PaymentStatusPage';
 import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
 import HallOfExcellenceManagementPage from './pages/admin/HallOfExcellenceManagementPage';
 import ResultsManagementPage from './pages/admin/ResultsManagementPage';
+import SchoolResultsManagementPage from './pages/admin/SchoolResultsManagementPage';
 import AdminToolsPage from './pages/admin/AdminToolsPage';
 import AdminPage from "./pages/AdminPage";
 import AuthPage from "./pages/AuthPage";
@@ -51,6 +52,7 @@ const App = () => (
           <Route path="/admin/store" element={<StoreMaterialsPage />} />
           <Route path="/admin/hall-of-excellence" element={<HallOfExcellenceManagementPage />} />
           <Route path="/admin/results" element={<ResultsManagementPage />} />
+          <Route path="/admin/school-results" element={<SchoolResultsManagementPage />} />
           <Route path="/admin/tools" element={<AdminToolsPage />} />
           <Route path="/auth" element={<AuthPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -145,15 +145,33 @@ const AdminPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <BarChart3 className="h-5 w-5 text-primary" />
-                <span>Results System</span>
+                <span>Top Students & Schools</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                Publish results, top 10 students, and best schools
+                Manage top 10 students and best performing schools
               </p>
               <Button className="w-full btn-educational">
-                Manage Results
+                Manage Top Results
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* School Results Links */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/school-results')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="h-5 w-5 text-primary" />
+                <span>School Results Links</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Publish Google Drive links for school results
+              </p>
+              <Button className="w-full btn-educational">
+                Manage Links
               </Button>
             </CardContent>
           </Card>

@@ -131,6 +131,42 @@ export type Database = {
         }
         Relationships: []
       }
+      general_results: {
+        Row: {
+          created_at: string
+          general_results_url: string | null
+          id: string
+          is_published: boolean | null
+          published_by: string | null
+          series_number: number
+          top_ten_schools_url: string | null
+          top_ten_students_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          general_results_url?: string | null
+          id?: string
+          is_published?: boolean | null
+          published_by?: string | null
+          series_number: number
+          top_ten_schools_url?: string | null
+          top_ten_students_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          general_results_url?: string | null
+          id?: string
+          is_published?: boolean | null
+          published_by?: string | null
+          series_number?: number
+          top_ten_schools_url?: string | null
+          top_ten_students_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       participation_confirmations: {
         Row: {
           confirmed_by: string
@@ -271,6 +307,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "results_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      school_results: {
+        Row: {
+          created_at: string
+          general_results_url: string | null
+          id: string
+          individual_results_url: string | null
+          is_published: boolean | null
+          published_by: string | null
+          school_id: string | null
+          series_number: number
+          top_ten_schools_url: string | null
+          top_ten_students_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          general_results_url?: string | null
+          id?: string
+          individual_results_url?: string | null
+          is_published?: boolean | null
+          published_by?: string | null
+          school_id?: string | null
+          series_number: number
+          top_ten_schools_url?: string | null
+          top_ten_students_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          general_results_url?: string | null
+          id?: string
+          individual_results_url?: string | null
+          is_published?: boolean | null
+          published_by?: string | null
+          school_id?: string | null
+          series_number?: number
+          top_ten_schools_url?: string | null
+          top_ten_students_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_results_school_id_fkey"
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
