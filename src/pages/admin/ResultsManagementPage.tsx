@@ -477,6 +477,7 @@ const ResultsManagementPage = () => {
                                 <SelectItem value="2">Series 2</SelectItem>
                                 <SelectItem value="3">Series 3</SelectItem>
                                 <SelectItem value="4">Series 4</SelectItem>
+                                <SelectItem value="5">Series 5</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -654,6 +655,7 @@ const ResultsManagementPage = () => {
                                 <SelectItem value="2">Series 2</SelectItem>
                                 <SelectItem value="3">Series 3</SelectItem>
                                 <SelectItem value="4">Series 4</SelectItem>
+                                <SelectItem value="5">Series 5</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
