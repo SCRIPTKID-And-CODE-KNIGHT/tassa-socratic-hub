@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import LoadingScreen from "@/components/LoadingScreen";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ResultsPage from "./pages/ResultsPage";
@@ -27,41 +29,49 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <div className="min-h-screen bg-background">
-          <Navigation />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/results" element={<ResultsPage />} />
-            <Route path="/past-results" element={<PastResultsPage />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-            <Route path="/registered-schools" element={<RegisteredSchoolsPage />} />
-          <Route path="/payment-status" element={<PaymentStatusPage />} />
-          <Route path="/participation" element={<ParticipationPage />} />
-          <Route path="/participation-confirmation" element={<ParticipationConfirmationPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/store" element={<StorePage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/admin/payments" element={<AdminPaymentStatusPage />} />
-          <Route path="/admin/store" element={<StoreMaterialsPage />} />
-          <Route path="/admin/hall-of-excellence" element={<HallOfExcellenceManagementPage />} />
-          <Route path="/admin/results" element={<ResultsManagementPage />} />
-          <Route path="/admin/school-results" element={<SchoolResultsManagementPage />} />
-          <Route path="/admin/tools" element={<AdminToolsPage />} />
-          <Route path="/auth" element={<AuthPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  if (isLoading) {
+    return <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />;
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="min-h-screen bg-background">
+            <Navigation />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/results" element={<ResultsPage />} />
+              <Route path="/past-results" element={<PastResultsPage />} />
+              <Route path="/registration" element={<RegistrationPage />} />
+              <Route path="/registered-schools" element={<RegisteredSchoolsPage />} />
+              <Route path="/payment-status" element={<PaymentStatusPage />} />
+              <Route path="/participation" element={<ParticipationPage />} />
+              <Route path="/participation-confirmation" element={<ParticipationConfirmationPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/store" element={<StorePage />} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin/payments" element={<AdminPaymentStatusPage />} />
+              <Route path="/admin/store" element={<StoreMaterialsPage />} />
+              <Route path="/admin/hall-of-excellence" element={<HallOfExcellenceManagementPage />} />
+              <Route path="/admin/results" element={<ResultsManagementPage />} />
+              <Route path="/admin/school-results" element={<SchoolResultsManagementPage />} />
+              <Route path="/admin/tools" element={<AdminToolsPage />} />
+              <Route path="/auth" element={<AuthPage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
