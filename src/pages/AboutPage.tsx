@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { GraduationCap, Users, Trophy, Target, BookOpen, Award } from 'lucide-react';
 import geographyBooks from '@/assets/geography-books.jpg';
+import founderImage from '@/assets/founder-daudi-manumba.jpg';
 
 const AboutPage = () => {
   const achievements = [
@@ -46,14 +47,23 @@ const AboutPage = () => {
 
         {/* Leadership Section */}
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-          <div>
-            <Card className="form-section">
+          <div className="flex flex-col items-center lg:items-start">
+            <div className="relative mb-6">
+              <img 
+                src={founderImage} 
+                alt="Sir Daudi Musula Manumba - Founder & Supervisor of TASSA"
+                className="rounded-xl shadow-educational-lg w-64 h-72 object-cover object-top border-4 border-primary/20"
+              />
+              <div className="absolute -bottom-3 -right-3 bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg">
+                <p className="text-xs font-semibold">Founder & Supervisor</p>
+              </div>
+            </div>
+            <Card className="form-section w-full">
               <CardHeader>
                 <Badge className="w-fit mb-4 bg-primary text-primary-foreground">Leadership</Badge>
                 <CardTitle className="text-2xl text-primary mb-4">
                   SIR DAUDI MUSULA MANUMBA
                 </CardTitle>
-                <p className="text-lg font-semibold text-muted-foreground">Founder & Supervisor</p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground leading-relaxed">
