@@ -5,6 +5,7 @@ import { BookOpen, Users, Trophy, FileText, ArrowRight, ExternalLink } from 'luc
 import VoiceGreeting from '@/components/VoiceGreeting';
 import AchievementsSection from '@/components/AchievementsSection';
 import geographyBooks from '@/assets/geography-books.jpg';
+import founderImage from '@/assets/founder-daudi-manumba.jpg';
 
 const HomePage = () => {
   const quickStats = [
@@ -108,6 +109,33 @@ const HomePage = () => {
 
       {/* Achievements Section */}
       <AchievementsSection />
+
+      {/* Co-Founder Section */}
+      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-blue-800 mb-8">Our Leadership</h2>
+          <div className="flex flex-col items-center">
+            <div className="relative mb-6">
+              <img 
+                src={founderImage} 
+                alt="Sir Daudi Musula Manumba - Co-Founder of TASSA"
+                className="rounded-xl shadow-xl w-48 h-56 object-cover object-top border-4 border-blue-200"
+              />
+              <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg whitespace-nowrap">
+                <p className="text-xs font-semibold">Co-Founder</p>
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-blue-800 mt-4">Sir Daudi Musula Manumba</h3>
+            <p className="text-blue-600 mt-2">Co-Founder & Supervisor</p>
+            <Link to="/about" className="mt-4">
+              <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
+                Learn More About Us
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="bg-blue-900 text-blue-100 py-6 text-center">
