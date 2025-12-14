@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, FileText, Video, Package } from 'lucide-react';
+import { BookOpen, FileText, Video, Package, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { PurchaseDialog } from '@/components/PurchaseDialog';
 
 interface StoreMaterial {
   id: string;
@@ -30,6 +31,8 @@ const StorePage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
+  const [selectedMaterial, setSelectedMaterial] = useState<{ id: string; title: string; price: number } | null>(null);
+  const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchMaterials();
@@ -62,6 +65,17 @@ const StorePage = () => {
         return <Video className="h-5 w-5" />;
       default:
         return <Package className="h-5 w-5" />;
+    }
+  };
+
+  const handleBuyClick = (material: StoreMaterial) => {
+    if (material.price && material.price > 0) {
+      setSelectedMaterial({
+        id: material.id,
+        title: material.title,
+        price: material.price,
+      });
+      setPurchaseDialogOpen(true);
     }
   };
 
@@ -165,20 +179,34 @@ const StorePage = () => {
                       </div>
                     )}
                   </div>
-                  {material.file_url && (
+                  {material.price !== null && material.price > 0 ? (
+                    <Button 
+                      className="w-full" 
+                      onClick={() => handleBuyClick(material)}
+                    >
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      Buy Now
+                    </Button>
+                  ) : material.file_url ? (
                     <Button 
                       className="w-full" 
                       onClick={() => window.open(material.file_url!, '_blank')}
                     >
                       View Material
                     </Button>
-                  )}
+                  ) : null}
                 </CardContent>
               </Card>
             ))}
           </div>
         )}
       </div>
+
+      <PurchaseDialog
+        open={purchaseDialogOpen}
+        onOpenChange={setPurchaseDialogOpen}
+        material={selectedMaterial}
+      />
     </div>
   );
 };
