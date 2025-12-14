@@ -23,6 +23,7 @@ import HallOfExcellenceManagementPage from './pages/admin/HallOfExcellenceManage
 import ResultsManagementPage from './pages/admin/ResultsManagementPage';
 import SchoolResultsManagementPage from './pages/admin/SchoolResultsManagementPage';
 import AdminToolsPage from './pages/admin/AdminToolsPage';
+import SchoolManagementPage from './pages/admin/SchoolManagementPage';
 import AdminPage from "./pages/AdminPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
@@ -63,6 +64,7 @@ const App = () => {
               <Route path="/admin/results" element={<ResultsManagementPage />} />
               <Route path="/admin/school-results" element={<SchoolResultsManagementPage />} />
               <Route path="/admin/tools" element={<AdminToolsPage />} />
+              <Route path="/admin/schools" element={<SchoolManagementPage />} />
               <Route path="/auth" element={<AuthPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
