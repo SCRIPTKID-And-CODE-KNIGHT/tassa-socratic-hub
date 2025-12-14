@@ -448,6 +448,50 @@ export type Database = {
         }
         Relationships: []
       }
+      store_purchases: {
+        Row: {
+          amount: number
+          created_at: string
+          customer_name: string
+          email: string | null
+          id: string
+          material_id: string | null
+          phone_number: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          customer_name: string
+          email?: string | null
+          id?: string
+          material_id?: string | null
+          phone_number: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          customer_name?: string
+          email?: string | null
+          id?: string
+          material_id?: string | null
+          phone_number?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_purchases_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "store_materials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       top_students: {
         Row: {
           created_at: string
