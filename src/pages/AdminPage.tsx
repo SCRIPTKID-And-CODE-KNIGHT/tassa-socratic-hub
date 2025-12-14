@@ -176,8 +176,8 @@ const AdminPage = () => {
             </CardContent>
           </Card>
 
-          {/* School Registrations */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/registered-schools')}>
+          {/* School Management */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/schools')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-5 w-5 text-primary" />
@@ -186,10 +186,10 @@ const AdminPage = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                View registrations and confirmed schools for coming series
+                View all schools, add new ones, and manage payment status
               </p>
               <Button className="w-full btn-educational">
-                View Schools
+                Manage Schools
               </Button>
             </CardContent>
           </Card>
