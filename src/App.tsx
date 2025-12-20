@@ -9,7 +9,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ResultsPage from "./pages/ResultsPage";
-import PastResultsPage from "./pages/PastResultsPage";
+import ResultsSubmissionPage from "./pages/ResultsSubmissionPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import RegisteredSchoolsPage from "./pages/RegisteredSchoolsPage";
 import PaymentStatusPage from "./pages/PaymentStatusPage";
@@ -22,6 +22,7 @@ import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
 import HallOfExcellenceManagementPage from './pages/admin/HallOfExcellenceManagementPage';
 import ResultsManagementPage from './pages/admin/ResultsManagementPage';
 import SchoolResultsManagementPage from './pages/admin/SchoolResultsManagementPage';
+import ResultsSubmissionsPage from './pages/admin/ResultsSubmissionsPage';
 import AdminToolsPage from './pages/admin/AdminToolsPage';
 import SchoolManagementPage from './pages/admin/SchoolManagementPage';
 import AdminPage from "./pages/AdminPage";
@@ -49,7 +50,7 @@ const App = () => {
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/results" element={<ResultsPage />} />
-              <Route path="/past-results" element={<PastResultsPage />} />
+              <Route path="/submit-results" element={<ResultsSubmissionPage />} />
               <Route path="/registration" element={<RegistrationPage />} />
               <Route path="/registered-schools" element={<RegisteredSchoolsPage />} />
               <Route path="/payment-status" element={<PaymentStatusPage />} />
@@ -63,6 +64,7 @@ const App = () => {
               <Route path="/admin/hall-of-excellence" element={<HallOfExcellenceManagementPage />} />
               <Route path="/admin/results" element={<ResultsManagementPage />} />
               <Route path="/admin/school-results" element={<SchoolResultsManagementPage />} />
+              <Route path="/admin/submissions" element={<ResultsSubmissionsPage />} />
               <Route path="/admin/tools" element={<AdminToolsPage />} />
               <Route path="/admin/schools" element={<SchoolManagementPage />} />
               <Route path="/auth" element={<AuthPage />} />

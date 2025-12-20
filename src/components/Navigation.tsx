@@ -70,7 +70,7 @@ const Navigation = () => {
                 <Button 
                   variant="ghost" 
                   className={`text-sm font-medium flex items-center space-x-1 ${
-                    ['/results', '/past-results'].some(path => isActive(path)) 
+                    ['/results', '/submit-results'].some(path => isActive(path)) 
                       ? 'text-primary' 
                       : 'text-foreground'
                   }`}
@@ -81,10 +81,10 @@ const Navigation = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
-                  <Link to="/results">Current Results</Link>
+                  <Link to="/results">View Results</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/past-results">Past Results</Link>
+                  <Link to="/submit-results">Submit Results</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -218,13 +218,13 @@ const Navigation = () => {
                 Current Results
               </Link>
               <Link
-                to="/past-results"
+                to="/submit-results"
                 className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  isActive('/past-results') ? 'text-primary bg-primary/10' : 'text-foreground'
+                  isActive('/submit-results') ? 'text-primary bg-primary/10' : 'text-foreground'
                 }`}
                 onClick={() => setIsOpen(false)}
               >
-                Past Results
+                Submit Results
               </Link>
               <Link
                 to="/registration"

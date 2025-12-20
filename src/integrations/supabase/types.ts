@@ -261,6 +261,57 @@ export type Database = {
           },
         ]
       }
+      result_submissions: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_url: string
+          id: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          school_name: string
+          series_number: number
+          status: string | null
+          teacher_email: string | null
+          teacher_name: string
+          teacher_phone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_url: string
+          id?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          school_name: string
+          series_number: number
+          status?: string | null
+          teacher_email?: string | null
+          teacher_name: string
+          teacher_phone: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_url?: string
+          id?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          school_name?: string
+          series_number?: number
+          status?: string | null
+          teacher_email?: string | null
+          teacher_name?: string
+          teacher_phone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       results: {
         Row: {
           created_at: string

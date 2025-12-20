@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings } from 'lucide-react';
+import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -190,6 +190,24 @@ const AdminPage = () => {
               </p>
               <Button className="w-full btn-educational">
                 Manage Schools
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Results Submissions */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/submissions')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Upload className="h-5 w-5 text-primary" />
+                <span>Results Submissions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Review results uploaded by teachers
+              </p>
+              <Button className="w-full btn-educational">
+                View Submissions
               </Button>
             </CardContent>
           </Card>
