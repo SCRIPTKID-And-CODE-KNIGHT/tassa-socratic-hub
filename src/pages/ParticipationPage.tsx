@@ -270,21 +270,21 @@ const ParticipationPage = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-primary">October 2025 Series</h4>
-                  <p className="text-sm text-muted-foreground">Physical & Human Geography Focus</p>
+                  <h4 className="font-semibold text-primary">SERIES 5</h4>
+                  <p className="text-sm text-muted-foreground">Both Physical & Human Geography Focus</p>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Confirmation Deadline:</span>
-                    <Badge variant="outline">September 15, 2025</Badge>
+                    <Badge variant="outline">WILL BE PUBLISHED SOON</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Competition Dates:</span>
-                    <Badge variant="outline">October 20-25, 2025</Badge>
+                    <Badge variant="outline">WILL BE PUBLISHED SOON</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Results Release:</span>
-                    <Badge variant="outline">November 1, 2025</Badge>
+                    <Badge variant="outline">WILL BE PUBLISHED SOON</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -327,7 +327,7 @@ const ParticipationPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-6 w-6 text-primary" />
-                <span>Confirmed Schools for Series 4 - October 2025</span>
+                <span>Confirmed Schools for Series 5</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -351,7 +351,7 @@ const ParticipationPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground text-center">No schools have confirmed for Series 3 yet.</p>
+                <p className="text-sm text-muted-foreground text-center">No schools have confirmed for Series 5 yet.</p>
               )}
             </CardContent>
           </Card>
