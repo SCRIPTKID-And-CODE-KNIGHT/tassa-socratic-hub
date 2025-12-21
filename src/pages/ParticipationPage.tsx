@@ -171,7 +171,7 @@ const ParticipationPage = () => {
             Participation Confirmation
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Confirm your school's participation in TASSA Socratic Series 4 - October 2025. 
+            Confirm your participation in TASSA Socratic Series 5. 
             Only registered schools can confirm participation for this series.
           </p>
         </div>
@@ -242,8 +242,8 @@ const ParticipationPage = () => {
                   <Alert>
                     <Calendar className="h-4 w-4" />
                     <AlertDescription>
-                      <strong>Series 3: October 2025</strong><br />
-                      Confirmation deadline:OCTOBER 2025 . Subject focus: Physical and Human Geography.
+                      <strong>Series 5</strong><br />
+                      Confirmation deadline:You are reminded to confirm before the confirmation window is closed.
                     </AlertDescription>
                   </Alert>
 
