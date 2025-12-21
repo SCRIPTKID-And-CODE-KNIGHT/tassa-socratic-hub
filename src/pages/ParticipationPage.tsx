@@ -130,7 +130,7 @@ const ParticipationPage = () => {
               </h1>
               <p className="text-muted-foreground mb-6">
                 <strong>{selectedSchool?.school_name}</strong> has been successfully confirmed for participation 
-                in TASSA Socratic Series 4 - October 2025.
+                in TASSA Socratic Series 5 January 21 & 22.
               </p>
               <div className="bg-card p-4 rounded-lg border mb-6">
                 <h3 className="font-semibold mb-2">Confirmation Details</h3>
@@ -171,7 +171,7 @@ const ParticipationPage = () => {
             Participation Confirmation
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Confirm your participation in TASSA Socratic Series 5. 
+            Confirm your participation in TASSA Socratic Series 5 which will be conducted on 21 & 22 of January 2025. 
             Only registered schools can confirm participation for this series.
           </p>
         </div>
@@ -243,7 +243,7 @@ const ParticipationPage = () => {
                     <Calendar className="h-4 w-4" />
                     <AlertDescription>
                       <strong>Series 5</strong><br />
-                      Confirmation deadline:You are reminded to confirm before the confirmation window is closed.
+                      Confirmation deadline:You are reminded to confirm for prticipation before the confirmation window is closed.
                     </AlertDescription>
                   </Alert>
 
