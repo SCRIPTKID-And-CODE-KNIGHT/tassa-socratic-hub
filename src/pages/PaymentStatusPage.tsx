@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { School } from 'lucide-react';
 
@@ -24,7 +30,7 @@ const PaymentStatusPage = () => {
     { name: 'Korona High School', status: 'Paid' },
     { name: 'Kagango SS', status: 'Paid' },
     { name: 'Jikomboe Girls High School', status: 'Paid' },
-    { name: 'Chato SS', status: 'Paid' }, // Treated as Chato Technical
+    { name: 'Chato SS', status: 'Paid' },
     { name: 'High View School of Zanzibar', status: 'Pending' },
     { name: 'Rubya Seminary', status: 'Pending' },
     { name: 'Dr Olsen', status: 'Pending' },
@@ -36,7 +42,9 @@ const PaymentStatusPage = () => {
     { name: 'Maswa SS', status: 'Pending' }
   ];
 
-  const schoolData = schools.find(s => s.name === selectedSchool);
+  const schoolData = schools.find(
+    (school) => school.name === selectedSchool
+  );
 
   const getBadgeColor = (status: string) => {
     switch (status) {
@@ -53,7 +61,9 @@ const PaymentStatusPage = () => {
 
   return (
     <div className="min-h-screen py-8 flex flex-col items-center justify-start">
-      <h1 className="text-3xl font-bold mb-6 text-foreground">Payment Status - Upcoming Series</h1>
+      <h1 className="text-3xl font-bold mb-6 text-foreground">
+        Payment Status - Upcoming Series
+      </h1>
 
       {/* School Selection */}
       <Card className="w-full max-w-md mb-8">
@@ -63,13 +73,14 @@ const PaymentStatusPage = () => {
             <span>Select School</span>
           </CardTitle>
         </CardHeader>
+
         <CardContent>
           <Select value={selectedSchool} onValueChange={setSelectedSchool}>
             <SelectTrigger>
               <SelectValue placeholder="Choose school..." />
             </SelectTrigger>
             <SelectContent>
-              {schools.map(school => (
+              {schools.map((school) => (
                 <SelectItem key={school.name} value={school.name}>
                   {school.name}
                 </SelectItem>
@@ -83,10 +94,18 @@ const PaymentStatusPage = () => {
       {selectedSchool && schoolData && (
         <Card className="text-center py-12 w-full max-w-md">
           <CardContent>
-            <h3 className="text-lg font-semibold mb-4">{selectedSchool}</h3>
-            <Badge className={`px-4 py-2 text-sm ${getBadgeColor(schoolData.status)}`}>
+            <h3 className="text-lg font-semibold mb-4">
+              {selectedSchool}
+            </h3>
+
+            <Badge
+              className={`px-4 py-2 text-sm ${getBadgeColor(
+                schoolData.status
+              )}`}
+            >
               {schoolData.status}
             </Badge>
+
             <p className="mt-4 text-muted-foreground text-sm">
               {schoolData.status === 'Paid'
                 ? 'School has completed payment.'
