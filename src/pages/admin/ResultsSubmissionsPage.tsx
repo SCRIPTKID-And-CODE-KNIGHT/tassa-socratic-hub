@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { FileSpreadsheet, Download, Eye, Loader2, Check, X, Clock } from "lucide-react";
+import { FileSpreadsheet, Download, Loader2, Check, X, Clock } from "lucide-react";
 import { format } from "date-fns";
 
 interface Submission {
@@ -84,6 +84,33 @@ export default function ResultsSubmissionsPage() {
       });
     } finally {
       setUpdatingId(null);
+    }
+  };
+
+  const downloadFile = async (fileUrl: string, fileName: string) => {
+    try {
+      // Extract the file path from the URL
+      const urlParts = fileUrl.split('/result-submissions/');
+      if (urlParts.length < 2) {
+        throw new Error('Invalid file URL');
+      }
+      const filePath = urlParts[1];
+
+      // Create a signed URL for download (valid for 60 seconds)
+      const { data, error } = await supabase.storage
+        .from('result-submissions')
+        .createSignedUrl(filePath, 60);
+
+      if (error) throw error;
+
+      // Open the signed URL in a new tab to trigger download
+      window.open(data.signedUrl, '_blank');
+    } catch (error: any) {
+      toast({
+        title: "Download failed",
+        description: error.message || "Failed to download file",
+        variant: "destructive",
+      });
     }
   };
 
@@ -166,10 +193,8 @@ export default function ResultsSubmissionsPage() {
                         </TableCell>
                         <TableCell>Series {submission.series_number}</TableCell>
                         <TableCell>
-                          <a
-                            href={submission.file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <button
+                            onClick={() => downloadFile(submission.file_url, submission.file_name)}
                             className="text-primary hover:underline flex items-center gap-1"
                           >
                             <Download className="h-4 w-4" />
@@ -177,7 +202,7 @@ export default function ResultsSubmissionsPage() {
                               ? submission.file_name.substring(0, 20) + '...'
                               : submission.file_name
                             }
-                          </a>
+                          </button>
                         </TableCell>
                         <TableCell>
                           {format(new Date(submission.created_at), 'MMM d, yyyy HH:mm')}
