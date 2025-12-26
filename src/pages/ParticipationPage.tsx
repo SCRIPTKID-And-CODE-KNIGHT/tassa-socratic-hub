@@ -313,7 +313,7 @@ const ParticipationPage = () => {
                   </div>
                   <div className="flex items-center justify-between p-2 rounded bg-muted/30">
                     <span>Competition Week</span>
-                    <Badge variant="outline">October 20-25, 2025</Badge>
+                    <Badge variant="outline">January 21-22, 2026</Badge>
                   </div>
                 </div>
               </CardContent>
