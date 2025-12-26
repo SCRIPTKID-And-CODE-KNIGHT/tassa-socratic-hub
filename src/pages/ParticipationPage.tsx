@@ -101,7 +101,7 @@ const ParticipationPage = () => {
 
       toast({
         title: "Participation Confirmed!",
-        description: "Your school's participation has been confirmed for Series 3.",
+        description: "Your school's participation has been confirmed for Series 5.",
       });
 
       setIsSubmitted(true);
@@ -149,7 +149,7 @@ const ParticipationPage = () => {
                     school_id: '',
                     contactPerson: '',
                     numberOfStudents: '',
-                    series_number: 3
+                    series_number: 5
                   });
                 }}
                 variant="outline"
@@ -276,11 +276,11 @@ const ParticipationPage = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Confirmation Deadline:</span>
-                    <Badge variant="outline">WILL BE PUBLISHED SOON</Badge>
+                    <Badge variant="outline">18 JANUARY 2026</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Competition Dates:</span>
-                    <Badge variant="outline">WILL BE PUBLISHED SOON</Badge>
+                    <Badge variant="outline">21 & 22 JANUARY 2026</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Results Release:</span>
