@@ -308,8 +308,8 @@ const ParticipationPage = () => {
                     <Badge className="bg-warning text-warning-foreground">Open Now</Badge>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded bg-muted/30">
-                    <span>Study Materials Release</span>
-                    <Badge variant="outline">September 20, 2025</Badge>
+                    <span>Results Release</span>
+                    <Badge variant="outline">After Marking and Results compilation</Badge>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded bg-muted/30">
                     <span>Competition Week</span>
