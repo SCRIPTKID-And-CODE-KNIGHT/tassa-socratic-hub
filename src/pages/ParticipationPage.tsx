@@ -139,7 +139,7 @@ const ParticipationPage = () => {
                   <p><strong>Contact:</strong> {formData.contactPerson}</p>
                   <p><strong>Students:</strong> {formData.numberOfStudents}</p>
                   <p><strong>Location:</strong> {selectedSchool?.district}, {selectedSchool?.region}</p>
-                  <p><strong>Series:</strong> Series 3</p>
+                  <p><strong>Series:</strong> Series 5</p>
                 </div>
               </div>
               <Button 
