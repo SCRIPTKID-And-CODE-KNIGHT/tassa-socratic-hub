@@ -35,8 +35,8 @@ const HomePage = () => {
       {/* Moving Marquee */}
       <div className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-blue-900 py-4 overflow-hidden shadow-lg">
         <div className="animate-marquee whitespace-nowrap">
-          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION IT DEPARTMENT WISHES YOU MARRY CHRISTMASS AND HAPPY NEW YEAR</span>
-          <span className="text-2xl font-bold mx-8">TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION IT DEPARTMENT WISHES YOU MARRY CHRISTMASS AND HAPPY NEW YEAR</span>
+          <span className="text-2xl font-bold mx-8">CHEERS TO ANOTHER YEAR,WISHING YOU A PRODUCTIVE AND SUCCESSFUL YEAR</span>
+          <span className="text-2xl font-bold mx-8">CHEERS TO ANOTHER YEAR,WISHING YOU A PRODUCTIVE AND SUCCESSFUL YEAR</span>
         </div>
       </div>
 
