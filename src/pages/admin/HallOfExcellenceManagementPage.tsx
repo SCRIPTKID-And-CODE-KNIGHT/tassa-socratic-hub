@@ -163,25 +163,27 @@ const HallOfExcellenceManagementPage = () => {
     try {
       const schoolData = {
         school_name: schoolForm.school_name,
-        average_marks: parseFloat(schoolForm.average_marks),
-        position: parseInt(schoolForm.position),
-        region: schoolForm.region,
-        district: schoolForm.district,
         series_number: parseInt(schoolForm.series_number),
-        total_students: parseInt(schoolForm.total_students),
-        is_published: false
+        is_published: false,
+        average_marks: schoolForm.average_marks ? parseFloat(schoolForm.average_marks) : null,
+        position: schoolForm.position ? parseInt(schoolForm.position) : null,
+        region: schoolForm.region || null,
+        district: schoolForm.district || null,
+        total_students: schoolForm.total_students ? parseInt(schoolForm.total_students) : null
       };
 
       if (editingId) {
-        await supabase
+        const { error } = await supabase
           .from('best_schools')
           .update(schoolData)
           .eq('id', editingId);
+        if (error) throw error;
         toast({ title: "School updated successfully" });
       } else {
-        await supabase
+        const { error } = await supabase
           .from('best_schools')
           .insert(schoolData);
+        if (error) throw error;
         toast({ title: "School added successfully" });
       }
 
@@ -190,6 +192,7 @@ const HallOfExcellenceManagementPage = () => {
       resetSchoolForm();
       fetchData();
     } catch (error) {
+      console.error('Error saving school:', error);
       toast({ title: "Error saving school", variant: "destructive" });
     }
   };
@@ -521,7 +524,7 @@ const HallOfExcellenceManagementPage = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {[1, 2, 3, 4].map((num) => (
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                           <SelectItem key={num} value={num.toString()}>
                             Series {num}
                           </SelectItem>
@@ -565,31 +568,32 @@ const HallOfExcellenceManagementPage = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="average_marks">Average Marks</Label>
+                    <Label htmlFor="average_marks">Average Marks (optional)</Label>
                     <Input
                       id="average_marks"
                       type="number"
                       step="0.01"
+                      placeholder="e.g. 85.5"
                       value={schoolForm.average_marks}
                       onChange={(e) => setSchoolForm({ ...schoolForm, average_marks: e.target.value })}
-                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="position_school">Position</Label>
+                    <Label htmlFor="position_school">Position (optional)</Label>
                     <Input
                       id="position_school"
                       type="number"
+                      placeholder="e.g. 1"
                       value={schoolForm.position}
                       onChange={(e) => setSchoolForm({ ...schoolForm, position: e.target.value })}
-                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="total_students">Total Students</Label>
+                    <Label htmlFor="total_students">Total Students (optional)</Label>
                     <Input
                       id="total_students"
                       type="number"
+                      placeholder="e.g. 50"
                       value={schoolForm.total_students}
                       onChange={(e) => setSchoolForm({ ...schoolForm, total_students: e.target.value })}
                     />
@@ -601,7 +605,7 @@ const HallOfExcellenceManagementPage = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {[1, 2, 3, 4].map((num) => (
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                           <SelectItem key={num} value={num.toString()}>
                             Series {num}
                           </SelectItem>
@@ -610,21 +614,21 @@ const HallOfExcellenceManagementPage = () => {
                     </Select>
                   </div>
                   <div>
-                    <Label htmlFor="region_school">Region</Label>
+                    <Label htmlFor="region_school">Region (optional)</Label>
                     <Input
                       id="region_school"
+                      placeholder="e.g. Dar es Salaam"
                       value={schoolForm.region}
                       onChange={(e) => setSchoolForm({ ...schoolForm, region: e.target.value })}
-                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="district_school">District</Label>
+                    <Label htmlFor="district_school">District (optional)</Label>
                     <Input
                       id="district_school"
+                      placeholder="e.g. Kinondoni"
                       value={schoolForm.district}
                       onChange={(e) => setSchoolForm({ ...schoolForm, district: e.target.value })}
-                      required
                     />
                   </div>
                 </div>

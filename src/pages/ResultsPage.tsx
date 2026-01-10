@@ -128,11 +128,14 @@ const SchoolsResultsPage = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">Series 1 - March</SelectItem>
-                <SelectItem value="2">Series 2 - June</SelectItem>
-                <SelectItem value="3">Series 3 - September</SelectItem>
-                <SelectItem value="4">Series 4 - December</SelectItem>
+                <SelectItem value="1">Series 1</SelectItem>
+                <SelectItem value="2">Series 2</SelectItem>
+                <SelectItem value="3">Series 3</SelectItem>
+                <SelectItem value="4">Series 4</SelectItem>
                 <SelectItem value="5">Series 5</SelectItem>
+                <SelectItem value="6">Series 6</SelectItem>
+                <SelectItem value="7">Series 7</SelectItem>
+                <SelectItem value="8">Series 8</SelectItem>
               </SelectContent>
             </Select>
           </CardContent>
