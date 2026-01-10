@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, Users, Trophy, FileText, ArrowRight, ExternalLink } from 'lucide-react';
 import VoiceGreeting from '@/components/VoiceGreeting';
 import AchievementsSection from '@/components/AchievementsSection';
+import ExamCountdown from '@/components/ExamCountdown';
 import geographyBooks from '@/assets/geography-books.jpg';
 import founderImage from '@/assets/founder-daudi-manumba.jpg';
 
@@ -86,8 +87,15 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Exam Countdown Section */}
+      <section className="py-12 bg-white">
+        <div className="max-w-2xl mx-auto px-6">
+          <ExamCountdown />
+        </div>
+      </section>
+
       {/* Quick Stats */}
-      <section className="stats-section py-20 bg-white">
+      <section className="stats-section py-16 bg-gradient-to-b from-white to-blue-50">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {quickStats.map((stat, index) => (
             <div
