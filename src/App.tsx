@@ -17,6 +17,7 @@ import ParticipationPage from "./pages/ParticipationPage";
 import ParticipationConfirmationPage from "./pages/ParticipationConfirmationPage";
 import ContactPage from "./pages/ContactPage";
 import StorePage from "./pages/StorePage";
+import AlmanacPage from "./pages/AlmanacPage";
 import AdminPaymentStatusPage from './pages/admin/PaymentStatusPage';
 import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
 import HallOfExcellenceManagementPage from './pages/admin/HallOfExcellenceManagementPage';
@@ -25,6 +26,8 @@ import SchoolResultsManagementPage from './pages/admin/SchoolResultsManagementPa
 import ResultsSubmissionsPage from './pages/admin/ResultsSubmissionsPage';
 import AdminToolsPage from './pages/admin/AdminToolsPage';
 import SchoolManagementPage from './pages/admin/SchoolManagementPage';
+import ExamSettingsPage from './pages/admin/ExamSettingsPage';
+import AlmanacManagementPage from './pages/admin/AlmanacManagementPage';
 import AdminPage from "./pages/AdminPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
@@ -58,6 +61,7 @@ const App = () => {
               <Route path="/participation-confirmation" element={<ParticipationConfirmationPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/store" element={<StorePage />} />
+              <Route path="/almanac" element={<AlmanacPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/admin/payments" element={<AdminPaymentStatusPage />} />
               <Route path="/admin/store" element={<StoreMaterialsPage />} />
@@ -67,6 +71,8 @@ const App = () => {
               <Route path="/admin/submissions" element={<ResultsSubmissionsPage />} />
               <Route path="/admin/tools" element={<AdminToolsPage />} />
               <Route path="/admin/schools" element={<SchoolManagementPage />} />
+              <Route path="/admin/exam-settings" element={<ExamSettingsPage />} />
+              <Route path="/admin/almanac" element={<AlmanacManagementPage />} />
               <Route path="/auth" element={<AuthPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
