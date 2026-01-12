@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings, Upload } from 'lucide-react';
+import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings, Upload, Clock, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -244,6 +244,42 @@ const AdminPage = () => {
               </p>
               <Button className="w-full btn-educational">
                 Admin Tools
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Exam Countdown Settings */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/exam-settings')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Clock className="h-5 w-5 text-primary" />
+                <span>Exam Countdown</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Manage the exam countdown timer on homepage
+              </p>
+              <Button className="w-full btn-educational">
+                Manage Countdown
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Almanac Management */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/almanac')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Calendar className="h-5 w-5 text-primary" />
+                <span>Almanac Management</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Manage exam schedules for Series 5, 6 & 7
+              </p>
+              <Button className="w-full btn-educational">
+                Manage Almanac
               </Button>
             </CardContent>
           </Card>

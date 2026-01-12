@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Clock, Calendar, Trophy } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface TimeLeft {
   days: number;
@@ -9,15 +10,42 @@ interface TimeLeft {
   seconds: number;
 }
 
+interface ExamSetting {
+  exam_date: string;
+  series_name: string;
+}
+
 const ExamCountdown = () => {
-  // Next TASSA Series Exam Date - Update this as needed
-  const examDate = new Date('2026-03-15T08:00:00');
-  const seriesName = "Series 1 Exam 2026";
-  
+  const [examSetting, setExamSetting] = useState<ExamSetting | null>(null);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isExpired, setIsExpired] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch active exam setting from database
+  useEffect(() => {
+    const fetchExamSetting = async () => {
+      const { data, error } = await supabase
+        .from('exam_settings')
+        .select('exam_date, series_name')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (data && !error) {
+        setExamSetting(data);
+      }
+      setLoading(false);
+    };
+
+    fetchExamSetting();
+  }, []);
 
   useEffect(() => {
+    if (!examSetting) return;
+
+    const examDate = new Date(examSetting.exam_date);
+
     const calculateTimeLeft = () => {
       const now = new Date();
       const difference = examDate.getTime() - now.getTime();
@@ -42,7 +70,7 @@ const ExamCountdown = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [examSetting]);
 
   const TimeBlock = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center">
@@ -52,6 +80,27 @@ const ExamCountdown = () => {
       <span className="text-xs sm:text-sm font-medium text-blue-700 mt-2 uppercase tracking-wider">{label}</span>
     </div>
   );
+
+  if (loading) {
+    return (
+      <Card className="bg-gradient-to-br from-white via-blue-50 to-indigo-50 p-6 sm:p-8 rounded-2xl shadow-xl border-2 border-blue-200/50">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-6 bg-blue-200 rounded w-32 mb-4"></div>
+          <div className="flex gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-200 rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (!examSetting) {
+    return null;
+  }
+
+  const examDate = new Date(examSetting.exam_date);
 
   if (isExpired) {
     return (
@@ -82,7 +131,7 @@ const ExamCountdown = () => {
         </div>
         
         <h3 className="text-xl sm:text-2xl font-bold text-center text-blue-900 mb-6">
-          {seriesName}
+          {examSetting.series_name}
         </h3>
 
         {/* Countdown Timer */}

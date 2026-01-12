@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      almanac_events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          event_date: string
+          event_name: string
+          id: string
+          is_published: boolean | null
+          responsible_person: string
+          series_number: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date: string
+          event_name: string
+          id?: string
+          is_published?: boolean | null
+          responsible_person: string
+          series_number: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date?: string
+          event_name?: string
+          id?: string
+          is_published?: boolean | null
+          responsible_person?: string
+          series_number?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           content: string
@@ -127,6 +166,36 @@ export type Database = {
           school?: string | null
           status?: string | null
           subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      exam_settings: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          exam_date: string
+          id: string
+          is_active: boolean | null
+          series_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          exam_date: string
+          id?: string
+          is_active?: boolean | null
+          series_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          exam_date?: string
+          id?: string
+          is_active?: boolean | null
+          series_name?: string
           updated_at?: string
         }
         Relationships: []
