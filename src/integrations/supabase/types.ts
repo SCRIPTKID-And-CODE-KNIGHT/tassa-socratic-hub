@@ -523,6 +523,39 @@ export type Database = {
         }
         Relationships: []
       }
+      security_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          path: string | null
+          severity: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          path?: string | null
+          severity?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          path?: string | null
+          severity?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       store_materials: {
         Row: {
           created_at: string
