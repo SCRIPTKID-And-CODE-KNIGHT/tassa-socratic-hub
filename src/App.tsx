@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "@/components/Navigation";
-import LoadingScreen from "@/components/LoadingScreen";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ResultsPage from "./pages/ResultsPage";
@@ -28,6 +26,7 @@ import AdminToolsPage from './pages/admin/AdminToolsPage';
 import SchoolManagementPage from './pages/admin/SchoolManagementPage';
 import ExamSettingsPage from './pages/admin/ExamSettingsPage';
 import AlmanacManagementPage from './pages/admin/AlmanacManagementPage';
+import SecurityLogsPage from './pages/admin/SecurityLogsPage';
 import AdminPage from "./pages/AdminPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
@@ -35,12 +34,6 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  if (isLoading) {
-    return <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />;
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -73,6 +66,7 @@ const App = () => {
               <Route path="/admin/schools" element={<SchoolManagementPage />} />
               <Route path="/admin/exam-settings" element={<ExamSettingsPage />} />
               <Route path="/admin/almanac" element={<AlmanacManagementPage />} />
+              <Route path="/admin/security-logs" element={<SecurityLogsPage />} />
               <Route path="/auth" element={<AuthPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
