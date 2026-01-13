@@ -3,123 +3,133 @@
 @tailwind utilities;
 
 /* TASSA Educational Design System - Tanzania Socratic Series Association
-All colors MUST be HSL for proper theming.
+   Modern Sapphire & Amber Premium Theme
+   All colors MUST be HSL for proper theming.
 */
 
 @layer base {
   :root {
-    /* Modern Teal & Coral Educational Palette */
-    --background: 180 15% 98%;
-    --foreground: 180 20% 15%;
+    /* Premium Sapphire Blue & Warm Amber Palette */
+    --background: 220 25% 97%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 180 20% 15%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 180 20% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary - Deep Teal */
-    --primary: 175 65% 35%;
+    /* Primary - Rich Sapphire Blue */
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 175 65% 28%;
-    --primary-light: 175 50% 92%;
+    --primary-hover: 221 83% 45%;
+    --primary-light: 221 70% 94%;
 
-    /* Secondary - Warm Coral */
-    --secondary: 15 70% 95%;
-    --secondary-foreground: 15 70% 35%;
+    /* Secondary - Warm Slate */
+    --secondary: 215 20% 95%;
+    --secondary-foreground: 222 47% 25%;
 
-    --muted: 180 10% 95%;
-    --muted-foreground: 180 10% 45%;
+    --muted: 220 15% 94%;
+    --muted-foreground: 220 10% 45%;
 
-    /* Success - Emerald Green */
-    --success: 160 70% 38%;
+    /* Success - Vibrant Emerald */
+    --success: 152 76% 40%;
     --success-foreground: 0 0% 100%;
-    --success-light: 160 60% 92%;
+    --success-light: 152 60% 92%;
 
-    /* Warning - Golden Amber */
-    --warning: 40 95% 52%;
-    --warning-foreground: 40 95% 15%;
-    --warning-light: 40 90% 92%;
+    /* Warning - Rich Amber */
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 12%;
+    --warning-light: 38 85% 92%;
 
-    --accent: 175 40% 92%;
-    --accent-foreground: 175 65% 25%;
+    --accent: 221 60% 94%;
+    --accent-foreground: 221 83% 40%;
 
-    --destructive: 0 75% 55%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 180 15% 88%;
-    --input: 180 15% 88%;
-    --ring: 175 65% 35%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 221 83% 53%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    /* Educational gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(175 65% 35%), hsl(175 50% 45%));
-    --gradient-hero: linear-gradient(135deg, hsl(175 65% 35%), hsl(200 60% 40%));
-    --gradient-announcement: linear-gradient(135deg, hsl(15 70% 55%), hsl(40 90% 55%));
+    /* Premium gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%), hsl(239 84% 67%));
+    --gradient-hero: linear-gradient(135deg, hsl(221 83% 53%), hsl(199 89% 48%));
+    --gradient-announcement: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 95% 53%));
     
-    /* Shadows */
-    --shadow-sm: 0 1px 3px 0 hsl(175 30% 0% / 0.08);
-    --shadow-md: 0 4px 12px -2px hsl(175 30% 0% / 0.1);
-    --shadow-lg: 0 12px 24px -4px hsl(175 30% 0% / 0.12);
-    --shadow-xl: 0 24px 48px -8px hsl(175 30% 0% / 0.2);
+    /* Modern shadows with blue tint */
+    --shadow-sm: 0 1px 3px 0 hsl(221 50% 20% / 0.06);
+    --shadow-md: 0 4px 12px -2px hsl(221 50% 20% / 0.08);
+    --shadow-lg: 0 12px 24px -4px hsl(221 50% 20% / 0.1);
+    --shadow-xl: 0 24px 48px -8px hsl(221 50% 20% / 0.15);
 
     /* Typography */
     --font-heading: 'Inter', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
 
-    --sidebar-background: 175 20% 98%;
-    --sidebar-foreground: 175 15% 25%;
-    --sidebar-primary: 175 65% 35%;
+    --sidebar-background: 220 25% 98%;
+    --sidebar-foreground: 222 47% 20%;
+    --sidebar-primary: 221 83% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 175 40% 94%;
-    --sidebar-accent-foreground: 175 65% 25%;
-    --sidebar-border: 175 15% 90%;
-    --sidebar-ring: 175 65% 45%;
+    --sidebar-accent: 221 60% 95%;
+    --sidebar-accent-foreground: 221 83% 40%;
+    --sidebar-border: 220 15% 90%;
+    --sidebar-ring: 221 83% 60%;
   }
 
   .dark {
-    --background: 180 25% 7%;
-    --foreground: 180 15% 95%;
+    --background: 222 47% 6%;
+    --foreground: 220 20% 95%;
 
-    --card: 180 25% 10%;
-    --card-foreground: 180 15% 95%;
+    --card: 222 47% 9%;
+    --card-foreground: 220 20% 95%;
 
-    --popover: 180 25% 10%;
-    --popover-foreground: 180 15% 95%;
+    --popover: 222 47% 9%;
+    --popover-foreground: 220 20% 95%;
 
-    --primary: 175 60% 50%;
-    --primary-foreground: 180 25% 7%;
-    --primary-hover: 175 60% 45%;
-    --primary-light: 175 50% 18%;
+    --primary: 221 80% 60%;
+    --primary-foreground: 222 47% 6%;
+    --primary-hover: 221 80% 55%;
+    --primary-light: 221 60% 18%;
 
-    --secondary: 15 50% 18%;
-    --secondary-foreground: 15 60% 85%;
+    --secondary: 222 30% 15%;
+    --secondary-foreground: 220 20% 85%;
 
-    --muted: 180 20% 14%;
-    --muted-foreground: 180 10% 60%;
+    --muted: 222 30% 12%;
+    --muted-foreground: 220 15% 55%;
 
-    --success: 160 65% 45%;
-    --success-foreground: 180 25% 7%;
-    --success-light: 160 50% 15%;
+    --success: 152 70% 48%;
+    --success-foreground: 222 47% 6%;
+    --success-light: 152 50% 15%;
 
-    --warning: 40 90% 55%;
-    --warning-foreground: 40 95% 10%;
-    --warning-light: 40 60% 18%;
+    --warning: 38 88% 55%;
+    --warning-foreground: 38 92% 8%;
+    --warning-light: 38 55% 18%;
 
-    --accent: 175 30% 16%;
-    --accent-foreground: 175 50% 80%;
+    --accent: 221 45% 18%;
+    --accent-foreground: 221 60% 78%;
 
-    --destructive: 0 70% 50%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 180 20% 16%;
-    --input: 180 20% 16%;
-    --ring: 175 60% 50%;
+    --border: 222 30% 16%;
+    --input: 222 30% 16%;
+    --ring: 221 80% 60%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(175 60% 50%), hsl(175 50% 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(175 60% 50%), hsl(200 55% 50%));
-    --gradient-announcement: linear-gradient(135deg, hsl(15 60% 55%), hsl(40 80% 55%));
+    --gradient-primary: linear-gradient(135deg, hsl(221 80% 60%), hsl(239 75% 70%));
+    --gradient-hero: linear-gradient(135deg, hsl(221 80% 60%), hsl(199 80% 55%));
+    --gradient-announcement: linear-gradient(135deg, hsl(38 88% 55%), hsl(25 90% 58%));
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 220 20% 90%;
+    --sidebar-primary: 221 80% 60%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 221 45% 16%;
+    --sidebar-accent-foreground: 221 60% 78%;
+    --sidebar-border: 222 30% 14%;
+    --sidebar-ring: 221 80% 65%;
   }
 }
 
@@ -133,26 +143,26 @@ All colors MUST be HSL for proper theming.
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-semibold;
+    @apply font-heading font-semibold tracking-tight;
   }
 }
 
 @layer components {
-  /* Educational component styles */
+  /* Premium educational component styles */
   .hero-section {
-    @apply bg-gradient-to-br from-primary to-primary/80 text-primary-foreground;
+    @apply bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground;
   }
 
   .announcement-card {
-    @apply bg-gradient-to-r from-warning to-warning/90 text-warning-foreground rounded-lg p-4 shadow-lg;
+    @apply bg-gradient-to-r from-warning to-warning/90 text-warning-foreground rounded-xl p-4 shadow-lg border border-warning/20;
   }
 
   .results-card {
-    @apply bg-card border border-border rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow;
+    @apply bg-card border border-border rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:border-primary/30;
   }
 
   .nav-link {
-    @apply text-foreground/80 hover:text-foreground transition-colors duration-200 font-medium;
+    @apply text-foreground/70 hover:text-foreground transition-colors duration-200 font-medium;
   }
 
   .nav-link-active {
@@ -160,15 +170,15 @@ All colors MUST be HSL for proper theming.
   }
 
   .btn-educational {
-    @apply bg-gradient-to-r from-primary to-primary-hover text-primary-foreground px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02];
+    @apply bg-gradient-to-r from-primary to-primary-hover text-primary-foreground px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
   }
 
   .form-section {
-    @apply bg-card rounded-lg p-6 shadow-md border border-border;
+    @apply bg-card rounded-xl p-6 shadow-md border border-border;
   }
 
   .grade-excellent {
-    @apply text-success font-semibold;
+    @apply text-success font-bold;
   }
 
   .grade-good {
@@ -182,11 +192,21 @@ All colors MUST be HSL for proper theming.
   .grade-poor {
     @apply text-destructive font-semibold;
   }
+
+  /* Premium card hover effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/20;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
+  }
 }
 
 @layer utilities {
   .text-gradient-primary {
-    @apply bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-primary/80 to-accent-foreground bg-clip-text text-transparent;
   }
 
   .shadow-educational {
@@ -209,5 +229,20 @@ All colors MUST be HSL for proper theming.
   .animate-marquee {
     display: inline-block;
     animation: marquee 20s linear infinite;
+  }
+
+  /* Smooth gradient background animation */
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
   }
 }
