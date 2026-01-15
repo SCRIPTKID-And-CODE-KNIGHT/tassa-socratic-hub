@@ -8,17 +8,22 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Plus, Calendar, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ArrowLeft, Plus, Calendar, Edit, Trash2, Eye, EyeOff, Wand2, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { generateFullAlmanac, SeriesSchedule, getHolidays2026 } from '@/lib/almanacScheduler';
 
 interface AlmanacEvent {
   id: string;
   series_number: number;
   event_date: string;
+  event_start_date: string | null;
+  event_end_date: string | null;
   event_name: string;
   responsible_person: string;
   description: string | null;
@@ -26,35 +31,29 @@ interface AlmanacEvent {
   created_at: string;
 }
 
-const eventSuggestions = [
-  'Examination Day',
-  'Exam Setting',
-  'Marking',
-  'Releasing of Exam Date',
-  'Submission of Constructed Exam to Coordinator',
-  'Exam Moderation After Setting',
-  'Results Release',
-  'Registration Deadline',
-  'Payment Deadline',
-];
-
 const AlmanacManagementPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [events, setEvents] = useState<AlmanacEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<AlmanacEvent | null>(null);
   const [activeTab, setActiveTab] = useState('5');
+  const [generatedSchedules, setGeneratedSchedules] = useState<SeriesSchedule[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const [formData, setFormData] = useState({
     series_number: 5,
-    event_date: '',
+    event_start_date: '',
+    event_end_date: '',
     event_name: '',
     responsible_person: '',
     description: '',
     is_published: false,
   });
+
+  const seriesList = [5, 6, 7, 8];
 
   useEffect(() => {
     checkAdminAndFetch();
@@ -87,7 +86,8 @@ const AlmanacManagementPage = () => {
     const { data, error } = await supabase
       .from('almanac_events')
       .select('*')
-      .order('event_date', { ascending: true });
+      .order('series_number', { ascending: true })
+      .order('event_start_date', { ascending: true });
 
     if (data && !error) {
       setEvents(data);
@@ -95,20 +95,81 @@ const AlmanacManagementPage = () => {
     setLoading(false);
   };
 
+  const handleGenerateSchedule = () => {
+    const schedules = generateFullAlmanac();
+    setGeneratedSchedules(schedules);
+    setGenerateDialogOpen(true);
+  };
+
+  const handleApplyGenerated = async () => {
+    setIsGenerating(true);
+    
+    try {
+      // Delete existing events for series 5-8
+      await supabase
+        .from('almanac_events')
+        .delete()
+        .in('series_number', [5, 6, 7, 8]);
+
+      // Insert new events
+      const newEvents = generatedSchedules.flatMap(schedule => 
+        schedule.events.map(event => ({
+          series_number: schedule.series_number,
+          event_name: event.event_name,
+          event_date: event.event_start_date,
+          event_start_date: event.event_start_date,
+          event_end_date: event.event_end_date,
+          responsible_person: event.responsible_person,
+          description: event.description,
+          is_published: false,
+        }))
+      );
+
+      const { error } = await supabase
+        .from('almanac_events')
+        .insert(newEvents);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({ 
+        title: 'Schedule Generated', 
+        description: `Successfully created ${newEvents.length} events across Series 5-8` 
+      });
+      
+      setGenerateDialogOpen(false);
+      fetchEvents();
+    } catch (error) {
+      console.error('Error applying schedule:', error);
+      toast({ 
+        title: 'Error', 
+        description: 'Failed to apply generated schedule', 
+        variant: 'destructive' 
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    const eventData = {
+      series_number: formData.series_number,
+      event_date: formData.event_start_date,
+      event_start_date: formData.event_start_date,
+      event_end_date: formData.event_end_date || formData.event_start_date,
+      event_name: formData.event_name,
+      responsible_person: formData.responsible_person,
+      description: formData.description || null,
+      is_published: formData.is_published,
+    };
+
     if (editingEvent) {
       const { error } = await supabase
         .from('almanac_events')
-        .update({
-          series_number: formData.series_number,
-          event_date: formData.event_date,
-          event_name: formData.event_name,
-          responsible_person: formData.responsible_person,
-          description: formData.description || null,
-          is_published: formData.is_published,
-        })
+        .update(eventData)
         .eq('id', editingEvent.id);
 
       if (error) {
@@ -122,14 +183,7 @@ const AlmanacManagementPage = () => {
     } else {
       const { error } = await supabase
         .from('almanac_events')
-        .insert({
-          series_number: formData.series_number,
-          event_date: formData.event_date,
-          event_name: formData.event_name,
-          responsible_person: formData.responsible_person,
-          description: formData.description || null,
-          is_published: formData.is_published,
-        });
+        .insert(eventData);
 
       if (error) {
         toast({ title: 'Error', description: 'Failed to create event', variant: 'destructive' });
@@ -146,7 +200,8 @@ const AlmanacManagementPage = () => {
     setEditingEvent(event);
     setFormData({
       series_number: event.series_number,
-      event_date: event.event_date,
+      event_start_date: event.event_start_date || event.event_date,
+      event_end_date: event.event_end_date || event.event_date,
       event_name: event.event_name,
       responsible_person: event.responsible_person,
       description: event.description || '',
@@ -200,7 +255,8 @@ const AlmanacManagementPage = () => {
     setEditingEvent(null);
     setFormData({
       series_number: parseInt(activeTab),
-      event_date: '',
+      event_start_date: '',
+      event_end_date: '',
       event_name: '',
       responsible_person: '',
       description: '',
@@ -212,7 +268,15 @@ const AlmanacManagementPage = () => {
     return events.filter(event => event.series_number === seriesNumber);
   };
 
-  const seriesList = [5, 6, 7];
+  const formatDateRange = (startDate: string | null, endDate: string | null): string => {
+    if (!startDate) return 'TBD';
+    const start = format(new Date(startDate), 'dd MMM yyyy');
+    if (!endDate || startDate === endDate) return start;
+    const end = format(new Date(endDate), 'dd MMM yyyy');
+    return `${start} - ${end}`;
+  };
+
+  const holidays = getHolidays2026();
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -223,112 +287,116 @@ const AlmanacManagementPage = () => {
         </Button>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-4">
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="h-6 w-6 text-primary" />
                 Almanac Management
               </CardTitle>
               <CardDescription>
-                Manage examination schedule and events for Series 5, 6 & 7
+                Manage examination schedule for Series 5, 6, 7 & 8 (32 working days each)
               </CardDescription>
             </div>
-            <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
-              <DialogTrigger asChild>
-                <Button onClick={() => setFormData({ ...formData, series_number: parseInt(activeTab) })}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Event
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader>
-                  <DialogTitle>
-                    {editingEvent ? 'Edit Event' : 'Add New Event'}
-                  </DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="series_number">Series</Label>
-                    <Select
-                      value={formData.series_number.toString()}
-                      onValueChange={(value) => setFormData({ ...formData, series_number: parseInt(value) })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {seriesList.map((s) => (
-                          <SelectItem key={s} value={s.toString()}>Series {s}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="event_date">Event Date</Label>
-                    <Input
-                      id="event_date"
-                      type="date"
-                      value={formData.event_date}
-                      onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="event_name">Event Name</Label>
-                    <Select
-                      value={formData.event_name}
-                      onValueChange={(value) => setFormData({ ...formData, event_name: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select or type custom event" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {eventSuggestions.map((event) => (
-                          <SelectItem key={event} value={event}>{event}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      id="event_name_custom"
-                      placeholder="Or type custom event name"
-                      value={formData.event_name}
-                      onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="responsible_person">Responsible Person/Team</Label>
-                    <Input
-                      id="responsible_person"
-                      placeholder="e.g., Exam Coordinator, Teachers"
-                      value={formData.responsible_person}
-                      onChange={(e) => setFormData({ ...formData, responsible_person: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="description">Description (Optional)</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Additional details about the event"
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="is_published"
-                      checked={formData.is_published}
-                      onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
-                    />
-                    <Label htmlFor="is_published">Publish immediately</Label>
-                  </div>
-                  <Button type="submit" className="w-full">
-                    {editingEvent ? 'Update' : 'Create'} Event
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handleGenerateSchedule}>
+                <Wand2 className="h-4 w-4 mr-2" />
+                Auto-Generate Schedule
+              </Button>
+              <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
+                <DialogTrigger asChild>
+                  <Button onClick={() => setFormData({ ...formData, series_number: parseInt(activeTab) })}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Event
                   </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingEvent ? 'Edit Event' : 'Add New Event'}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="series_number">Series</Label>
+                      <Select
+                        value={formData.series_number.toString()}
+                        onValueChange={(value) => setFormData({ ...formData, series_number: parseInt(value) })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {seriesList.map((s) => (
+                            <SelectItem key={s} value={s.toString()}>Series {s}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="event_start_date">Start Date</Label>
+                        <Input
+                          id="event_start_date"
+                          type="date"
+                          value={formData.event_start_date}
+                          onChange={(e) => setFormData({ ...formData, event_start_date: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="event_end_date">End Date</Label>
+                        <Input
+                          id="event_end_date"
+                          type="date"
+                          value={formData.event_end_date}
+                          onChange={(e) => setFormData({ ...formData, event_end_date: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="event_name">Event Name</Label>
+                      <Input
+                        id="event_name"
+                        placeholder="Enter event name"
+                        value={formData.event_name}
+                        onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="responsible_person">Responsible Person/Team</Label>
+                      <Input
+                        id="responsible_person"
+                        placeholder="e.g., Exam Coordinator, Teachers"
+                        value={formData.responsible_person}
+                        onChange={(e) => setFormData({ ...formData, responsible_person: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="description">Description (Optional)</Label>
+                      <Textarea
+                        id="description"
+                        placeholder="Additional details about the event"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="is_published"
+                        checked={formData.is_published}
+                        onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+                      />
+                      <Label htmlFor="is_published">Publish immediately</Label>
+                    </div>
+                    <Button type="submit" className="w-full">
+                      {editingEvent ? 'Update' : 'Create'} Event
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
           </CardHeader>
           <CardContent>
             {loading ? (
@@ -337,7 +405,7 @@ const AlmanacManagementPage = () => {
               </div>
             ) : (
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
                   <TabsList>
                     {seriesList.map((series) => (
                       <TabsTrigger key={series} value={series.toString()}>
@@ -359,13 +427,16 @@ const AlmanacManagementPage = () => {
                   <TabsContent key={series} value={series.toString()}>
                     {getEventsBySeries(series).length === 0 ? (
                       <div className="text-center py-8 text-muted-foreground">
-                        No events for Series {series} yet. Click "Add Event" to create one.
+                        <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p>No events for Series {series} yet.</p>
+                        <p className="text-sm mt-2">Click "Auto-Generate Schedule" or "Add Event" to create events.</p>
                       </div>
                     ) : (
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>Date</TableHead>
+                            <TableHead className="w-[50px]">#</TableHead>
+                            <TableHead className="w-[200px]">Date Range</TableHead>
                             <TableHead>Event</TableHead>
                             <TableHead>Responsible</TableHead>
                             <TableHead>Status</TableHead>
@@ -373,16 +444,19 @@ const AlmanacManagementPage = () => {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {getEventsBySeries(series).map((event) => (
+                          {getEventsBySeries(series).map((event, index) => (
                             <TableRow key={event.id}>
+                              <TableCell className="font-medium text-muted-foreground">
+                                {index + 1}
+                              </TableCell>
                               <TableCell className="font-medium">
-                                {format(new Date(event.event_date), 'MMM dd, yyyy')}
+                                {formatDateRange(event.event_start_date, event.event_end_date)}
                               </TableCell>
                               <TableCell>
                                 <div>
                                   <div className="font-medium">{event.event_name}</div>
                                   {event.description && (
-                                    <div className="text-sm text-muted-foreground">{event.description}</div>
+                                    <div className="text-sm text-muted-foreground line-clamp-1">{event.description}</div>
                                   )}
                                 </div>
                               </TableCell>
@@ -425,7 +499,105 @@ const AlmanacManagementPage = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Holidays Reference */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              2026 Public Holidays (Skipped)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {holidays.map((holiday) => (
+                <Badge key={holiday} variant="secondary">
+                  {format(new Date(holiday), 'dd MMM yyyy')}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Generate Schedule Dialog */}
+      <Dialog open={generateDialogOpen} onOpenChange={setGenerateDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Wand2 className="h-5 w-5" />
+              Auto-Generated Examination Schedule
+            </DialogTitle>
+            <DialogDescription>
+              Preview the automatically calculated schedule for Series 5-8. Each series has 32 working days.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Alert className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              This will replace all existing events for Series 5-8. Make sure to review the schedule before applying.
+            </AlertDescription>
+          </Alert>
+
+          <div className="space-y-6">
+            {generatedSchedules.map((schedule) => (
+              <div key={schedule.series_number} className="border rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-lg">Series {schedule.series_number}</h3>
+                  <Badge variant="outline">
+                    {format(new Date(schedule.official_start_date), 'dd MMM')} - {format(new Date(schedule.official_end_date), 'dd MMM yyyy')}
+                  </Badge>
+                </div>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[50px]">#</TableHead>
+                      <TableHead className="w-[180px]">Date Range</TableHead>
+                      <TableHead>Event</TableHead>
+                      <TableHead>Responsible</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {schedule.events.map((event, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="text-muted-foreground">{index + 1}</TableCell>
+                        <TableCell className="text-sm">
+                          {event.event_start_date === event.event_end_date 
+                            ? format(new Date(event.event_start_date), 'dd MMM yyyy')
+                            : `${format(new Date(event.event_start_date), 'dd MMM')} - ${format(new Date(event.event_end_date), 'dd MMM yyyy')}`
+                          }
+                        </TableCell>
+                        <TableCell className="font-medium">{event.event_name}</TableCell>
+                        <TableCell className="text-muted-foreground">{event.responsible_person}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="outline" onClick={() => setGenerateDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleApplyGenerated} disabled={isGenerating}>
+              {isGenerating ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Applying...
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Apply Schedule
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
