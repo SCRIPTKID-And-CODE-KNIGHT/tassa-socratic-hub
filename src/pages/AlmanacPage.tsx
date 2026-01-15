@@ -3,9 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, BookOpen, Users, Clock, FileCheck, Send, CheckCircle, Award, Settings, Truck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
+import { Calendar, BookOpen, Users, Clock, FileCheck, Send, CheckCircle, Award, Settings, Truck, Download, FileSpreadsheet, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { exportToPDF, exportToExcel, exportSeriesOnly } from '@/lib/almanacExport';
+import { useToast } from '@/hooks/use-toast';
 
 interface AlmanacEvent {
   id: string;
@@ -29,6 +33,7 @@ const AlmanacPage = () => {
   const [events, setEvents] = useState<AlmanacEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('5');
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -96,6 +101,33 @@ const AlmanacPage = () => {
     return `${start} - ${end}`;
   };
 
+  const handleExportPDF = () => {
+    try {
+      exportToPDF(events, getSeriesSummary);
+      toast({ title: 'Export Complete', description: 'PDF downloaded successfully' });
+    } catch (error) {
+      toast({ title: 'Export Failed', description: 'Could not generate PDF', variant: 'destructive' });
+    }
+  };
+
+  const handleExportExcel = () => {
+    try {
+      exportToExcel(events, getSeriesSummary);
+      toast({ title: 'Export Complete', description: 'Excel file downloaded successfully' });
+    } catch (error) {
+      toast({ title: 'Export Failed', description: 'Could not generate Excel file', variant: 'destructive' });
+    }
+  };
+
+  const handleExportSeries = (series: number, format_type: 'pdf' | 'excel') => {
+    try {
+      exportSeriesOnly(events, series, format_type, getSeriesSummary);
+      toast({ title: 'Export Complete', description: `Series ${series} exported successfully` });
+    } catch (error) {
+      toast({ title: 'Export Failed', description: 'Could not export series', variant: 'destructive' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       {/* Hero Section */}
@@ -153,10 +185,43 @@ const AlmanacPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card className="shadow-xl border-2 border-primary/10">
           <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5 border-b">
-            <CardTitle className="text-2xl flex items-center gap-3">
-              <BookOpen className="h-6 w-6 text-primary" />
-              Examination Schedule 2026
-            </CardTitle>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <CardTitle className="text-2xl flex items-center gap-3">
+                <BookOpen className="h-6 w-6 text-primary" />
+                Examination Schedule 2026
+              </CardTitle>
+              {events.length > 0 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Download className="h-4 w-4" />
+                      Export Schedule
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>Export All Series</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={handleExportPDF} className="gap-2">
+                      <FileText className="h-4 w-4 text-red-500" />
+                      Download as PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportExcel} className="gap-2">
+                      <FileSpreadsheet className="h-4 w-4 text-green-600" />
+                      Download as Excel
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Export Current Series</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => handleExportSeries(parseInt(activeTab), 'pdf')} className="gap-2">
+                      <FileText className="h-4 w-4 text-red-500" />
+                      Series {activeTab} as PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExportSeries(parseInt(activeTab), 'excel')} className="gap-2">
+                      <FileSpreadsheet className="h-4 w-4 text-green-600" />
+                      Series {activeTab} as Excel
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="p-6">
             {loading ? (
