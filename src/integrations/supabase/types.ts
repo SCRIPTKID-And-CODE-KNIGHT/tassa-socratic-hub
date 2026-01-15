@@ -20,7 +20,9 @@ export type Database = {
           created_by: string | null
           description: string | null
           event_date: string
+          event_end_date: string | null
           event_name: string
+          event_start_date: string | null
           id: string
           is_published: boolean | null
           responsible_person: string
@@ -32,7 +34,9 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           event_date: string
+          event_end_date?: string | null
           event_name: string
+          event_start_date?: string | null
           id?: string
           is_published?: boolean | null
           responsible_person: string
@@ -44,7 +48,9 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           event_date?: string
+          event_end_date?: string | null
           event_name?: string
+          event_start_date?: string | null
           id?: string
           is_published?: boolean | null
           responsible_person?: string
