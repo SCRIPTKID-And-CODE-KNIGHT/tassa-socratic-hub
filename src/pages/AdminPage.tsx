@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings, Upload, Clock, Calendar, ShieldAlert } from 'lucide-react';
+import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings, Upload, Clock, Calendar, ShieldAlert, Award } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -298,6 +298,24 @@ const AdminPage = () => {
               </p>
               <Button className="w-full btn-educational">
                 View Security Logs
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Certificate Generator */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/certificates')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Award className="h-5 w-5 text-primary" />
+                <span>Certificates & IDs</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Generate certificates for teachers, schools & staff IDs
+              </p>
+              <Button className="w-full btn-educational">
+                Generate Certificates
               </Button>
             </CardContent>
           </Card>
