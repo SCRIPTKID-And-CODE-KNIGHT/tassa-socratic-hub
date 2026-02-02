@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Award, IdCard, School, ArrowLeft, Download } from "lucide-react";
+import { Award, IdCard, School, ArrowLeft, Download, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 
@@ -14,11 +14,10 @@ export default function CertificateGeneratorPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Teacher Certificate State
-  const [teacherName, setTeacherName] = useState("");
-  const [teacherSchool, setTeacherSchool] = useState("");
-  const [teacherAward, setTeacherAward] = useState("");
-  const [teacherSeries, setTeacherSeries] = useState("");
+  // Appreciation Certificate State (for teachers and students)
+  const [recipientType, setRecipientType] = useState<"teacher" | "student">("teacher");
+  const [recipientName, setRecipientName] = useState("");
+  const [certificateType, setCertificateType] = useState("");
 
   // School Certificate State
   const [schoolName, setSchoolName] = useState("");
@@ -32,8 +31,38 @@ export default function CertificateGeneratorPage() {
   const [staffDepartment, setStaffDepartment] = useState("");
   const [staffIdNumber, setStaffIdNumber] = useState("");
 
-  const generateTeacherCertificate = () => {
-    if (!teacherName || !teacherSchool || !teacherAward || !teacherSeries) {
+  const teacherCertificateTypes = [
+    "Outstanding Examination Setting",
+    "Excellent Marking and Moderation",
+    "Best Subject Coordinator",
+    "Outstanding School Coordination",
+    "Excellence in Student Preparation",
+    "Dedicated Service to TASSA",
+    "Outstanding Leadership",
+    "Exceptional Mentorship",
+    "Academic Excellence Contribution",
+    "Community Service",
+  ];
+
+  const studentCertificateTypes = [
+    "Academic Excellence",
+    "Outstanding Performance",
+    "Best Student in Subject",
+    "Most Improved Student",
+    "Leadership Excellence",
+    "Community Service",
+    "Sports Achievement",
+    "Cultural Excellence",
+    "Science Fair Winner",
+    "Debate Champion",
+    "Essay Competition Winner",
+    "Mathematics Olympiad",
+    "Perfect Attendance",
+    "Best Class Representative",
+  ];
+
+  const generateAppreciationCertificate = () => {
+    if (!recipientName || !certificateType) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields",
@@ -88,31 +117,26 @@ export default function CertificateGeneratorPage() {
     doc.setFontSize(14);
     doc.text("This is to certify that", 148.5, 105, { align: "center" });
 
-    // Teacher name
+    // Recipient name
     doc.setFontSize(28);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(26, 82, 118);
-    doc.text(teacherName.toUpperCase(), 148.5, 120, { align: "center" });
+    doc.text(recipientName.toUpperCase(), 148.5, 120, { align: "center" });
 
-    // School
+    // Recipient type
     doc.setFontSize(14);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
-    doc.text(`from ${teacherSchool}`, 148.5, 130, { align: "center" });
+    doc.text(`(${recipientType === "teacher" ? "Teacher" : "Student"})`, 148.5, 130, { align: "center" });
 
     // Award reason
     doc.setFontSize(12);
     doc.text("is hereby awarded this certificate in recognition of", 148.5, 145, { align: "center" });
 
-    doc.setFontSize(16);
+    doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(26, 82, 118);
-    doc.text(teacherAward, 148.5, 157, { align: "center" });
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    doc.text(`Series ${teacherSeries} Examinations`, 148.5, 167, { align: "center" });
+    doc.text(certificateType.toUpperCase(), 148.5, 158, { align: "center" });
 
     // Date and signature line
     const currentDate = new Date().toLocaleDateString("en-GB", {
@@ -122,24 +146,38 @@ export default function CertificateGeneratorPage() {
     });
 
     doc.setFontSize(10);
-    doc.text(`Date: ${currentDate}`, 60, 185, { align: "center" });
-    doc.line(40, 180, 80, 180);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    doc.text(`Date: ${currentDate}`, 60, 182, { align: "center" });
+    doc.line(40, 177, 80, 177);
 
-    doc.text("TASSA Chairman", 148.5, 185, { align: "center" });
-    doc.line(120, 180, 177, 180);
+    // Coordinator signature with D.M.Manumba
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(11);
+    doc.setTextColor(26, 82, 118);
+    doc.text("D.M.Manumba", 148.5, 177, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(10);
+    doc.text("TASSA Coordinator", 148.5, 182, { align: "center" });
+    doc.line(120, 172, 177, 172);
 
-    doc.text("TASSA Secretary", 237, 185, { align: "center" });
-    doc.line(210, 180, 264, 180);
+    doc.text("TASSA Secretary", 237, 182, { align: "center" });
+    doc.line(210, 177, 264, 177);
 
     // Footer decoration
     doc.setFillColor(26, 82, 118);
-    doc.rect(20, 195, 257, 2, "F");
+    doc.rect(20, 190, 257, 2, "F");
 
-    doc.save(`Teacher_Certificate_${teacherName.replace(/\s+/g, "_")}.pdf`);
+    const filename = recipientType === "teacher" 
+      ? `Teacher_Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`
+      : `Student_Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`;
+
+    doc.save(filename);
 
     toast({
       title: "Certificate Generated",
-      description: "Teacher appreciation certificate has been downloaded",
+      description: `${recipientType === "teacher" ? "Teacher" : "Student"} appreciation certificate has been downloaded`,
     });
   };
 
@@ -252,14 +290,22 @@ export default function CertificateGeneratorPage() {
     });
 
     doc.setFontSize(10);
-    doc.text(`Date: ${currentDate}`, 60, 188, { align: "center" });
-    doc.line(40, 183, 80, 183);
+    doc.text(`Date: ${currentDate}`, 60, 185, { align: "center" });
+    doc.line(40, 180, 80, 180);
 
-    doc.text("TASSA Chairman", 148.5, 188, { align: "center" });
-    doc.line(120, 183, 177, 183);
+    // Coordinator signature with D.M.Manumba
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(11);
+    doc.setTextColor(26, 82, 118);
+    doc.text("D.M.Manumba", 148.5, 180, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(10);
+    doc.text("TASSA Coordinator", 148.5, 185, { align: "center" });
+    doc.line(120, 175, 177, 175);
 
-    doc.text("TASSA Secretary", 237, 188, { align: "center" });
-    doc.line(210, 183, 264, 183);
+    doc.text("TASSA Secretary", 237, 185, { align: "center" });
+    doc.line(210, 180, 264, 180);
 
     doc.save(`School_Certificate_${schoolName.replace(/\s+/g, "_")}.pdf`);
 
@@ -382,10 +428,16 @@ export default function CertificateGeneratorPage() {
       yPos += 3;
     });
 
-    // Signature line
+    // Coordinator signature with D.M.Manumba
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(6);
+    doc.setTextColor(26, 82, 118);
+    doc.text("D.M.Manumba", 43, 44, { align: "center" });
     doc.line(20, 45, 66, 45);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
     doc.setFontSize(5);
-    doc.text("Authorized Signature", 43, 48, { align: "center" });
+    doc.text("TASSA Coordinator", 43, 48, { align: "center" });
 
     doc.save(`TASSA_ID_${staffName.replace(/\s+/g, "_")}.pdf`);
 
@@ -410,11 +462,11 @@ export default function CertificateGeneratorPage() {
           </p>
         </div>
 
-        <Tabs defaultValue="teacher" className="space-y-6">
+        <Tabs defaultValue="appreciation" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="teacher" className="flex items-center gap-2">
+            <TabsTrigger value="appreciation" className="flex items-center gap-2">
               <Award className="h-4 w-4" />
-              Teacher Certificate
+              Appreciation Certificate
             </TabsTrigger>
             <TabsTrigger value="school" className="flex items-center gap-2">
               <School className="h-4 w-4" />
@@ -426,79 +478,83 @@ export default function CertificateGeneratorPage() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Teacher Certificate Tab */}
-          <TabsContent value="teacher">
+          {/* Appreciation Certificate Tab */}
+          <TabsContent value="appreciation">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Award className="h-5 w-5 text-primary" />
-                  Teacher Certificate of Appreciation
+                  Certificate of Appreciation
                 </CardTitle>
                 <CardDescription>
-                  Generate certificates for teachers who have contributed to TASSA examinations
+                  Generate appreciation certificates for teachers or students
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="teacherName">Teacher's Full Name</Label>
-                    <Input
-                      id="teacherName"
-                      placeholder="Enter teacher's full name"
-                      value={teacherName}
-                      onChange={(e) => setTeacherName(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="teacherSchool">School Name</Label>
-                    <Input
-                      id="teacherSchool"
-                      placeholder="Enter school name"
-                      value={teacherSchool}
-                      onChange={(e) => setTeacherSchool(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="teacherAward">Award/Recognition For</Label>
-                    <Select value={teacherAward} onValueChange={setTeacherAward}>
+                    <Label>Certificate For</Label>
+                    <Select 
+                      value={recipientType} 
+                      onValueChange={(value: "teacher" | "student") => {
+                        setRecipientType(value);
+                        setCertificateType(""); // Reset certificate type when changing recipient
+                      }}
+                    >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select award type" />
+                        <SelectValue placeholder="Select recipient type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Outstanding Examination Setting">
-                          Outstanding Examination Setting
+                        <SelectItem value="teacher">
+                          <div className="flex items-center gap-2">
+                            <Users className="h-4 w-4" />
+                            Teacher
+                          </div>
                         </SelectItem>
-                        <SelectItem value="Excellent Marking and Moderation">
-                          Excellent Marking and Moderation
+                        <SelectItem value="student">
+                          <div className="flex items-center gap-2">
+                            <Award className="h-4 w-4" />
+                            Student
+                          </div>
                         </SelectItem>
-                        <SelectItem value="Best Subject Coordinator">Best Subject Coordinator</SelectItem>
-                        <SelectItem value="Outstanding School Coordination">
-                          Outstanding School Coordination
-                        </SelectItem>
-                        <SelectItem value="Excellence in Student Preparation">
-                          Excellence in Student Preparation
-                        </SelectItem>
-                        <SelectItem value="Dedicated Service to TASSA">Dedicated Service to TASSA</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="teacherSeries">Series Number</Label>
-                    <Select value={teacherSeries} onValueChange={setTeacherSeries}>
+                    <Label htmlFor="recipientName">
+                      {recipientType === "teacher" ? "Teacher's" : "Student's"} Full Name
+                    </Label>
+                    <Input
+                      id="recipientName"
+                      placeholder={`Enter ${recipientType}'s full name`}
+                      value={recipientName}
+                      onChange={(e) => setRecipientName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Type of Certification</Label>
+                    <Select value={certificateType} onValueChange={setCertificateType}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select series" />
+                        <SelectValue placeholder="Select certificate type" />
                       </SelectTrigger>
                       <SelectContent>
-                        {[5, 6, 7, 8].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            Series {num}
+                        {(recipientType === "teacher" ? teacherCertificateTypes : studentCertificateTypes).map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
-                <Button onClick={generateTeacherCertificate} className="w-full md:w-auto">
+
+                <div className="bg-muted/50 p-4 rounded-lg border">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Note:</strong> All certificates include the TASSA Coordinator signature (D.M.Manumba)
+                  </p>
+                </div>
+
+                <Button onClick={generateAppreciationCertificate} className="w-full md:w-auto">
                   <Download className="h-4 w-4 mr-2" />
                   Generate Certificate
                 </Button>
@@ -570,6 +626,13 @@ export default function CertificateGeneratorPage() {
                     </Select>
                   </div>
                 </div>
+
+                <div className="bg-muted/50 p-4 rounded-lg border">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Note:</strong> All certificates include the TASSA Coordinator signature (D.M.Manumba)
+                  </p>
+                </div>
+
                 <Button onClick={generateSchoolCertificate} className="w-full md:w-auto">
                   <Download className="h-4 w-4 mr-2" />
                   Generate Certificate
@@ -645,6 +708,13 @@ export default function CertificateGeneratorPage() {
                     />
                   </div>
                 </div>
+
+                <div className="bg-muted/50 p-4 rounded-lg border">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Note:</strong> ID cards include the TASSA Coordinator signature (D.M.Manumba)
+                  </p>
+                </div>
+
                 <Button onClick={generateIdCard} className="w-full md:w-auto">
                   <Download className="h-4 w-4 mr-2" />
                   Generate ID Card
