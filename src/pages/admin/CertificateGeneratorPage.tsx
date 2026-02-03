@@ -148,22 +148,22 @@ export default function CertificateGeneratorPage() {
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
-    doc.text(`Date: ${currentDate}`, 60, 182, { align: "center" });
-    doc.line(40, 177, 80, 177);
+    doc.text(`Date: ${currentDate}`, 60, 177, { align: "center" });
+    doc.line(40, 179, 80, 179);
 
     // Coordinator signature with D.M.Manumba
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
     doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 148.5, 177, { align: "center" });
+    doc.text("D.M.Manumba", 148.5, 172, { align: "center" });
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
     doc.setFontSize(10);
-    doc.text("TASSA Coordinator", 148.5, 182, { align: "center" });
-    doc.line(120, 172, 177, 172);
+    doc.text("TASSA Coordinator", 148.5, 177, { align: "center" });
+    doc.line(120, 179, 177, 179);
 
-    doc.text("TASSA Secretary", 237, 182, { align: "center" });
-    doc.line(210, 177, 264, 177);
+    doc.text("TASSA Secretary", 237, 177, { align: "center" });
+    doc.line(210, 179, 264, 179);
 
     // Footer decoration
     doc.setFillColor(26, 82, 118);
@@ -290,22 +290,22 @@ export default function CertificateGeneratorPage() {
     });
 
     doc.setFontSize(10);
-    doc.text(`Date: ${currentDate}`, 60, 185, { align: "center" });
-    doc.line(40, 180, 80, 180);
+    doc.text(`Date: ${currentDate}`, 60, 180, { align: "center" });
+    doc.line(40, 182, 80, 182);
 
     // Coordinator signature with D.M.Manumba
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
     doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 148.5, 180, { align: "center" });
+    doc.text("D.M.Manumba", 148.5, 175, { align: "center" });
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
     doc.setFontSize(10);
-    doc.text("TASSA Coordinator", 148.5, 185, { align: "center" });
-    doc.line(120, 175, 177, 175);
+    doc.text("TASSA Coordinator", 148.5, 180, { align: "center" });
+    doc.line(120, 182, 177, 182);
 
-    doc.text("TASSA Secretary", 237, 185, { align: "center" });
-    doc.line(210, 180, 264, 180);
+    doc.text("TASSA Secretary", 237, 180, { align: "center" });
+    doc.line(210, 182, 264, 182);
 
     doc.save(`School_Certificate_${schoolName.replace(/\s+/g, "_")}.pdf`);
 
@@ -432,12 +432,12 @@ export default function CertificateGeneratorPage() {
     doc.setFont("helvetica", "italic");
     doc.setFontSize(6);
     doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 43, 44, { align: "center" });
-    doc.line(20, 45, 66, 45);
+    doc.text("D.M.Manumba", 43, 42, { align: "center" });
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
     doc.setFontSize(5);
-    doc.text("TASSA Coordinator", 43, 48, { align: "center" });
+    doc.text("TASSA Coordinator", 43, 46, { align: "center" });
+    doc.line(20, 48, 66, 48);
 
     doc.save(`TASSA_ID_${staffName.replace(/\s+/g, "_")}.pdf`);
 
