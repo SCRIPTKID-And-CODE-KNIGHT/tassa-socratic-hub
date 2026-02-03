@@ -568,6 +568,7 @@ export type Database = {
           description: string | null
           file_url: string | null
           grade_level: string | null
+          harakapay_link: string | null
           id: string
           is_published: boolean | null
           material_type: string
@@ -582,6 +583,7 @@ export type Database = {
           description?: string | null
           file_url?: string | null
           grade_level?: string | null
+          harakapay_link?: string | null
           id?: string
           is_published?: boolean | null
           material_type: string
@@ -596,6 +598,7 @@ export type Database = {
           description?: string | null
           file_url?: string | null
           grade_level?: string | null
+          harakapay_link?: string | null
           id?: string
           is_published?: boolean | null
           material_type?: string

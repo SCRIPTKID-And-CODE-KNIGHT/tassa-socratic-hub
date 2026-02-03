@@ -24,6 +24,7 @@ interface StoreMaterial {
   grade_level: string | null;
   is_published: boolean;
   created_at: string;
+  harakapay_link: string | null;
 }
 
 const StoreMaterialsPage = () => {
@@ -43,7 +44,8 @@ const StoreMaterialsPage = () => {
     price: '',
     subject: '',
     grade_level: '',
-    is_published: false
+    is_published: false,
+    harakapay_link: ''
   });
 
   const materialTypes = [
@@ -94,6 +96,7 @@ const StoreMaterialsPage = () => {
         file_url: formData.file_url || null,
         subject: formData.subject || null,
         grade_level: formData.grade_level || null,
+        harakapay_link: formData.harakapay_link || null,
         published_by: user.id
       };
 
@@ -166,7 +169,8 @@ const StoreMaterialsPage = () => {
       price: '',
       subject: '',
       grade_level: '',
-      is_published: false
+      is_published: false,
+      harakapay_link: ''
     });
   };
 
@@ -180,7 +184,8 @@ const StoreMaterialsPage = () => {
       price: material.price?.toString() || '',
       subject: material.subject || '',
       grade_level: material.grade_level || '',
-      is_published: material.is_published
+      is_published: material.is_published,
+      harakapay_link: material.harakapay_link || ''
     });
     setShowAddDialog(true);
   };
@@ -301,12 +306,24 @@ const StoreMaterialsPage = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="file_url">File URL/Link</Label>
+                  <Label htmlFor="file_url">File URL/Link (for free materials)</Label>
                   <Input
                     value={formData.file_url}
                     onChange={(e) => setFormData({...formData, file_url: e.target.value})}
                     placeholder="https://... (Google Drive, Dropbox, etc.)"
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="harakapay_link">HarakaPay Link (for paid materials)</Label>
+                  <Input
+                    value={formData.harakapay_link}
+                    onChange={(e) => setFormData({...formData, harakapay_link: e.target.value})}
+                    placeholder="https://harakapay.net/pay/XXXXXXXXXX"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Users will be redirected to this link to complete payment
+                  </p>
                 </div>
 
                 <Button type="submit" className="w-full btn-educational">
