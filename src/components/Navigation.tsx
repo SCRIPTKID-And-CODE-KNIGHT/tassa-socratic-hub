@@ -152,6 +152,15 @@ const Navigation = () => {
               Store
             </Link>
 
+            <Link 
+              to="/almanac" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/almanac') ? 'text-primary border-b-2 border-primary pb-1' : 'text-foreground'
+              }`}
+            >
+              Almanac
+            </Link>
+
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -288,6 +297,15 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Store
+              </Link>
+              <Link
+                to="/almanac"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/almanac') ? 'text-primary bg-primary/10' : 'text-foreground'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Almanac
               </Link>
               
               {user ? (

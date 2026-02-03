@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      almanac_events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          event_date: string
+          event_end_date: string | null
+          event_name: string
+          event_start_date: string | null
+          id: string
+          is_published: boolean | null
+          responsible_person: string
+          series_number: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date: string
+          event_end_date?: string | null
+          event_name: string
+          event_start_date?: string | null
+          id?: string
+          is_published?: boolean | null
+          responsible_person: string
+          series_number: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date?: string
+          event_end_date?: string | null
+          event_name?: string
+          event_start_date?: string | null
+          id?: string
+          is_published?: boolean | null
+          responsible_person?: string
+          series_number?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           content: string
@@ -127,6 +172,36 @@ export type Database = {
           school?: string | null
           status?: string | null
           subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      exam_settings: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          exam_date: string
+          id: string
+          is_active: boolean | null
+          series_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          exam_date: string
+          id?: string
+          is_active?: boolean | null
+          series_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          exam_date?: string
+          id?: string
+          is_active?: boolean | null
+          series_name?: string
           updated_at?: string
         }
         Relationships: []
@@ -454,12 +529,46 @@ export type Database = {
         }
         Relationships: []
       }
+      security_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          path: string | null
+          severity: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          path?: string | null
+          severity?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          path?: string | null
+          severity?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       store_materials: {
         Row: {
           created_at: string
           description: string | null
           file_url: string | null
           grade_level: string | null
+          harakapay_link: string | null
           id: string
           is_published: boolean | null
           material_type: string
@@ -474,6 +583,7 @@ export type Database = {
           description?: string | null
           file_url?: string | null
           grade_level?: string | null
+          harakapay_link?: string | null
           id?: string
           is_published?: boolean | null
           material_type: string
@@ -488,6 +598,7 @@ export type Database = {
           description?: string | null
           file_url?: string | null
           grade_level?: string | null
+          harakapay_link?: string | null
           id?: string
           is_published?: boolean | null
           material_type?: string
