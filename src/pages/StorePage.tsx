@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PurchaseDialog } from '@/components/PurchaseDialog';
 
 interface StoreMaterial {
   id: string;
@@ -24,6 +23,7 @@ interface StoreMaterial {
   subject: string | null;
   grade_level: string | null;
   is_published: boolean | null;
+  harakapay_link: string | null;
 }
 
 const StorePage = () => {
@@ -31,8 +31,6 @@ const StorePage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
-  const [selectedMaterial, setSelectedMaterial] = useState<{ id: string; title: string; price: number } | null>(null);
-  const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchMaterials();
@@ -69,13 +67,8 @@ const StorePage = () => {
   };
 
   const handleBuyClick = (material: StoreMaterial) => {
-    if (material.price && material.price > 0) {
-      setSelectedMaterial({
-        id: material.id,
-        title: material.title,
-        price: material.price,
-      });
-      setPurchaseDialogOpen(true);
+    if (material.harakapay_link) {
+      window.open(material.harakapay_link, '_blank');
     }
   };
 
@@ -179,7 +172,7 @@ const StorePage = () => {
                       </div>
                     )}
                   </div>
-                  {material.price !== null && material.price > 0 ? (
+                  {material.price !== null && material.price > 0 && material.harakapay_link ? (
                     <Button 
                       className="w-full" 
                       onClick={() => handleBuyClick(material)}
@@ -202,11 +195,6 @@ const StorePage = () => {
         )}
       </div>
 
-      <PurchaseDialog
-        open={purchaseDialogOpen}
-        onOpenChange={setPurchaseDialogOpen}
-        material={selectedMaterial}
-      />
     </div>
   );
 };
