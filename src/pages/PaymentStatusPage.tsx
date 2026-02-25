@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Select,
   SelectContent,
@@ -17,59 +9,66 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { School, Search, Loader2 } from 'lucide-react';
+import { School, Search, Loader2, MapPin } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-interface PaymentData {
+interface SchoolPayment {
   id: string;
   school_name: string;
   region: string;
   district: string;
-  series_number: number;
   status: string;
+  series_number: number | null;
 }
 
 const PaymentStatusPage = () => {
-  const [payments, setPayments] = useState<PaymentData[]>([]);
+  const [schools, setSchools] = useState<SchoolPayment[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [seriesFilter, setSeriesFilter] = useState('all');
 
   useEffect(() => {
-    fetchPayments();
+    fetchSchoolsWithPayments();
   }, []);
 
-  const fetchPayments = async () => {
+  const fetchSchoolsWithPayments = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch all schools
+      const { data: schoolsData, error: schoolsError } = await supabase
+        .from('schools')
+        .select('id, school_name, region, district')
+        .order('school_name');
+
+      if (schoolsError) throw schoolsError;
+
+      // Fetch latest payment status for each school (series 6)
+      const { data: paymentsData, error: paymentsError } = await supabase
         .from('payment_status')
-        .select(`
-          id,
-          series_number,
-          status,
-          schools (
-            school_name,
-            region,
-            district
-          )
-        `)
-        .order('series_number', { ascending: false });
+        .select('school_id, status, series_number')
+        .eq('series_number', 6);
 
-      if (error) throw error;
+      if (paymentsError) throw paymentsError;
 
-      const formattedData: PaymentData[] = (data || []).map((item: any) => ({
-        id: item.id,
-        school_name: item.schools?.school_name || 'Unknown School',
-        region: item.schools?.region || '',
-        district: item.schools?.district || '',
-        series_number: item.series_number,
-        status: item.status || 'pending',
-      }));
+      const paymentMap = new Map<string, { status: string; series_number: number }>();
+      (paymentsData || []).forEach((p: any) => {
+        paymentMap.set(p.school_id, { status: p.status || 'pending', series_number: p.series_number });
+      });
 
-      setPayments(formattedData);
+      const combined: SchoolPayment[] = (schoolsData || []).map((school: any) => {
+        const payment = paymentMap.get(school.id);
+        return {
+          id: school.id,
+          school_name: school.school_name,
+          region: school.region,
+          district: school.district,
+          status: payment?.status || 'pending',
+          series_number: payment?.series_number || null,
+        };
+      });
+
+      setSchools(combined);
     } catch (error) {
-      console.error('Error fetching payments:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
@@ -78,37 +77,43 @@ const PaymentStatusPage = () => {
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'paid':
-        return <Badge className="bg-green-500 hover:bg-green-600 text-white">Paid</Badge>;
+        return <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs px-3 py-1">Paid</Badge>;
       case 'demanded':
-        return <Badge className="bg-orange-500 hover:bg-orange-600 text-white">Demanded</Badge>;
+        return <Badge className="bg-orange-500 hover:bg-orange-600 text-white text-xs px-3 py-1">Demanded</Badge>;
       case 'pending':
       default:
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600 text-black">Not Paid</Badge>;
+        return <Badge className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1">Not Paid</Badge>;
     }
   };
 
-  const uniqueSeries = [...new Set(payments.map(p => p.series_number))].sort((a, b) => b - a);
+  const getStatusBorder = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'paid':
+        return 'border-l-4 border-l-emerald-500';
+      case 'demanded':
+        return 'border-l-4 border-l-orange-500';
+      default:
+        return 'border-l-4 border-l-red-500';
+    }
+  };
 
-  const filteredPayments = payments.filter((payment) => {
+  const filteredSchools = schools.filter((school) => {
     const matchesSearch =
-      payment.school_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.district.toLowerCase().includes(searchTerm.toLowerCase());
+      school.school_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      school.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      school.district.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
-      statusFilter === 'all' || payment.status?.toLowerCase() === statusFilter.toLowerCase();
+      statusFilter === 'all' || school.status?.toLowerCase() === statusFilter.toLowerCase();
 
-    const matchesSeries =
-      seriesFilter === 'all' || payment.series_number.toString() === seriesFilter;
-
-    return matchesSearch && matchesStatus && matchesSeries;
+    return matchesSearch && matchesStatus;
   });
 
   const stats = {
-    total: filteredPayments.length,
-    paid: filteredPayments.filter(p => p.status?.toLowerCase() === 'paid').length,
-    demanded: filteredPayments.filter(p => p.status?.toLowerCase() === 'demanded').length,
-    notPaid: filteredPayments.filter(p => !p.status || p.status?.toLowerCase() === 'pending').length,
+    total: schools.length,
+    paid: schools.filter(s => s.status?.toLowerCase() === 'paid').length,
+    demanded: schools.filter(s => s.status?.toLowerCase() === 'demanded').length,
+    notPaid: schools.filter(s => !s.status || s.status?.toLowerCase() === 'pending').length,
   };
 
   return (
@@ -117,10 +122,10 @@ const PaymentStatusPage = () => {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground flex items-center justify-center gap-2">
             <School className="h-8 w-8 text-primary" />
-            Payment Status
+            Payment Status - Series 6
           </h1>
           <p className="text-muted-foreground mt-2">
-            View payment status for all registered schools
+            Payment status for all registered schools
           </p>
         </div>
 
@@ -129,12 +134,12 @@ const PaymentStatusPage = () => {
           <Card>
             <CardContent className="pt-4 text-center">
               <div className="text-2xl font-bold text-foreground">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">Total</div>
+              <div className="text-sm text-muted-foreground">Total Schools</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.paid}</div>
+              <div className="text-2xl font-bold text-emerald-600">{stats.paid}</div>
               <div className="text-sm text-muted-foreground">Paid</div>
             </CardContent>
           </Card>
@@ -146,7 +151,7 @@ const PaymentStatusPage = () => {
           </Card>
           <Card>
             <CardContent className="pt-4 text-center">
-              <div className="text-2xl font-bold text-yellow-600">{stats.notPaid}</div>
+              <div className="text-2xl font-bold text-red-600">{stats.notPaid}</div>
               <div className="text-sm text-muted-foreground">Not Paid</div>
             </CardContent>
           </Card>
@@ -165,19 +170,6 @@ const PaymentStatusPage = () => {
                   className="pl-10"
                 />
               </div>
-              <Select value={seriesFilter} onValueChange={setSeriesFilter}>
-                <SelectTrigger className="w-full md:w-40">
-                  <SelectValue placeholder="Series" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Series</SelectItem>
-                  {uniqueSeries.map((series) => (
-                    <SelectItem key={series} value={series.toString()}>
-                      Series {series}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full md:w-40">
                   <SelectValue placeholder="Status" />
@@ -193,52 +185,39 @@ const PaymentStatusPage = () => {
           </CardContent>
         </Card>
 
-        {/* Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Schools Payment Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : filteredPayments.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                No payment records found.
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-12">#</TableHead>
-                      <TableHead>School Name</TableHead>
-                      <TableHead>Region</TableHead>
-                      <TableHead>District</TableHead>
-                      <TableHead>Series</TableHead>
-                      <TableHead className="text-center">Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredPayments.map((payment, index) => (
-                      <TableRow key={payment.id}>
-                        <TableCell className="font-medium">{index + 1}</TableCell>
-                        <TableCell className="font-medium">{payment.school_name}</TableCell>
-                        <TableCell>{payment.region}</TableCell>
-                        <TableCell>{payment.district}</TableCell>
-                        <TableCell>Series {payment.series_number}</TableCell>
-                        <TableCell className="text-center">
-                          {getStatusBadge(payment.status)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        {/* Schools Cards Grid */}
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : filteredSchools.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            No schools found.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredSchools.map((school) => (
+              <Card key={school.id} className={`${getStatusBorder(school.status)} hover:shadow-md transition-shadow`}>
+                <CardContent className="pt-4 pb-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-foreground text-sm leading-tight flex-1 mr-2">
+                      {school.school_name}
+                    </h3>
+                    {getStatusBadge(school.status)}
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3" />
+                    <span>{school.district}, {school.region}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          Showing {filteredSchools.length} of {schools.length} schools
+        </p>
       </div>
     </div>
   );

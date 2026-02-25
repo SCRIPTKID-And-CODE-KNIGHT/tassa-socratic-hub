@@ -48,7 +48,7 @@ const SchoolResultsManagementPage = () => {
   const { toast } = useToast();
 
   const [generalForm, setGeneralForm] = useState({
-    series_number: 5,
+    series_number: 6,
     general_results_url: '',
     top_ten_students_url: '',
     top_ten_schools_url: '',
@@ -57,7 +57,7 @@ const SchoolResultsManagementPage = () => {
 
   const [schoolForm, setSchoolForm] = useState({
     school_id: '',
-    series_number: 5,
+    series_number: 6,
     individual_results_url: '',
     is_published: false
   });
@@ -281,7 +281,7 @@ const SchoolResultsManagementPage = () => {
 
   const resetGeneralForm = () => {
     setGeneralForm({
-      series_number: 5,
+      series_number: 6,
       general_results_url: '',
       top_ten_students_url: '',
       top_ten_schools_url: '',
@@ -292,7 +292,7 @@ const SchoolResultsManagementPage = () => {
   const resetSchoolForm = () => {
     setSchoolForm({
       school_id: '',
-      series_number: 5,
+      series_number: 6,
       individual_results_url: '',
       is_published: false
     });
@@ -536,6 +536,7 @@ const SchoolResultsManagementPage = () => {
                     <SelectItem value="3">Series 3</SelectItem>
                     <SelectItem value="4">Series 4</SelectItem>
                     <SelectItem value="5">Series 5</SelectItem>
+                    <SelectItem value="6">Series 6</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -633,6 +634,7 @@ const SchoolResultsManagementPage = () => {
                     <SelectItem value="3">Series 3</SelectItem>
                     <SelectItem value="4">Series 4</SelectItem>
                     <SelectItem value="5">Series 5</SelectItem>
+                    <SelectItem value="6">Series 6</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
