@@ -147,39 +147,31 @@ export default function CertificateGeneratorPage() {
     doc.setTextColor(80, 80, 80);
     doc.text(`Presented on ${currentDate}`, 148.5, 148, { align: "center" });
 
-    // Signature section - three columns
-    const sigY = 172;
-    const lineY = sigY + 2;
+    // Signature section - two columns: Date (left), Coordinator (right)
+    const sigY = 175;
 
     // Left: Date
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
-    doc.text(currentDate, 60, sigY, { align: "center" });
-    doc.line(35, lineY, 85, lineY);
+    doc.text(currentDate, 80, sigY, { align: "center" });
+    doc.setDrawColor(50, 50, 50);
+    doc.setLineWidth(0.5);
+    doc.line(45, sigY + 2, 115, sigY + 2);
     doc.setFontSize(9);
-    doc.text("Date", 60, lineY + 5, { align: "center" });
+    doc.text("Date", 80, sigY + 7, { align: "center" });
 
-    // Center: Coordinator
+    // Right: Coordinator
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
     doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 148.5, sigY, { align: "center" });
+    doc.text("D.M.Manumba", 217, sigY, { align: "center" });
     doc.setDrawColor(50, 50, 50);
-    doc.line(115, lineY, 182, lineY);
+    doc.line(182, sigY + 2, 252, sigY + 2);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(180, 50, 50);
     doc.setFontSize(9);
-    doc.text("TASSA COORDINATOR", 148.5, lineY + 5, { align: "center" });
-
-    // Right: Secretary
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(50, 50, 50);
-    doc.text("________________", 237, sigY, { align: "center" });
-    doc.line(210, lineY, 264, lineY);
-    doc.setFontSize(9);
-    doc.text("TASSA SECRETARY", 237, lineY + 5, { align: "center" });
+    doc.text("TASSA COORDINATOR", 217, sigY + 7, { align: "center" });
 
     const filename = recipientType === "teacher" 
       ? `Teacher_Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`
@@ -279,35 +271,31 @@ export default function CertificateGeneratorPage() {
       year: "numeric",
     });
 
-    // Signatures
-    const sigY = 172;
-    const lineY = sigY + 2;
+    // Signature section - two columns: Date (left), Coordinator (right)
+    const sigY = 175;
 
+    // Left: Date
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
-    doc.text(currentDate, 60, sigY, { align: "center" });
-    doc.line(35, lineY, 85, lineY);
+    doc.text(currentDate, 80, sigY, { align: "center" });
+    doc.setDrawColor(50, 50, 50);
+    doc.setLineWidth(0.5);
+    doc.line(45, sigY + 2, 115, sigY + 2);
     doc.setFontSize(9);
-    doc.text("Date", 60, lineY + 5, { align: "center" });
+    doc.text("Date", 80, sigY + 7, { align: "center" });
 
+    // Right: Coordinator
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
     doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 148.5, sigY, { align: "center" });
-    doc.line(115, lineY, 182, lineY);
+    doc.text("D.M.Manumba", 217, sigY, { align: "center" });
+    doc.setDrawColor(50, 50, 50);
+    doc.line(182, sigY + 2, 252, sigY + 2);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(180, 50, 50);
     doc.setFontSize(9);
-    doc.text("TASSA COORDINATOR", 148.5, lineY + 5, { align: "center" });
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(50, 50, 50);
-    doc.text("________________", 237, sigY, { align: "center" });
-    doc.line(210, lineY, 264, lineY);
-    doc.setFontSize(9);
-    doc.text("TASSA SECRETARY", 237, lineY + 5, { align: "center" });
+    doc.text("TASSA COORDINATOR", 217, sigY + 7, { align: "center" });
 
     doc.save(`School_Certificate_${schoolName.replace(/\s+/g, "_")}.pdf`);
 
