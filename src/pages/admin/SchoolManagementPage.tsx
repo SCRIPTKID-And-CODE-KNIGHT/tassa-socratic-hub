@@ -56,7 +56,7 @@ const SchoolManagementPage = () => {
   });
 
   const [paymentFormData, setPaymentFormData] = useState({
-    series_number: '5',
+    series_number: '6',
     status: 'pending',
     amount: '',
     payment_date: '',
@@ -234,7 +234,7 @@ const SchoolManagementPage = () => {
 
   const resetPaymentForm = () => {
     setPaymentFormData({
-      series_number: '5',
+      series_number: '6',
       status: 'pending',
       amount: '',
       payment_date: '',
@@ -263,9 +263,9 @@ const SchoolManagementPage = () => {
   const openPaymentDialog = (school: SchoolData) => {
     setSelectedSchool(school);
     
-    // Check if payment exists for series 5
+    // Check if payment exists for series 6
     const existingPayment = payments.find(
-      p => p.school_id === school.id && p.series_number === 5
+      p => p.school_id === school.id && p.series_number === 6
     );
     
     if (existingPayment) {
@@ -539,7 +539,7 @@ const SchoolManagementPage = () => {
                     <TableHead>Contact</TableHead>
                     <TableHead>Region</TableHead>
                     <TableHead>District</TableHead>
-                    <TableHead>Series 5 Payment</TableHead>
+                    <TableHead>Series 6 Payment</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>

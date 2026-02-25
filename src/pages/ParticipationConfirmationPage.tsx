@@ -14,7 +14,7 @@ const ParticipationConfirmationPage = () => {
   const [schools, setSchools] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     school_id: '',
-    series_number: 5,
+    series_number: 6,
     confirmed_by: '',
     number_of_students: '',
     notes: ''
@@ -180,6 +180,7 @@ const ParticipationConfirmationPage = () => {
                     <SelectItem value="3">Series 3 - September</SelectItem>
                     <SelectItem value="4">Series 4 - December</SelectItem>
                     <SelectItem value="5">Series 5</SelectItem>
+                    <SelectItem value="6">Series 6</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

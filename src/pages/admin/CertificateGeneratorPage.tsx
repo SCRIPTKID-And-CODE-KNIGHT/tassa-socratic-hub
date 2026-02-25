@@ -77,97 +77,109 @@ export default function CertificateGeneratorPage() {
       format: "a4",
     });
 
-    // Background gradient effect
-    doc.setFillColor(245, 245, 250);
+    // White background
+    doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, 297, 210, "F");
 
-    // Border
-    doc.setDrawColor(26, 82, 118);
-    doc.setLineWidth(3);
-    doc.rect(10, 10, 277, 190);
-    doc.setLineWidth(1);
-    doc.rect(15, 15, 267, 180);
+    // Decorative cyan/teal border (wavy effect via thick border)
+    doc.setDrawColor(0, 188, 212);
+    doc.setLineWidth(8);
+    doc.rect(6, 6, 285, 198);
+    doc.setDrawColor(0, 160, 190);
+    doc.setLineWidth(2);
+    doc.rect(14, 14, 269, 182);
 
-    // Header decoration
-    doc.setFillColor(26, 82, 118);
-    doc.rect(20, 20, 257, 2, "F");
-
-    // Logo placeholder circle
-    doc.setFillColor(26, 82, 118);
-    doc.circle(148.5, 40, 15, "F");
-    doc.setTextColor(255, 255, 255);
+    // Organization name at top
     doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text("TASSA", 148.5, 42, { align: "center" });
-
-    // Title
-    doc.setTextColor(26, 82, 118);
-    doc.setFontSize(32);
-    doc.setFont("helvetica", "bold");
-    doc.text("CERTIFICATE OF APPRECIATION", 148.5, 75, { align: "center" });
-
-    // Subtitle
-    doc.setFontSize(14);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Tanzania Secondary Schools Socratic Association", 148.5, 85, { align: "center" });
+    doc.setTextColor(80, 80, 80);
+    doc.text("TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION", 148.5, 35, { align: "center" });
 
-    // Main content
-    doc.setTextColor(50, 50, 50);
-    doc.setFontSize(14);
-    doc.text("This is to certify that", 148.5, 105, { align: "center" });
-
-    // Recipient name
-    doc.setFontSize(28);
-    doc.setFont("helvetica", "bold");
+    // Main title - Academic Achievement Award style
+    doc.setFontSize(36);
+    doc.setFont("helvetica", "bolditalic");
     doc.setTextColor(26, 82, 118);
-    doc.text(recipientName.toUpperCase(), 148.5, 120, { align: "center" });
+    doc.text("Certificate of Appreciation", 148.5, 55, { align: "center" });
 
-    // Recipient type
-    doc.setFontSize(14);
+    // "This award is presented to"
+    doc.setFontSize(13);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    doc.text(`(${recipientType === "teacher" ? "Teacher" : "Student"})`, 148.5, 130, { align: "center" });
+    doc.setTextColor(80, 80, 80);
+    doc.text("This award is presented to", 148.5, 75, { align: "center" });
+
+    // Recipient name - large and bold
+    doc.setFontSize(30);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(30, 30, 30);
+    doc.text(recipientName.toUpperCase(), 148.5, 95, { align: "center" });
+
+    // Thin line under name
+    const nameWidth = doc.getTextWidth(recipientName.toUpperCase());
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(148.5 - nameWidth / 2 - 10, 99, 148.5 + nameWidth / 2 + 10, 99);
 
     // Award reason
-    doc.setFontSize(12);
-    doc.text("is hereby awarded this certificate in recognition of", 148.5, 145, { align: "center" });
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(80, 80, 80);
+    doc.text(`for outstanding contribution in`, 148.5, 112, { align: "center" });
 
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "bold");
+    doc.setFontSize(15);
+    doc.setFont("helvetica", "bolditalic");
     doc.setTextColor(26, 82, 118);
-    doc.text(certificateType.toUpperCase(), 148.5, 158, { align: "center" });
+    doc.text(certificateType, 148.5, 122, { align: "center" });
 
-    // Date and signature line
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(80, 80, 80);
+    doc.text(`as a ${recipientType === "teacher" ? "Teacher" : "Student"}.`, 148.5, 132, { align: "center" });
+
+    // Date presentation
     const currentDate = new Date().toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
       year: "numeric",
     });
 
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(80, 80, 80);
+    doc.text(`Presented on ${currentDate}`, 148.5, 148, { align: "center" });
+
+    // Signature section - three columns
+    const sigY = 172;
+    const lineY = sigY + 2;
+
+    // Left: Date
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
-    doc.text(`Date: ${currentDate}`, 60, 177, { align: "center" });
-    doc.line(40, 179, 80, 179);
+    doc.text(currentDate, 60, sigY, { align: "center" });
+    doc.line(35, lineY, 85, lineY);
+    doc.setFontSize(9);
+    doc.text("Date", 60, lineY + 5, { align: "center" });
 
-    // Coordinator signature with D.M.Manumba
+    // Center: Coordinator
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
     doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 148.5, 172, { align: "center" });
+    doc.text("D.M.Manumba", 148.5, sigY, { align: "center" });
+    doc.setDrawColor(50, 50, 50);
+    doc.line(115, lineY, 182, lineY);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
+    doc.setTextColor(180, 50, 50);
+    doc.setFontSize(9);
+    doc.text("TASSA COORDINATOR", 148.5, lineY + 5, { align: "center" });
+
+    // Right: Secretary
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("TASSA Coordinator", 148.5, 177, { align: "center" });
-    doc.line(120, 179, 177, 179);
-
-    doc.text("TASSA Secretary", 237, 177, { align: "center" });
-    doc.line(210, 179, 264, 179);
-
-    // Footer decoration
-    doc.setFillColor(26, 82, 118);
-    doc.rect(20, 190, 257, 2, "F");
+    doc.setTextColor(50, 50, 50);
+    doc.text("________________", 237, sigY, { align: "center" });
+    doc.line(210, lineY, 264, lineY);
+    doc.setFontSize(9);
+    doc.text("TASSA SECRETARY", 237, lineY + 5, { align: "center" });
 
     const filename = recipientType === "teacher" 
       ? `Teacher_Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`
@@ -197,115 +209,105 @@ export default function CertificateGeneratorPage() {
       format: "a4",
     });
 
-    // Background
-    doc.setFillColor(250, 248, 240);
+    // White background
+    doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, 297, 210, "F");
 
-    // Decorative border
+    // Decorative gold/teal border
     doc.setDrawColor(184, 134, 11);
-    doc.setLineWidth(4);
-    doc.rect(8, 8, 281, 194);
+    doc.setLineWidth(8);
+    doc.rect(6, 6, 285, 198);
     doc.setDrawColor(26, 82, 118);
     doc.setLineWidth(2);
-    doc.rect(12, 12, 273, 186);
+    doc.rect(14, 14, 269, 182);
 
     // Corner decorations
-    const corners = [
-      [20, 20],
-      [277, 20],
-      [20, 190],
-      [277, 190],
-    ];
+    const corners = [[20, 20], [277, 20], [20, 190], [277, 190]];
     doc.setFillColor(184, 134, 11);
-    corners.forEach(([x, y]) => {
-      doc.circle(x, y, 5, "F");
-    });
+    corners.forEach(([x, y]) => { doc.circle(x, y, 4, "F"); });
 
-    // Logo circle
-    doc.setFillColor(26, 82, 118);
-    doc.circle(148.5, 38, 18, "F");
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("TASSA", 148.5, 40, { align: "center" });
+    // Organization name
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(80, 80, 80);
+    doc.text("TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION", 148.5, 35, { align: "center" });
 
     // Title
-    doc.setTextColor(184, 134, 11);
     doc.setFontSize(36);
-    doc.setFont("helvetica", "bold");
-    doc.text("CERTIFICATE OF EXCELLENCE", 148.5, 75, { align: "center" });
-
-    // Subtitle
-    doc.setTextColor(26, 82, 118);
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "normal");
-    doc.text("Tanzania Secondary Schools Socratic Association", 148.5, 85, { align: "center" });
+    doc.setFont("helvetica", "bolditalic");
+    doc.setTextColor(184, 134, 11);
+    doc.text("Certificate of Excellence", 148.5, 55, { align: "center" });
 
     // Content
-    doc.setTextColor(50, 50, 50);
-    doc.setFontSize(14);
-    doc.text("This certificate is proudly presented to", 148.5, 105, { align: "center" });
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(80, 80, 80);
+    doc.text("This certificate is proudly presented to", 148.5, 75, { align: "center" });
 
     // School name
-    doc.setFontSize(30);
+    doc.setFontSize(28);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(26, 82, 118);
-    doc.text(schoolName.toUpperCase(), 148.5, 122, { align: "center" });
+    doc.text(schoolName.toUpperCase(), 148.5, 95, { align: "center" });
 
     // Region
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text(`${schoolRegion} Region`, 148.5, 132, { align: "center" });
+    doc.text(`${schoolRegion} Region`, 148.5, 105, { align: "center" });
 
-    // Position and achievement
-    doc.setFontSize(14);
-    doc.setTextColor(50, 50, 50);
-    doc.text("in recognition of outstanding performance as", 148.5, 147, { align: "center" });
-
-    const positionSuffix =
-      schoolPosition === "1"
-        ? "st"
-        : schoolPosition === "2"
-        ? "nd"
-        : schoolPosition === "3"
-        ? "rd"
-        : "th";
+    // Position
+    const positionSuffix = schoolPosition === "1" ? "st" : schoolPosition === "2" ? "nd" : schoolPosition === "3" ? "rd" : "th";
+    doc.setFontSize(13);
+    doc.setTextColor(80, 80, 80);
+    doc.text("for outstanding performance as", 148.5, 120, { align: "center" });
 
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(184, 134, 11);
-    doc.text(`${schoolPosition}${positionSuffix} BEST SCHOOL`, 148.5, 160, { align: "center" });
+    doc.text(`${schoolPosition}${positionSuffix} BEST SCHOOL`, 148.5, 133, { align: "center" });
 
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    doc.text(`in Series ${schoolSeries} National Examinations`, 148.5, 170, { align: "center" });
+    doc.setTextColor(80, 80, 80);
+    doc.text(`in Series ${schoolSeries} National Examinations`, 148.5, 143, { align: "center" });
 
-    // Date and signatures
+    // Date
     const currentDate = new Date().toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
       year: "numeric",
     });
 
-    doc.setFontSize(10);
-    doc.text(`Date: ${currentDate}`, 60, 180, { align: "center" });
-    doc.line(40, 182, 80, 182);
+    // Signatures
+    const sigY = 172;
+    const lineY = sigY + 2;
 
-    // Coordinator signature with D.M.Manumba
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    doc.text(currentDate, 60, sigY, { align: "center" });
+    doc.line(35, lineY, 85, lineY);
+    doc.setFontSize(9);
+    doc.text("Date", 60, lineY + 5, { align: "center" });
+
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
     doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 148.5, 175, { align: "center" });
+    doc.text("D.M.Manumba", 148.5, sigY, { align: "center" });
+    doc.line(115, lineY, 182, lineY);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    doc.setFontSize(10);
-    doc.text("TASSA Coordinator", 148.5, 180, { align: "center" });
-    doc.line(120, 182, 177, 182);
+    doc.setTextColor(180, 50, 50);
+    doc.setFontSize(9);
+    doc.text("TASSA COORDINATOR", 148.5, lineY + 5, { align: "center" });
 
-    doc.text("TASSA Secretary", 237, 180, { align: "center" });
-    doc.line(210, 182, 264, 182);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(50, 50, 50);
+    doc.text("________________", 237, sigY, { align: "center" });
+    doc.line(210, lineY, 264, lineY);
+    doc.setFontSize(9);
+    doc.text("TASSA SECRETARY", 237, lineY + 5, { align: "center" });
 
     doc.save(`School_Certificate_${schoolName.replace(/\s+/g, "_")}.pdf`);
 
