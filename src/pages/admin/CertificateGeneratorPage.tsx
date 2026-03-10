@@ -1,29 +1,49 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Award, IdCard, School, ArrowLeft, Download, Users } from "lucide-react";
+import { Award, IdCard, School, ArrowLeft, Download, Users, Upload, Image as ImageIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
+import certificateTemplateBg from "@/assets/certificate-template-bg.png";
 
 export default function CertificateGeneratorPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Appreciation Certificate State (for teachers and students)
+  // Logo state
+  const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
+  const [logoFileName, setLogoFileName] = useState<string>("");
+  const logoInputRef = useRef<HTMLInputElement>(null);
+
+  // Appreciation Certificate State
   const [recipientType, setRecipientType] = useState<"teacher" | "student">("teacher");
   const [recipientName, setRecipientName] = useState("");
-  const [certificateType, setCertificateType] = useState("");
+  const [certTitle, setCertTitle] = useState("CERTIFICATE");
+  const [certSubtitle, setCertSubtitle] = useState("OF PARTICIPATION");
+  const [certIntro, setCertIntro] = useState("This certificate is proudly presented to");
+  const [certBody, setCertBody] = useState(
+    "in recognition of outstanding performance, dedication, and commitment to learning.\nYour hard work and achievements are highly commendable, and we sincerely appreciate your efforts."
+  );
+  const [certSignName, setCertSignName] = useState("DAUDI MUSULA MANUMBA");
+  const [certSignTitle, setCertSignTitle] = useState("TASSA COORDINATOR");
 
   // School Certificate State
   const [schoolName, setSchoolName] = useState("");
   const [schoolPosition, setSchoolPosition] = useState("");
   const [schoolRegion, setSchoolRegion] = useState("");
   const [schoolSeries, setSchoolSeries] = useState("");
+  const [schoolCertTitle, setSchoolCertTitle] = useState("CERTIFICATE");
+  const [schoolCertSubtitle, setSchoolCertSubtitle] = useState("OF EXCELLENCE");
+  const [schoolCertIntro, setSchoolCertIntro] = useState("This certificate is proudly presented to");
+  const [schoolCertBody, setSchoolCertBody] = useState(
+    "for outstanding performance and dedication to academic excellence."
+  );
 
   // ID Card State
   const [staffName, setStaffName] = useState("");
@@ -31,324 +51,228 @@ export default function CertificateGeneratorPage() {
   const [staffDepartment, setStaffDepartment] = useState("");
   const [staffIdNumber, setStaffIdNumber] = useState("");
 
-  const teacherCertificateTypes = [
-    "Outstanding Examination Setting",
-    "Excellent Marking and Moderation",
-    "Best Subject Coordinator",
-    "Outstanding School Coordination",
-    "Excellence in Student Preparation",
-    "Dedicated Service to TASSA",
-    "Outstanding Leadership",
-    "Exceptional Mentorship",
-    "Academic Excellence Contribution",
-    "Community Service",
-  ];
-
-  const studentCertificateTypes = [
-    "Academic Excellence",
-    "Outstanding Performance",
-    "Best Student in Subject",
-    "Most Improved Student",
-    "Leadership Excellence",
-    "Community Service",
-    "Sports Achievement",
-    "Cultural Excellence",
-    "Science Fair Winner",
-    "Debate Champion",
-    "Essay Competition Winner",
-    "Mathematics Olympiad",
-    "Perfect Attendance",
-    "Best Class Representative",
-  ];
-
-  const generateAppreciationCertificate = () => {
-    if (!recipientName || !certificateType) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Invalid file", description: "Please upload an image file", variant: "destructive" });
       return;
     }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setLogoDataUrl(ev.target?.result as string);
+      setLogoFileName(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
 
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
-
-    // White background
-    doc.setFillColor(255, 255, 255);
-    doc.rect(0, 0, 297, 210, "F");
-
-    // Decorative cyan/teal border (wavy effect via thick border)
-    doc.setDrawColor(0, 188, 212);
-    doc.setLineWidth(8);
-    doc.rect(6, 6, 285, 198);
-    doc.setDrawColor(0, 160, 190);
-    doc.setLineWidth(2);
-    doc.rect(14, 14, 269, 182);
-
-    // Organization name at top
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text("TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION", 148.5, 35, { align: "center" });
-
-    // Main title - Academic Achievement Award style
-    doc.setFontSize(36);
-    doc.setFont("helvetica", "bolditalic");
-    doc.setTextColor(26, 82, 118);
-    doc.text("Certificate of Appreciation", 148.5, 55, { align: "center" });
-
-    // "This award is presented to"
-    doc.setFontSize(13);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text("This award is presented to", 148.5, 75, { align: "center" });
-
-    // Recipient name - large and bold
-    doc.setFontSize(30);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(30, 30, 30);
-    doc.text(recipientName.toUpperCase(), 148.5, 95, { align: "center" });
-
-    // Thin line under name
-    const nameWidth = doc.getTextWidth(recipientName.toUpperCase());
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.5);
-    doc.line(148.5 - nameWidth / 2 - 10, 99, 148.5 + nameWidth / 2 + 10, 99);
-
-    // Award reason
-    doc.setFontSize(13);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text(`for outstanding contribution in`, 148.5, 112, { align: "center" });
-
-    doc.setFontSize(15);
-    doc.setFont("helvetica", "bolditalic");
-    doc.setTextColor(26, 82, 118);
-    doc.text(certificateType, 148.5, 122, { align: "center" });
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text(`as a ${recipientType === "teacher" ? "Teacher" : "Student"}.`, 148.5, 132, { align: "center" });
-
-    // Date presentation
-    const currentDate = new Date().toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "italic");
-    doc.setTextColor(80, 80, 80);
-    doc.text(`Presented on ${currentDate}`, 148.5, 148, { align: "center" });
-
-    // Signature section - two columns: Date (left), Coordinator (right)
-    const sigY = 175;
-
-    // Left: Date
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    doc.text(currentDate, 80, sigY, { align: "center" });
-    doc.setDrawColor(50, 50, 50);
-    doc.setLineWidth(0.5);
-    doc.line(45, sigY + 2, 115, sigY + 2);
-    doc.setFontSize(9);
-    doc.text("Date", 80, sigY + 7, { align: "center" });
-
-    // Right: Coordinator
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(11);
-    doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 217, sigY, { align: "center" });
-    doc.setDrawColor(50, 50, 50);
-    doc.line(182, sigY + 2, 252, sigY + 2);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(180, 50, 50);
-    doc.setFontSize(9);
-    doc.text("TASSA COORDINATOR", 217, sigY + 7, { align: "center" });
-
-    const filename = recipientType === "teacher" 
-      ? `Teacher_Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`
-      : `Student_Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`;
-
-    doc.save(filename);
-
-    toast({
-      title: "Certificate Generated",
-      description: `${recipientType === "teacher" ? "Teacher" : "Student"} appreciation certificate has been downloaded`,
+  const loadImage = (src: string): Promise<HTMLImageElement> => {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
     });
   };
 
-  const generateSchoolCertificate = () => {
-    if (!schoolName || !schoolPosition || !schoolRegion || !schoolSeries) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
+  const generateAppreciationCertificate = async () => {
+    if (!recipientName) {
+      toast({ title: "Missing Information", description: "Please enter recipient name", variant: "destructive" });
       return;
     }
 
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
-    // White background
-    doc.setFillColor(255, 255, 255);
-    doc.rect(0, 0, 297, 210, "F");
+    // Add template background
+    try {
+      const bgImg = await loadImage(certificateTemplateBg);
+      doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
+    } catch {
+      // Fallback: simple border
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, 297, 210, "F");
+      doc.setDrawColor(0, 188, 212);
+      doc.setLineWidth(8);
+      doc.rect(6, 6, 285, 198);
+    }
 
-    // Decorative gold/teal border
-    doc.setDrawColor(184, 134, 11);
-    doc.setLineWidth(8);
-    doc.rect(6, 6, 285, 198);
-    doc.setDrawColor(26, 82, 118);
-    doc.setLineWidth(2);
-    doc.rect(14, 14, 269, 182);
+    // Add logo if uploaded
+    if (logoDataUrl) {
+      try {
+        const logoImg = await loadImage(logoDataUrl);
+        doc.addImage(logoImg, "PNG", 128.5, 18, 40, 40);
+      } catch { /* skip logo */ }
+    }
 
-    // Corner decorations
-    const corners = [[20, 20], [277, 20], [20, 190], [277, 190]];
-    doc.setFillColor(184, 134, 11);
-    corners.forEach(([x, y]) => { doc.circle(x, y, 4, "F"); });
+    const logoOffset = logoDataUrl ? 60 : 30;
 
-    // Organization name
-    doc.setFontSize(12);
+    // Main title
+    doc.setFontSize(42);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(20, 40, 80);
+    doc.text(certTitle, 148.5, logoOffset + 10, { align: "center" });
+
+    // Subtitle
+    doc.setFontSize(18);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text("TANZANIA ADVANCED SOCRATIC SCHOOLS ASSOCIATION", 148.5, 35, { align: "center" });
+    doc.setTextColor(26, 82, 118);
+    doc.text(certSubtitle, 148.5, logoOffset + 22, { align: "center" });
 
-    // Title
-    doc.setFontSize(36);
-    doc.setFont("helvetica", "bolditalic");
-    doc.setTextColor(184, 134, 11);
-    doc.text("Certificate of Excellence", 148.5, 55, { align: "center" });
-
-    // Content
+    // Intro text
     doc.setFontSize(13);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text("This certificate is proudly presented to", 148.5, 75, { align: "center" });
+    doc.setTextColor(60, 60, 60);
+    doc.text(certIntro, 148.5, logoOffset + 38, { align: "center" });
+
+    // Recipient name with underline
+    doc.setFontSize(28);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(20, 20, 20);
+    doc.text(recipientName.toUpperCase(), 148.5, logoOffset + 56, { align: "center" });
+    const nameWidth = doc.getTextWidth(recipientName.toUpperCase());
+    doc.setDrawColor(40, 40, 40);
+    doc.setLineWidth(0.6);
+    doc.line(148.5 - nameWidth / 2 - 10, logoOffset + 60, 148.5 + nameWidth / 2 + 10, logoOffset + 60);
+
+    // Body text - split by newlines and wrap
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    const bodyLines = doc.splitTextToSize(certBody, 200);
+    doc.text(bodyLines, 148.5, logoOffset + 72, { align: "center" });
+
+    // Signature section at bottom
+    const sigY = 175;
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(20, 40, 80);
+    doc.text(certSignName, 148.5, sigY, { align: "center" });
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(26, 82, 118);
+    doc.text(certSignTitle, 148.5, sigY + 7, { align: "center" });
+
+    const filename = `Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`;
+    doc.save(filename);
+
+    toast({ title: "Certificate Generated", description: "Certificate has been downloaded" });
+  };
+
+  const generateSchoolCertificate = async () => {
+    if (!schoolName || !schoolPosition || !schoolRegion || !schoolSeries) {
+      toast({ title: "Missing Information", description: "Please fill in all fields", variant: "destructive" });
+      return;
+    }
+
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+    // Add template background
+    try {
+      const bgImg = await loadImage(certificateTemplateBg);
+      doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
+    } catch {
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, 297, 210, "F");
+      doc.setDrawColor(184, 134, 11);
+      doc.setLineWidth(8);
+      doc.rect(6, 6, 285, 198);
+    }
+
+    // Add logo if uploaded
+    if (logoDataUrl) {
+      try {
+        const logoImg = await loadImage(logoDataUrl);
+        doc.addImage(logoImg, "PNG", 128.5, 18, 40, 40);
+      } catch { /* skip logo */ }
+    }
+
+    const logoOffset = logoDataUrl ? 60 : 30;
+
+    // Title
+    doc.setFontSize(42);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(20, 40, 80);
+    doc.text(schoolCertTitle, 148.5, logoOffset + 10, { align: "center" });
+
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(184, 134, 11);
+    doc.text(schoolCertSubtitle, 148.5, logoOffset + 22, { align: "center" });
+
+    // Intro
+    doc.setFontSize(13);
+    doc.setTextColor(60, 60, 60);
+    doc.text(schoolCertIntro, 148.5, logoOffset + 38, { align: "center" });
 
     // School name
     doc.setFontSize(28);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(26, 82, 118);
-    doc.text(schoolName.toUpperCase(), 148.5, 95, { align: "center" });
+    doc.text(schoolName.toUpperCase(), 148.5, logoOffset + 56, { align: "center" });
 
     // Region
     doc.setFontSize(13);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text(`${schoolRegion} Region`, 148.5, 105, { align: "center" });
+    doc.text(`${schoolRegion} Region`, 148.5, logoOffset + 65, { align: "center" });
 
     // Position
     const positionSuffix = schoolPosition === "1" ? "st" : schoolPosition === "2" ? "nd" : schoolPosition === "3" ? "rd" : "th";
-    doc.setFontSize(13);
-    doc.setTextColor(80, 80, 80);
-    doc.text("for outstanding performance as", 148.5, 120, { align: "center" });
-
-    doc.setFontSize(24);
+    doc.setFontSize(20);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(184, 134, 11);
-    doc.text(`${schoolPosition}${positionSuffix} BEST SCHOOL`, 148.5, 133, { align: "center" });
+    doc.text(`${schoolPosition}${positionSuffix} BEST SCHOOL - Series ${schoolSeries}`, 148.5, logoOffset + 78, { align: "center" });
 
-    doc.setFontSize(13);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text(`in Series ${schoolSeries} National Examinations`, 148.5, 143, { align: "center" });
-
-    // Date
-    const currentDate = new Date().toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-
-    // Signature section - two columns: Date (left), Coordinator (right)
-    const sigY = 175;
-
-    // Left: Date
-    doc.setFontSize(10);
+    // Body
+    doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
-    doc.text(currentDate, 80, sigY, { align: "center" });
-    doc.setDrawColor(50, 50, 50);
-    doc.setLineWidth(0.5);
-    doc.line(45, sigY + 2, 115, sigY + 2);
-    doc.setFontSize(9);
-    doc.text("Date", 80, sigY + 7, { align: "center" });
+    const bodyLines = doc.splitTextToSize(schoolCertBody, 200);
+    doc.text(bodyLines, 148.5, logoOffset + 90, { align: "center" });
 
-    // Right: Coordinator
-    doc.setFont("helvetica", "italic");
+    // Signature
+    const sigY = 175;
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(20, 40, 80);
+    doc.text(certSignName, 148.5, sigY, { align: "center" });
     doc.setFontSize(11);
-    doc.setTextColor(26, 82, 118);
-    doc.text("D.M.Manumba", 217, sigY, { align: "center" });
-    doc.setDrawColor(50, 50, 50);
-    doc.line(182, sigY + 2, 252, sigY + 2);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(180, 50, 50);
-    doc.setFontSize(9);
-    doc.text("TASSA COORDINATOR", 217, sigY + 7, { align: "center" });
+    doc.setTextColor(26, 82, 118);
+    doc.text(certSignTitle, 148.5, sigY + 7, { align: "center" });
 
     doc.save(`School_Certificate_${schoolName.replace(/\s+/g, "_")}.pdf`);
-
-    toast({
-      title: "Certificate Generated",
-      description: "Best school certificate has been downloaded",
-    });
+    toast({ title: "Certificate Generated", description: "School certificate has been downloaded" });
   };
 
   const generateIdCard = () => {
     if (!staffName || !staffPosition || !staffDepartment || !staffIdNumber) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
+      toast({ title: "Missing Information", description: "Please fill in all fields", variant: "destructive" });
       return;
     }
 
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: [86, 54], // Standard ID card size
-    });
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: [86, 54] });
 
-    // Front of ID Card
-    // Background
     doc.setFillColor(26, 82, 118);
     doc.rect(0, 0, 86, 54, "F");
-
-    // White content area
     doc.setFillColor(255, 255, 255);
     doc.roundedRect(3, 3, 80, 48, 2, 2, "F");
-
-    // Header stripe
     doc.setFillColor(26, 82, 118);
     doc.rect(3, 3, 80, 12, "F");
 
-    // Organization name
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(8);
     doc.setFont("helvetica", "bold");
     doc.text("TANZANIA SECONDARY SCHOOLS", 43, 8, { align: "center" });
     doc.text("SOCRATIC ASSOCIATION", 43, 12, { align: "center" });
 
-    // Photo placeholder
     doc.setFillColor(230, 230, 230);
     doc.rect(6, 18, 22, 26, "F");
     doc.setTextColor(150, 150, 150);
     doc.setFontSize(6);
     doc.text("PHOTO", 17, 32, { align: "center" });
 
-    // Staff details
     doc.setTextColor(26, 82, 118);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
@@ -358,44 +282,31 @@ export default function CertificateGeneratorPage() {
     doc.setFontSize(7);
     doc.setFont("helvetica", "normal");
     doc.text(staffPosition, 32, 28);
-
     doc.setFontSize(6);
     doc.text(`Department: ${staffDepartment}`, 32, 33);
     doc.text(`ID No: ${staffIdNumber}`, 32, 38);
 
-    // Valid until
     const validUntil = new Date();
     validUntil.setFullYear(validUntil.getFullYear() + 1);
-    const validDate = validUntil.toLocaleDateString("en-GB", {
-      month: "short",
-      year: "numeric",
-    });
-    doc.text(`Valid Until: ${validDate}`, 32, 43);
+    doc.text(`Valid Until: ${validUntil.toLocaleDateString("en-GB", { month: "short", year: "numeric" })}`, 32, 43);
 
-    // Footer
     doc.setFillColor(184, 134, 11);
     doc.rect(3, 47, 80, 4, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(5);
     doc.text("TASSA - Empowering Education Through Excellence", 43, 50, { align: "center" });
 
-    // Add a new page for the back of the card
     doc.addPage([86, 54], "portrait");
-
-    // Back of ID Card
     doc.setFillColor(26, 82, 118);
     doc.rect(0, 0, 86, 54, "F");
-
     doc.setFillColor(255, 255, 255);
     doc.roundedRect(3, 3, 80, 48, 2, 2, "F");
 
-    // Title
     doc.setTextColor(26, 82, 118);
     doc.setFontSize(8);
     doc.setFont("helvetica", "bold");
     doc.text("TASSA STAFF IDENTIFICATION", 43, 10, { align: "center" });
 
-    // Instructions
     doc.setTextColor(50, 50, 50);
     doc.setFontSize(5);
     doc.setFont("helvetica", "normal");
@@ -411,14 +322,9 @@ export default function CertificateGeneratorPage() {
       "For emergencies, call:",
       "+255 XXX XXX XXX",
     ];
-
     let yPos = 16;
-    instructions.forEach((line) => {
-      doc.text(line, 43, yPos, { align: "center" });
-      yPos += 3;
-    });
+    instructions.forEach((line) => { doc.text(line, 43, yPos, { align: "center" }); yPos += 3; });
 
-    // Coordinator signature with D.M.Manumba
     doc.setFont("helvetica", "italic");
     doc.setFontSize(6);
     doc.setTextColor(26, 82, 118);
@@ -430,11 +336,7 @@ export default function CertificateGeneratorPage() {
     doc.line(20, 48, 66, 48);
 
     doc.save(`TASSA_ID_${staffName.replace(/\s+/g, "_")}.pdf`);
-
-    toast({
-      title: "ID Card Generated",
-      description: "Staff ID card (front and back) has been downloaded",
-    });
+    toast({ title: "ID Card Generated", description: "Staff ID card has been downloaded" });
   };
 
   return (
@@ -451,6 +353,40 @@ export default function CertificateGeneratorPage() {
             Generate certificates of appreciation, school excellence awards, and TASSA staff ID cards
           </p>
         </div>
+
+        {/* Logo Upload Section */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ImageIcon className="h-5 w-5 text-primary" />
+              Certificate Logo
+            </CardTitle>
+            <CardDescription>Upload a logo to appear on all certificates (optional)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <input
+                ref={logoInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleLogoUpload}
+                className="hidden"
+              />
+              <Button variant="outline" onClick={() => logoInputRef.current?.click()}>
+                <Upload className="h-4 w-4 mr-2" />
+                {logoFileName || "Upload Logo"}
+              </Button>
+              {logoDataUrl && (
+                <div className="flex items-center gap-3">
+                  <img src={logoDataUrl} alt="Logo preview" className="h-12 w-12 object-contain rounded border" />
+                  <Button variant="ghost" size="sm" onClick={() => { setLogoDataUrl(null); setLogoFileName(""); }}>
+                    Remove
+                  </Button>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         <Tabs defaultValue="appreciation" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
@@ -476,72 +412,48 @@ export default function CertificateGeneratorPage() {
                   <Award className="h-5 w-5 text-primary" />
                   Certificate of Appreciation
                 </CardTitle>
-                <CardDescription>
-                  Generate appreciation certificates for teachers or students
-                </CardDescription>
+                <CardDescription>Generate certificates using the template. Edit any text below.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
+                    <Label>Certificate Title</Label>
+                    <Input value={certTitle} onChange={(e) => setCertTitle(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Subtitle</Label>
+                    <Input value={certSubtitle} onChange={(e) => setCertSubtitle(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
                     <Label>Certificate For</Label>
-                    <Select 
-                      value={recipientType} 
-                      onValueChange={(value: "teacher" | "student") => {
-                        setRecipientType(value);
-                        setCertificateType(""); // Reset certificate type when changing recipient
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select recipient type" />
-                      </SelectTrigger>
+                    <Select value={recipientType} onValueChange={(v: "teacher" | "student") => setRecipientType(v)}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="teacher">
-                          <div className="flex items-center gap-2">
-                            <Users className="h-4 w-4" />
-                            Teacher
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="student">
-                          <div className="flex items-center gap-2">
-                            <Award className="h-4 w-4" />
-                            Student
-                          </div>
-                        </SelectItem>
+                        <SelectItem value="teacher"><div className="flex items-center gap-2"><Users className="h-4 w-4" />Teacher</div></SelectItem>
+                        <SelectItem value="student"><div className="flex items-center gap-2"><Award className="h-4 w-4" />Student</div></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="recipientName">
-                      {recipientType === "teacher" ? "Teacher's" : "Student's"} Full Name
-                    </Label>
-                    <Input
-                      id="recipientName"
-                      placeholder={`Enter ${recipientType}'s full name`}
-                      value={recipientName}
-                      onChange={(e) => setRecipientName(e.target.value)}
-                    />
+                    <Label>{recipientType === "teacher" ? "Teacher's" : "Student's"} Full Name</Label>
+                    <Input placeholder="Enter full name" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} />
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <Label>Type of Certification</Label>
-                    <Select value={certificateType} onValueChange={setCertificateType}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select certificate type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {(recipientType === "teacher" ? teacherCertificateTypes : studentCertificateTypes).map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label>Introduction Text</Label>
+                    <Input value={certIntro} onChange={(e) => setCertIntro(e.target.value)} />
                   </div>
-                </div>
-
-                <div className="bg-muted/50 p-4 rounded-lg border">
-                  <p className="text-sm text-muted-foreground">
-                    <strong>Note:</strong> All certificates include the TASSA Coordinator signature (D.M.Manumba)
-                  </p>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Body Text</Label>
+                    <Textarea value={certBody} onChange={(e) => setCertBody(e.target.value)} rows={3} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Signer Name</Label>
+                    <Input value={certSignName} onChange={(e) => setCertSignName(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Signer Title</Label>
+                    <Input value={certSignTitle} onChange={(e) => setCertSignTitle(e.target.value)} />
+                  </div>
                 </div>
 
                 <Button onClick={generateAppreciationCertificate} className="w-full md:w-auto">
@@ -560,67 +472,54 @@ export default function CertificateGeneratorPage() {
                   <School className="h-5 w-5 text-primary" />
                   Best School Certificate
                 </CardTitle>
-                <CardDescription>
-                  Generate excellence certificates for top-performing schools
-                </CardDescription>
+                <CardDescription>Generate excellence certificates for top-performing schools</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="schoolName">School Name</Label>
-                    <Input
-                      id="schoolName"
-                      placeholder="Enter school name"
-                      value={schoolName}
-                      onChange={(e) => setSchoolName(e.target.value)}
-                    />
+                    <Label>Certificate Title</Label>
+                    <Input value={schoolCertTitle} onChange={(e) => setSchoolCertTitle(e.target.value)} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="schoolRegion">Region</Label>
-                    <Input
-                      id="schoolRegion"
-                      placeholder="Enter region"
-                      value={schoolRegion}
-                      onChange={(e) => setSchoolRegion(e.target.value)}
-                    />
+                    <Label>Subtitle</Label>
+                    <Input value={schoolCertSubtitle} onChange={(e) => setSchoolCertSubtitle(e.target.value)} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="schoolPosition">Position Achieved</Label>
+                    <Label>School Name</Label>
+                    <Input placeholder="Enter school name" value={schoolName} onChange={(e) => setSchoolName(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Region</Label>
+                    <Input placeholder="Enter region" value={schoolRegion} onChange={(e) => setSchoolRegion(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Position Achieved</Label>
                     <Select value={schoolPosition} onValueChange={setSchoolPosition}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select position" />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
                       <SelectContent>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            {num}
-                            {num === 1 ? "st" : num === 2 ? "nd" : num === 3 ? "rd" : "th"} Position
-                          </SelectItem>
+                        {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                          <SelectItem key={n} value={n.toString()}>{n}{n===1?"st":n===2?"nd":n===3?"rd":"th"} Position</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="schoolSeries">Series Number</Label>
+                    <Label>Series Number</Label>
                     <Select value={schoolSeries} onValueChange={setSchoolSeries}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select series" />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Select series" /></SelectTrigger>
                       <SelectContent>
-                        {[5, 6, 7, 8].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            Series {num}
-                          </SelectItem>
-                        ))}
+                        {[5,6,7,8].map(n => (<SelectItem key={n} value={n.toString()}>Series {n}</SelectItem>))}
                       </SelectContent>
                     </Select>
                   </div>
-                </div>
-
-                <div className="bg-muted/50 p-4 rounded-lg border">
-                  <p className="text-sm text-muted-foreground">
-                    <strong>Note:</strong> All certificates include the TASSA Coordinator signature (D.M.Manumba)
-                  </p>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Introduction Text</Label>
+                    <Input value={schoolCertIntro} onChange={(e) => setSchoolCertIntro(e.target.value)} />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Body Text</Label>
+                    <Textarea value={schoolCertBody} onChange={(e) => setSchoolCertBody(e.target.value)} rows={3} />
+                  </div>
                 </div>
 
                 <Button onClick={generateSchoolCertificate} className="w-full md:w-auto">
@@ -639,70 +538,40 @@ export default function CertificateGeneratorPage() {
                   <IdCard className="h-5 w-5 text-primary" />
                   TASSA Staff ID Card
                 </CardTitle>
-                <CardDescription>
-                  Generate identification cards for TASSA department staff members
-                </CardDescription>
+                <CardDescription>Generate identification cards for TASSA staff members</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="staffName">Staff Full Name</Label>
-                    <Input
-                      id="staffName"
-                      placeholder="Enter staff full name"
-                      value={staffName}
-                      onChange={(e) => setStaffName(e.target.value)}
-                    />
+                    <Label>Staff Full Name</Label>
+                    <Input placeholder="Enter staff full name" value={staffName} onChange={(e) => setStaffName(e.target.value)} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="staffPosition">Position</Label>
+                    <Label>Position</Label>
                     <Select value={staffPosition} onValueChange={setStaffPosition}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select position" />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Chairman">Chairman</SelectItem>
-                        <SelectItem value="Vice Chairman">Vice Chairman</SelectItem>
-                        <SelectItem value="Secretary General">Secretary General</SelectItem>
-                        <SelectItem value="Treasurer">Treasurer</SelectItem>
-                        <SelectItem value="Academic Coordinator">Academic Coordinator</SelectItem>
-                        <SelectItem value="Regional Coordinator">Regional Coordinator</SelectItem>
-                        <SelectItem value="Subject Coordinator">Subject Coordinator</SelectItem>
-                        <SelectItem value="IT Administrator">IT Administrator</SelectItem>
-                        <SelectItem value="Office Assistant">Office Assistant</SelectItem>
+                        {["Chairman","Vice Chairman","Secretary General","Treasurer","Academic Coordinator","Regional Coordinator","Subject Coordinator","IT Administrator","Office Assistant"].map(p => (
+                          <SelectItem key={p} value={p}>{p}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="staffDepartment">Department</Label>
+                    <Label>Department</Label>
                     <Select value={staffDepartment} onValueChange={setStaffDepartment}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Select department" /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Administration">Administration</SelectItem>
-                        <SelectItem value="Academic">Academic</SelectItem>
-                        <SelectItem value="Finance">Finance</SelectItem>
-                        <SelectItem value="IT & Communications">IT & Communications</SelectItem>
-                        <SelectItem value="Regional Affairs">Regional Affairs</SelectItem>
+                        {["Administration","Academic","Finance","IT & Communications","Regional Affairs"].map(d => (
+                          <SelectItem key={d} value={d}>{d}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="staffIdNumber">ID Number</Label>
-                    <Input
-                      id="staffIdNumber"
-                      placeholder="e.g., TASSA-2026-001"
-                      value={staffIdNumber}
-                      onChange={(e) => setStaffIdNumber(e.target.value)}
-                    />
+                    <Label>ID Number</Label>
+                    <Input placeholder="e.g., TASSA-2026-001" value={staffIdNumber} onChange={(e) => setStaffIdNumber(e.target.value)} />
                   </div>
-                </div>
-
-                <div className="bg-muted/50 p-4 rounded-lg border">
-                  <p className="text-sm text-muted-foreground">
-                    <strong>Note:</strong> ID cards include the TASSA Coordinator signature (D.M.Manumba)
-                  </p>
                 </div>
 
                 <Button onClick={generateIdCard} className="w-full md:w-auto">
