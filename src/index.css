@@ -3,80 +3,80 @@
 @tailwind utilities;
 
 /* TASSA Educational Design System - Tanzania Socratic Series Association
-   Modern Sapphire & Amber Premium Theme
+   Emerald & Cream Premium Theme
    All colors MUST be HSL for proper theming.
 */
 
 @layer base {
   :root {
-    /* Premium Sapphire Blue & Warm Amber Palette */
-    --background: 220 25% 97%;
-    --foreground: 222 47% 11%;
+    /* Emerald & Warm Cream Palette */
+    --background: 40 30% 97%;
+    --foreground: 150 30% 10%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 40 20% 99%;
+    --card-foreground: 150 30% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 40 20% 99%;
+    --popover-foreground: 150 30% 10%;
 
-    /* Primary - Rich Sapphire Blue */
-    --primary: 221 83% 53%;
+    /* Primary - Rich Emerald Green */
+    --primary: 152 60% 36%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 221 83% 45%;
-    --primary-light: 221 70% 94%;
+    --primary-hover: 152 60% 28%;
+    --primary-light: 152 45% 93%;
 
-    /* Secondary - Warm Slate */
-    --secondary: 215 20% 95%;
-    --secondary-foreground: 222 47% 25%;
+    /* Secondary - Warm Cream */
+    --secondary: 38 30% 95%;
+    --secondary-foreground: 150 30% 20%;
 
-    --muted: 220 15% 94%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 40 20% 94%;
+    --muted-foreground: 150 10% 45%;
 
-    /* Success - Vibrant Emerald */
-    --success: 152 76% 40%;
+    /* Success - Vibrant Teal */
+    --success: 170 65% 38%;
     --success-foreground: 0 0% 100%;
-    --success-light: 152 60% 92%;
+    --success-light: 170 50% 92%;
 
-    /* Warning - Rich Amber */
-    --warning: 38 92% 50%;
-    --warning-foreground: 38 92% 12%;
-    --warning-light: 38 85% 92%;
+    /* Warning - Warm Gold */
+    --warning: 42 90% 50%;
+    --warning-foreground: 42 90% 12%;
+    --warning-light: 42 80% 92%;
 
-    --accent: 221 60% 94%;
-    --accent-foreground: 221 83% 40%;
+    --accent: 152 40% 93%;
+    --accent-foreground: 152 60% 30%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 221 83% 53%;
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 152 60% 36%;
 
     --radius: 0.625rem;
 
     /* Premium gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%), hsl(239 84% 67%));
-    --gradient-hero: linear-gradient(135deg, hsl(221 83% 53%), hsl(199 89% 48%));
-    --gradient-announcement: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 95% 53%));
+    --gradient-primary: linear-gradient(135deg, hsl(152 60% 36%), hsl(170 55% 40%));
+    --gradient-hero: linear-gradient(135deg, hsl(152 60% 36%), hsl(140 50% 45%));
+    --gradient-announcement: linear-gradient(135deg, hsl(42 90% 50%), hsl(32 85% 52%));
     
-    /* Modern shadows with blue tint */
-    --shadow-sm: 0 1px 3px 0 hsl(221 50% 20% / 0.06);
-    --shadow-md: 0 4px 12px -2px hsl(221 50% 20% / 0.08);
-    --shadow-lg: 0 12px 24px -4px hsl(221 50% 20% / 0.1);
-    --shadow-xl: 0 24px 48px -8px hsl(221 50% 20% / 0.15);
+    /* Modern shadows with green tint */
+    --shadow-sm: 0 1px 3px 0 hsl(152 40% 20% / 0.06);
+    --shadow-md: 0 4px 12px -2px hsl(152 40% 20% / 0.08);
+    --shadow-lg: 0 12px 24px -4px hsl(152 40% 20% / 0.1);
+    --shadow-xl: 0 24px 48px -8px hsl(152 40% 20% / 0.15);
 
     /* Typography */
     --font-heading: 'Inter', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
 
-    --sidebar-background: 220 25% 98%;
-    --sidebar-foreground: 222 47% 20%;
-    --sidebar-primary: 221 83% 53%;
+    --sidebar-background: 40 25% 98%;
+    --sidebar-foreground: 150 30% 18%;
+    --sidebar-primary: 152 60% 36%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 221 60% 95%;
-    --sidebar-accent-foreground: 221 83% 40%;
-    --sidebar-border: 220 15% 90%;
-    --sidebar-ring: 221 83% 60%;
+    --sidebar-accent: 152 40% 94%;
+    --sidebar-accent-foreground: 152 60% 30%;
+    --sidebar-border: 40 15% 90%;
+    --sidebar-ring: 152 60% 45%;
   }
 
   .dark {
