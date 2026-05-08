@@ -391,39 +391,58 @@ export default function CertificateGeneratorPage() {
           </p>
         </div>
 
-        {/* Logo Upload Section */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ImageIcon className="h-5 w-5 text-primary" />
-              Certificate Logo
-            </CardTitle>
-            <CardDescription>Upload a logo to appear on all certificates (optional)</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <input
-                ref={logoInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleLogoUpload}
-                className="hidden"
-              />
-              <Button variant="outline" onClick={() => logoInputRef.current?.click()}>
-                <Upload className="h-4 w-4 mr-2" />
-                {logoFileName || "Upload Logo"}
-              </Button>
-              {logoDataUrl && (
-                <div className="flex items-center gap-3">
-                  <img src={logoDataUrl} alt="Logo preview" className="h-12 w-12 object-contain rounded border" />
-                  <Button variant="ghost" size="sm" onClick={() => { setLogoDataUrl(null); setLogoFileName(""); }}>
-                    Remove
-                  </Button>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Logo + Background Upload */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-primary" />
+                Certificate Logo
+              </CardTitle>
+              <CardDescription>Optional logo shown at the top of certificates</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <input ref={logoInputRef} type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+                <Button variant="outline" onClick={() => logoInputRef.current?.click()}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  {logoFileName || "Upload Logo"}
+                </Button>
+                {logoDataUrl && (
+                  <div className="flex items-center gap-3">
+                    <img src={logoDataUrl} alt="Logo preview" className="h-12 w-12 object-contain rounded border" />
+                    <Button variant="ghost" size="sm" onClick={() => { setLogoDataUrl(null); setLogoFileName(""); }}>Remove</Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-primary" />
+                Custom Background
+              </CardTitle>
+              <CardDescription>Replace the default certificate template (optional)</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <input ref={bgInputRef} type="file" accept="image/*" onChange={handleBgUpload} className="hidden" />
+                <Button variant="outline" onClick={() => bgInputRef.current?.click()}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  {bgFileName || "Upload Background"}
+                </Button>
+                {bgDataUrl && (
+                  <div className="flex items-center gap-3">
+                    <img src={bgDataUrl} alt="Background preview" className="h-12 w-16 object-cover rounded border" />
+                    <Button variant="ghost" size="sm" onClick={() => { setBgDataUrl(null); setBgFileName(""); }}>Reset</Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         <Tabs defaultValue="appreciation" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
