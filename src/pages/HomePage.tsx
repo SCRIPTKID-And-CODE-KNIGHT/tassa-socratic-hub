@@ -1,32 +1,60 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Trophy, FileText, ArrowRight, ExternalLink } from 'lucide-react';
+import { BookOpen, Users, Trophy, FileText, ArrowRight, ExternalLink, Building2, Sparkles } from 'lucide-react';
 import VoiceGreeting from '@/components/VoiceGreeting';
 import AchievementsSection from '@/components/AchievementsSection';
 import ExamCountdown from '@/components/ExamCountdown';
 import geographyBooks from '@/assets/geography-books.jpg';
 import founderImage from '@/assets/founder-daudi-manumba.jpg';
+import { supabase } from '@/integrations/supabase/client';
 
 const HomePage = () => {
+  const [schools, setSchools] = useState<{ id: string; school_name: string; region: string }[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from('schools')
+      .select('id, school_name, region')
+      .order('school_name')
+      .then(({ data }) => setSchools(data || []));
+  }, []);
+
   const quickStats = [
-    { icon: Users, label: 'Registered Schools', value: '25+' },
+    { icon: Users, label: 'Registered Schools', value: schools.length ? `${schools.length}+` : '25+' },
     { icon: Trophy, label: 'Annual Series', value: '12' },
     { icon: BookOpen, label: 'Subjects Covered', value: '1' },
     { icon: FileText, label: 'Past Papers', value: '200+' },
   ];
 
+  const half = Math.ceil(schools.length / 2) || 1;
+  const rowA = schools.slice(0, half);
+  const rowB = schools.slice(half);
+
+  const SchoolPill = ({ name, region }: { name: string; region: string }) => (
+    <div className="mx-3 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 shadow-sm hover:shadow-md hover:border-primary/40 transition-all">
+      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <Building2 className="h-3.5 w-3.5" />
+      </div>
+      <div className="flex flex-col leading-tight whitespace-nowrap">
+        <span className="text-xs font-semibold text-foreground">{name}</span>
+        <span className="text-[10px] text-muted-foreground">{region}</span>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-emerald-50">
+    <div className="min-h-screen bg-background">
       <VoiceGreeting />
 
-      {/* Top Study Materials Button - Refreshed 2026 Style */}
-      <div className="bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 text-white py-4 text-center shadow-lg">
-        <div className="flex items-center justify-center gap-3">
-          <span className="text-sm font-medium bg-emerald-500 px-3 py-1 rounded-full animate-pulse">NEW 2026</span>
+      {/* Top Study Materials Bar */}
+      <div className="bg-[image:var(--gradient-hero)] text-primary-foreground py-4 text-center shadow-lg">
+        <div className="flex items-center justify-center gap-3 flex-wrap px-4">
+          <span className="text-xs font-medium bg-warning text-warning-foreground px-3 py-1 rounded-full">NEW 2026</span>
           <Button
             onClick={() => window.open('https://tassageoacademy.vercel.app', '_blank', 'noopener,noreferrer')}
-            className="bg-gradient-to-r from-yellow-400 to-amber-500 text-blue-900 font-bold hover:from-yellow-500 hover:to-amber-600 hover:scale-105 transition-all duration-300 shadow-lg no-underline"
+            className="bg-warning text-warning-foreground font-bold hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg"
             size="lg"
           >
             <BookOpen className="mr-2 h-5 w-5" />
@@ -36,50 +64,36 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Moving Marquee - New Year 2026 */}
-      <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white py-4 overflow-hidden shadow-lg relative">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle,_white_1px,_transparent_1px)] bg-[length:20px_20px]"></div>
-        <div className="animate-marquee whitespace-nowrap relative">
-          <span className="text-2xl font-bold mx-8">🎉 WELCOME TO 2026! WISHING ALL TASSA SCHOOLS A YEAR OF EXCELLENCE AND ACHIEVEMENT 🌟</span>
-          <span className="text-2xl font-bold mx-8">📚 NEW YEAR, NEW GOALS - LET&apos;S MAKE 2026 THE BEST YEAR YET! 🏆</span>
-          <span className="text-2xl font-bold mx-8">🎉 WELCOME TO 2026! WISHING ALL TASSA SCHOOLS A YEAR OF EXCELLENCE AND ACHIEVEMENT 🌟</span>
-          <span className="text-2xl font-bold mx-8">📚 NEW YEAR, NEW GOALS - LET&apos;S MAKE 2026 THE BEST YEAR YET! 🏆</span>
-        </div>
-      </div>
-
       {/* Hero Section */}
       <section
-        className="hero-section py-24 relative overflow-hidden text-center text-white"
+        className="py-24 relative overflow-hidden text-center text-primary-foreground"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 40, 120, 0.85), rgba(0, 40, 120, 0.85)), url(${geographyBooks})`,
+          backgroundImage: `linear-gradient(135deg, hsl(222 65% 12% / 0.92), hsl(212 60% 25% / 0.88)), url(${geographyBooks})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
         <div className="max-w-5xl mx-auto px-6">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 font-heading animate-fade-in">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-4 py-1.5 mb-6 animate-fade-in">
+            <Sparkles className="h-4 w-4 text-warning" />
+            <span className="text-xs font-medium">Empowering Tanzania's brightest minds</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-heading animate-fade-in">
             Tanzania Advanced Socratic Schools Association
           </h1>
-          <p className="text-lg md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <p className="text-base md:text-xl mb-8 text-white/80 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '120ms' }}>
             Empowering academic excellence through comprehensive educational
             competitions across Tanzania
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '400ms' }}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '240ms' }}>
             <Link to="/registration">
-              <Button
-                size="lg"
-                className="bg-yellow-400 text-blue-900 font-semibold hover:bg-yellow-500 hover:scale-105 transition-transform"
-              >
+              <Button size="lg" className="bg-warning text-warning-foreground font-semibold hover:opacity-90 hover:scale-105 transition-transform">
                 Register Your School
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link to="/results">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-blue-800 transition"
-              >
+              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-primary transition">
                 View Results
               </Button>
             </Link>
@@ -88,34 +102,81 @@ const HomePage = () => {
       </section>
 
       {/* Exam Countdown Section */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-card border-b border-border">
         <div className="max-w-2xl mx-auto px-6">
           <ExamCountdown />
         </div>
       </section>
 
       {/* Quick Stats */}
-      <section className="stats-section py-16 bg-gradient-to-b from-white to-blue-50">
+      <section className="py-16 bg-secondary/40">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {quickStats.map((stat, index) => (
-            <div
-              key={index}
-              className="animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <Card className="rounded-2xl border-blue-200 shadow-md hover:shadow-xl transition-shadow duration-300 p-6 text-center bg-gradient-to-b from-blue-50 to-white">
-                <stat.icon className="mx-auto mb-3 h-10 w-10 text-blue-600" />
+            <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 80}ms` }}>
+              <Card className="rounded-2xl border-border shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 text-center bg-card">
+                <div className="mx-auto mb-3 h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <stat.icon className="h-6 w-6" />
+                </div>
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-blue-800">
-                    {stat.value}
-                  </CardTitle>
+                  <CardTitle className="text-3xl font-bold text-primary">{stat.value}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-blue-700 font-medium">
-                  {stat.label}
-                </CardContent>
+                <CardContent className="text-muted-foreground font-medium">{stat.label}</CardContent>
               </Card>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Trusted By Section */}
+      <section className="py-16 bg-background overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-10 animate-fade-in">
+            <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-3">Trusted By</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+              {schools.length || '25+'} Schools Across Tanzania
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Joining hands with the nation's leading institutions to deliver world-class academic competitions.
+            </p>
+          </div>
+
+          {schools.length > 0 ? (
+            <div className="space-y-4">
+              {/* Row A - scroll left */}
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
+                <div className="flex animate-scroll-left whitespace-nowrap">
+                  {[...rowA, ...rowA].map((s, i) => (
+                    <SchoolPill key={`a-${s.id}-${i}`} name={s.school_name} region={s.region} />
+                  ))}
+                </div>
+              </div>
+              {/* Row B - scroll right */}
+              {rowB.length > 0 && (
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
+                  <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
+                  <div className="flex animate-scroll-right whitespace-nowrap">
+                    {[...rowB, ...rowB].map((s, i) => (
+                      <SchoolPill key={`b-${s.id}-${i}`} name={s.school_name} region={s.region} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center text-muted-foreground py-8">Loading registered schools…</div>
+          )}
+
+          <div className="text-center mt-10">
+            <Link to="/registered-schools">
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                View All Registered Schools
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -123,24 +184,24 @@ const HomePage = () => {
       <AchievementsSection />
 
       {/* Co-Founder Section */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
+      <section className="py-16 bg-secondary/40">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-blue-800 mb-8">Our Leadership</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2>
           <div className="flex flex-col items-center">
-            <div className="relative mb-6">
-              <img 
-                src={founderImage} 
+            <div className="relative mb-6 animate-float-slow">
+              <img
+                src={founderImage}
                 alt="Sir Daudi Musula Manumba - Co-Founder of TASSA"
-                className="rounded-xl shadow-xl w-48 h-56 object-cover object-top border-4 border-blue-200"
+                className="rounded-xl shadow-xl w-48 h-56 object-cover object-top border-4 border-primary/20"
               />
-              <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg whitespace-nowrap">
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg whitespace-nowrap">
                 <p className="text-xs font-semibold">Co-Founder</p>
               </div>
             </div>
-            <h3 className="text-xl font-bold text-blue-800 mt-4">Sir Daudi Musula Manumba</h3>
-            <p className="text-blue-600 mt-2">Co-Founder & Supervisor</p>
+            <h3 className="text-xl font-bold text-foreground mt-4">Sir Daudi Musula Manumba</h3>
+            <p className="text-primary mt-2">Co-Founder & Supervisor</p>
             <Link to="/about" className="mt-4">
-              <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                 Learn More About Us
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -150,7 +211,7 @@ const HomePage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-blue-900 via-indigo-900 to-blue-900 text-blue-100 py-8 text-center">
+      <footer className="bg-[image:var(--gradient-hero)] text-primary-foreground py-8 text-center">
         <p className="text-sm">
           © 2026 Tanzania Advanced Socratic Schools Association. All Rights Reserved.
         </p>
