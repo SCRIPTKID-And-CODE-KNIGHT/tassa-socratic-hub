@@ -503,12 +503,66 @@ export default function CertificateGeneratorPage() {
                     <Textarea value={certBody} onChange={(e) => setCertBody(e.target.value)} rows={3} />
                   </div>
                   <div className="space-y-2">
+                    <Label>Event / Occasion (optional)</Label>
+                    <Input value={certEvent} onChange={(e) => setCertEvent(e.target.value)} placeholder="e.g. TASSA Series 6" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Location (optional)</Label>
+                    <Input value={certLocation} onChange={(e) => setCertLocation(e.target.value)} placeholder="e.g. Dar es Salaam" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Date Issued</Label>
+                    <Input type="date" value={certDate} onChange={(e) => setCertDate(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
                     <Label>Signer Name</Label>
                     <Input value={certSignName} onChange={(e) => setCertSignName(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label>Signer Title</Label>
                     <Input value={certSignTitle} onChange={(e) => setCertSignTitle(e.target.value)} />
+                  </div>
+                </div>
+
+                {/* Live Preview */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold">Live Preview</Label>
+                  <div
+                    className="relative w-full aspect-[297/210] rounded-lg border border-border overflow-hidden shadow-md bg-card"
+                    style={{
+                      backgroundImage: `url(${bgDataUrl || certificateTemplateBg})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  >
+                    <div className="absolute inset-0 flex flex-col items-center justify-start text-center px-[6%] py-[4%]">
+                      {logoDataUrl && (
+                        <img src={logoDataUrl} alt="logo" className="h-[14%] object-contain mb-2" />
+                      )}
+                      <h3 className="text-[3.5cqw] md:text-3xl font-bold text-primary tracking-wider">{certTitle}</h3>
+                      <p className="text-[2cqw] md:text-base text-accent font-medium">{certSubtitle}</p>
+                      <p className="mt-3 text-[1.4cqw] md:text-sm text-muted-foreground">{certIntro}</p>
+                      <p className="mt-1 text-[3cqw] md:text-2xl font-bold text-foreground border-b-2 border-foreground/40 pb-1 px-4">
+                        {recipientName.toUpperCase() || "RECIPIENT NAME"}
+                      </p>
+                      <p className="mt-3 text-[1.2cqw] md:text-xs text-muted-foreground max-w-[80%] whitespace-pre-line">{certBody}</p>
+                      {(certEvent || certLocation) && (
+                        <p className="mt-2 text-[1.2cqw] md:text-xs text-foreground/70">
+                          {[certEvent, certLocation].filter(Boolean).join(" — ")}
+                        </p>
+                      )}
+                      <div className="mt-auto w-full flex justify-between items-end text-[1.1cqw] md:text-xs">
+                        <div className="text-left">
+                          <p className="text-muted-foreground">Date: {certDate}</p>
+                          <div className="border-t border-foreground/40 w-32 mt-1" />
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-primary">{certSignName}</p>
+                          <p className="text-accent">{certSignTitle}</p>
+                          <div className="border-t border-foreground/40 w-40 mt-1 ml-auto" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
