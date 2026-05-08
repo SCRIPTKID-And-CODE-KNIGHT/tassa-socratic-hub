@@ -21,6 +21,11 @@ export default function CertificateGeneratorPage() {
   const [logoFileName, setLogoFileName] = useState<string>("");
   const logoInputRef = useRef<HTMLInputElement>(null);
 
+  // Custom background state
+  const [bgDataUrl, setBgDataUrl] = useState<string | null>(null);
+  const [bgFileName, setBgFileName] = useState<string>("");
+  const bgInputRef = useRef<HTMLInputElement>(null);
+
   // Appreciation Certificate State
   const [recipientType, setRecipientType] = useState<"teacher" | "student">("teacher");
   const [recipientName, setRecipientName] = useState("");
@@ -32,6 +37,9 @@ export default function CertificateGeneratorPage() {
   );
   const [certSignName, setCertSignName] = useState("DAUDI MUSULA MANUMBA");
   const [certSignTitle, setCertSignTitle] = useState("TASSA COORDINATOR");
+  const [certEvent, setCertEvent] = useState("");
+  const [certDate, setCertDate] = useState(new Date().toISOString().slice(0, 10));
+  const [certLocation, setCertLocation] = useState("");
 
   // School Certificate State
   const [schoolName, setSchoolName] = useState("");
@@ -66,6 +74,21 @@ export default function CertificateGeneratorPage() {
     reader.readAsDataURL(file);
   };
 
+  const handleBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Invalid file", description: "Please upload an image file", variant: "destructive" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setBgDataUrl(ev.target?.result as string);
+      setBgFileName(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new window.Image();
@@ -84,12 +107,11 @@ export default function CertificateGeneratorPage() {
 
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
-    // Add template background
+    // Add template background (custom upload or default)
     try {
-      const bgImg = await loadImage(certificateTemplateBg);
+      const bgImg = await loadImage(bgDataUrl || certificateTemplateBg);
       doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
     } catch {
-      // Fallback: simple border
       doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, 297, 210, "F");
       doc.setDrawColor(0, 188, 212);
@@ -142,16 +164,32 @@ export default function CertificateGeneratorPage() {
     const bodyLines = doc.splitTextToSize(certBody, 200);
     doc.text(bodyLines, 148.5, logoOffset + 72, { align: "center" });
 
+    // Optional event/location line
+    if (certEvent || certLocation) {
+      doc.setFontSize(11);
+      doc.setTextColor(80, 80, 80);
+      doc.text([certEvent, certLocation].filter(Boolean).join(" — "), 148.5, logoOffset + 92, { align: "center" });
+    }
+
     // Signature section at bottom
-    const sigY = 175;
+    const sigY = 180;
+    // Date (left)
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    doc.text(`Date: ${certDate}`, 30, sigY);
+    doc.line(30, sigY + 2, 100, sigY + 2);
+
+    // Coordinator signature (right)
     doc.setFontSize(13);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(20, 40, 80);
-    doc.text(certSignName, 148.5, sigY, { align: "center" });
+    doc.text(certSignName, 240, sigY, { align: "center" });
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(26, 82, 118);
-    doc.text(certSignTitle, 148.5, sigY + 7, { align: "center" });
+    doc.text(certSignTitle, 240, sigY + 6, { align: "center" });
+    doc.line(195, sigY + 2, 285, sigY + 2);
 
     const filename = `Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`;
     doc.save(filename);
@@ -167,9 +205,8 @@ export default function CertificateGeneratorPage() {
 
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
-    // Add template background
     try {
-      const bgImg = await loadImage(certificateTemplateBg);
+      const bgImg = await loadImage(bgDataUrl || certificateTemplateBg);
       doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
     } catch {
       doc.setFillColor(255, 255, 255);
