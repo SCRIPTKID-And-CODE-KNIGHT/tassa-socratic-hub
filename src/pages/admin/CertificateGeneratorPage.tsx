@@ -21,6 +21,11 @@ export default function CertificateGeneratorPage() {
   const [logoFileName, setLogoFileName] = useState<string>("");
   const logoInputRef = useRef<HTMLInputElement>(null);
 
+  // Custom background state
+  const [bgDataUrl, setBgDataUrl] = useState<string | null>(null);
+  const [bgFileName, setBgFileName] = useState<string>("");
+  const bgInputRef = useRef<HTMLInputElement>(null);
+
   // Appreciation Certificate State
   const [recipientType, setRecipientType] = useState<"teacher" | "student">("teacher");
   const [recipientName, setRecipientName] = useState("");
@@ -32,6 +37,9 @@ export default function CertificateGeneratorPage() {
   );
   const [certSignName, setCertSignName] = useState("DAUDI MUSULA MANUMBA");
   const [certSignTitle, setCertSignTitle] = useState("TASSA COORDINATOR");
+  const [certEvent, setCertEvent] = useState("");
+  const [certDate, setCertDate] = useState(new Date().toISOString().slice(0, 10));
+  const [certLocation, setCertLocation] = useState("");
 
   // School Certificate State
   const [schoolName, setSchoolName] = useState("");
@@ -66,6 +74,21 @@ export default function CertificateGeneratorPage() {
     reader.readAsDataURL(file);
   };
 
+  const handleBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Invalid file", description: "Please upload an image file", variant: "destructive" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setBgDataUrl(ev.target?.result as string);
+      setBgFileName(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new window.Image();
@@ -84,12 +107,11 @@ export default function CertificateGeneratorPage() {
 
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
-    // Add template background
+    // Add template background (custom upload or default)
     try {
-      const bgImg = await loadImage(certificateTemplateBg);
+      const bgImg = await loadImage(bgDataUrl || certificateTemplateBg);
       doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
     } catch {
-      // Fallback: simple border
       doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, 297, 210, "F");
       doc.setDrawColor(0, 188, 212);
@@ -142,16 +164,32 @@ export default function CertificateGeneratorPage() {
     const bodyLines = doc.splitTextToSize(certBody, 200);
     doc.text(bodyLines, 148.5, logoOffset + 72, { align: "center" });
 
+    // Optional event/location line
+    if (certEvent || certLocation) {
+      doc.setFontSize(11);
+      doc.setTextColor(80, 80, 80);
+      doc.text([certEvent, certLocation].filter(Boolean).join(" — "), 148.5, logoOffset + 92, { align: "center" });
+    }
+
     // Signature section at bottom
-    const sigY = 175;
+    const sigY = 180;
+    // Date (left)
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    doc.text(`Date: ${certDate}`, 30, sigY);
+    doc.line(30, sigY + 2, 100, sigY + 2);
+
+    // Coordinator signature (right)
     doc.setFontSize(13);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(20, 40, 80);
-    doc.text(certSignName, 148.5, sigY, { align: "center" });
+    doc.text(certSignName, 240, sigY, { align: "center" });
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(26, 82, 118);
-    doc.text(certSignTitle, 148.5, sigY + 7, { align: "center" });
+    doc.text(certSignTitle, 240, sigY + 6, { align: "center" });
+    doc.line(195, sigY + 2, 285, sigY + 2);
 
     const filename = `Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`;
     doc.save(filename);
@@ -167,9 +205,8 @@ export default function CertificateGeneratorPage() {
 
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
-    // Add template background
     try {
-      const bgImg = await loadImage(certificateTemplateBg);
+      const bgImg = await loadImage(bgDataUrl || certificateTemplateBg);
       doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
     } catch {
       doc.setFillColor(255, 255, 255);
@@ -354,39 +391,58 @@ export default function CertificateGeneratorPage() {
           </p>
         </div>
 
-        {/* Logo Upload Section */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ImageIcon className="h-5 w-5 text-primary" />
-              Certificate Logo
-            </CardTitle>
-            <CardDescription>Upload a logo to appear on all certificates (optional)</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <input
-                ref={logoInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleLogoUpload}
-                className="hidden"
-              />
-              <Button variant="outline" onClick={() => logoInputRef.current?.click()}>
-                <Upload className="h-4 w-4 mr-2" />
-                {logoFileName || "Upload Logo"}
-              </Button>
-              {logoDataUrl && (
-                <div className="flex items-center gap-3">
-                  <img src={logoDataUrl} alt="Logo preview" className="h-12 w-12 object-contain rounded border" />
-                  <Button variant="ghost" size="sm" onClick={() => { setLogoDataUrl(null); setLogoFileName(""); }}>
-                    Remove
-                  </Button>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Logo + Background Upload */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-primary" />
+                Certificate Logo
+              </CardTitle>
+              <CardDescription>Optional logo shown at the top of certificates</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <input ref={logoInputRef} type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+                <Button variant="outline" onClick={() => logoInputRef.current?.click()}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  {logoFileName || "Upload Logo"}
+                </Button>
+                {logoDataUrl && (
+                  <div className="flex items-center gap-3">
+                    <img src={logoDataUrl} alt="Logo preview" className="h-12 w-12 object-contain rounded border" />
+                    <Button variant="ghost" size="sm" onClick={() => { setLogoDataUrl(null); setLogoFileName(""); }}>Remove</Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-primary" />
+                Custom Background
+              </CardTitle>
+              <CardDescription>Replace the default certificate template (optional)</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <input ref={bgInputRef} type="file" accept="image/*" onChange={handleBgUpload} className="hidden" />
+                <Button variant="outline" onClick={() => bgInputRef.current?.click()}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  {bgFileName || "Upload Background"}
+                </Button>
+                {bgDataUrl && (
+                  <div className="flex items-center gap-3">
+                    <img src={bgDataUrl} alt="Background preview" className="h-12 w-16 object-cover rounded border" />
+                    <Button variant="ghost" size="sm" onClick={() => { setBgDataUrl(null); setBgFileName(""); }}>Reset</Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         <Tabs defaultValue="appreciation" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
@@ -447,12 +503,66 @@ export default function CertificateGeneratorPage() {
                     <Textarea value={certBody} onChange={(e) => setCertBody(e.target.value)} rows={3} />
                   </div>
                   <div className="space-y-2">
+                    <Label>Event / Occasion (optional)</Label>
+                    <Input value={certEvent} onChange={(e) => setCertEvent(e.target.value)} placeholder="e.g. TASSA Series 6" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Location (optional)</Label>
+                    <Input value={certLocation} onChange={(e) => setCertLocation(e.target.value)} placeholder="e.g. Dar es Salaam" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Date Issued</Label>
+                    <Input type="date" value={certDate} onChange={(e) => setCertDate(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
                     <Label>Signer Name</Label>
                     <Input value={certSignName} onChange={(e) => setCertSignName(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label>Signer Title</Label>
                     <Input value={certSignTitle} onChange={(e) => setCertSignTitle(e.target.value)} />
+                  </div>
+                </div>
+
+                {/* Live Preview */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold">Live Preview</Label>
+                  <div
+                    className="relative w-full aspect-[297/210] rounded-lg border border-border overflow-hidden shadow-md bg-card"
+                    style={{
+                      backgroundImage: `url(${bgDataUrl || certificateTemplateBg})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  >
+                    <div className="absolute inset-0 flex flex-col items-center justify-start text-center px-[6%] py-[4%]">
+                      {logoDataUrl && (
+                        <img src={logoDataUrl} alt="logo" className="h-[14%] object-contain mb-2" />
+                      )}
+                      <h3 className="text-[3.5cqw] md:text-3xl font-bold text-primary tracking-wider">{certTitle}</h3>
+                      <p className="text-[2cqw] md:text-base text-accent font-medium">{certSubtitle}</p>
+                      <p className="mt-3 text-[1.4cqw] md:text-sm text-muted-foreground">{certIntro}</p>
+                      <p className="mt-1 text-[3cqw] md:text-2xl font-bold text-foreground border-b-2 border-foreground/40 pb-1 px-4">
+                        {recipientName.toUpperCase() || "RECIPIENT NAME"}
+                      </p>
+                      <p className="mt-3 text-[1.2cqw] md:text-xs text-muted-foreground max-w-[80%] whitespace-pre-line">{certBody}</p>
+                      {(certEvent || certLocation) && (
+                        <p className="mt-2 text-[1.2cqw] md:text-xs text-foreground/70">
+                          {[certEvent, certLocation].filter(Boolean).join(" — ")}
+                        </p>
+                      )}
+                      <div className="mt-auto w-full flex justify-between items-end text-[1.1cqw] md:text-xs">
+                        <div className="text-left">
+                          <p className="text-muted-foreground">Date: {certDate}</p>
+                          <div className="border-t border-foreground/40 w-32 mt-1" />
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-primary">{certSignName}</p>
+                          <p className="text-accent">{certSignTitle}</p>
+                          <div className="border-t border-foreground/40 w-40 mt-1 ml-auto" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
