@@ -49,8 +49,8 @@ const ContactPage = () => {
       }
 
       toast({
-        title: "Message Sent Successfully!",
-        description: "Your message has been received. We will respond within 24 hours.",
+        title: "Message has been Sent Successfully!",
+        description: "Your message has been received. We will get back soon to you within 24 hours.",
       });
 
       setIsSubmitted(true);
