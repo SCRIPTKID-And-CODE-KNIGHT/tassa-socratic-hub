@@ -10,7 +10,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Plus, Search, Edit, DollarSign, School } from 'lucide-react';
+import { ArrowLeft, Plus, Search, Edit, DollarSign, School, Trash2, Copy, AlertTriangle } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface SchoolData {
   id: string;
@@ -42,6 +52,9 @@ const SchoolManagementPage = () => {
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState<SchoolData | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [confirmAutoDelete, setConfirmAutoDelete] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -304,6 +317,62 @@ const SchoolManagementPage = () => {
     school.contact_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Normalize name for duplicate detection
+  const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ');
+
+  const duplicateGroups = (() => {
+    const map = new Map<string, SchoolData[]>();
+    for (const s of schools) {
+      const key = normalize(s.school_name);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(s);
+    }
+    return Array.from(map.values()).filter((g) => g.length > 1);
+  })();
+
+  const duplicateIds = new Set(duplicateGroups.flat().map((s) => s.id));
+  const displayedSchools = showDuplicatesOnly
+    ? filteredSchools.filter((s) => duplicateIds.has(s.id))
+    : filteredSchools;
+
+  const isDuplicate = (s: SchoolData) => duplicateIds.has(s.id);
+
+  const handleDeleteSchool = async (id: string) => {
+    const { error } = await supabase.from('schools').delete().eq('id', id);
+    if (error) {
+      toast({ title: 'Error', description: 'Failed to delete school.', variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Deleted', description: 'School removed successfully.' });
+    setConfirmDeleteId(null);
+    fetchData();
+  };
+
+  const handleAutoDeleteDuplicates = async () => {
+    // Keep oldest (first registered) per duplicate group, delete the rest
+    const toDelete: string[] = [];
+    for (const group of duplicateGroups) {
+      const sorted = [...group].sort(
+        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+      toDelete.push(...sorted.slice(1).map((s) => s.id));
+    }
+    if (toDelete.length === 0) {
+      toast({ title: 'No duplicates', description: 'No duplicate schools found.' });
+      setConfirmAutoDelete(false);
+      return;
+    }
+    const { error } = await supabase.from('schools').delete().in('id', toDelete);
+    if (error) {
+      toast({ title: 'Error', description: 'Failed to delete duplicates.', variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Duplicates removed', description: `${toDelete.length} duplicate school(s) deleted.` });
+    setConfirmAutoDelete(false);
+    setShowDuplicatesOnly(false);
+    fetchData();
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen py-16 bg-muted/20 flex items-center justify-center">
@@ -330,11 +399,34 @@ const SchoolManagementPage = () => {
               School Management
             </h1>
             <p className="text-muted-foreground">
-              View, add, and manage registered schools ({schools.length} total)
+              View, add, and manage registered schools ({schools.length} total
+              {duplicateGroups.length > 0 && (
+                <span className="text-destructive font-medium"> · {duplicateIds.size} possible duplicates in {duplicateGroups.length} group(s)</span>
+              )}
+              )
             </p>
           </div>
 
-          <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant={showDuplicatesOnly ? 'default' : 'outline'}
+              onClick={() => setShowDuplicatesOnly((v) => !v)}
+              className="flex items-center gap-2"
+            >
+              <Copy className="h-4 w-4" />
+              {showDuplicatesOnly ? 'Show All Schools' : `Find Duplicates${duplicateGroups.length ? ` (${duplicateIds.size})` : ''}`}
+            </Button>
+            {duplicateGroups.length > 0 && (
+              <Button
+                variant="destructive"
+                onClick={() => setConfirmAutoDelete(true)}
+                className="flex items-center gap-2"
+              >
+                <AlertTriangle className="h-4 w-4" />
+                Auto-Delete Duplicates
+              </Button>
+            )}
+            <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
             setIsAddDialogOpen(open);
             if (!open) resetForm();
           }}>
@@ -419,6 +511,7 @@ const SchoolManagementPage = () => {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* Payment Dialog */}
@@ -544,9 +637,16 @@ const SchoolManagementPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredSchools.map((school) => (
-                    <TableRow key={school.id}>
-                      <TableCell className="font-medium">{school.school_name}</TableCell>
+                  {displayedSchools.map((school) => (
+                    <TableRow key={school.id} className={isDuplicate(school) ? 'bg-destructive/5' : ''}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          {school.school_name}
+                          {isDuplicate(school) && (
+                            <Badge variant="destructive" className="text-[10px]">Duplicate</Badge>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <div>
                           <p className="text-sm">{school.contact_name}</p>
@@ -576,20 +676,71 @@ const SchoolManagementPage = () => {
                           >
                             <DollarSign className="h-4 w-4" />
                           </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                            onClick={() => setConfirmDeleteId(school.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              {filteredSchools.length === 0 && (
+              {displayedSchools.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No schools found matching your search.
+                  {showDuplicatesOnly ? 'No duplicate schools found.' : 'No schools found matching your search.'}
                 </div>
               )}
             </div>
           </CardContent>
         </Card>
+
+        {/* Delete confirm */}
+        <AlertDialog open={!!confirmDeleteId} onOpenChange={(open) => !open && setConfirmDeleteId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this school?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. The school will be permanently removed from the registry.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => confirmDeleteId && handleDeleteSchool(confirmDeleteId)}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Auto-delete duplicates confirm */}
+        <AlertDialog open={confirmAutoDelete} onOpenChange={setConfirmAutoDelete}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Auto-delete duplicate schools?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Schools are grouped by normalized name. The oldest registration in each group is kept; the rest will be deleted.
+                This will remove {Math.max(0, duplicateIds.size - duplicateGroups.length)} school(s).
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleAutoDeleteDuplicates}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete Duplicates
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

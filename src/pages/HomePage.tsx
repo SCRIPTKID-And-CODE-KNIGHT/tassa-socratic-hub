@@ -210,12 +210,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[image:var(--gradient-hero)] text-primary-foreground py-8 text-center">
-        <p className="text-sm">
-          © 2026 Tanzania Advanced Socratic Schools Association. All Rights Reserved.
-        </p>
-      </footer>
     </div>
   );
 };

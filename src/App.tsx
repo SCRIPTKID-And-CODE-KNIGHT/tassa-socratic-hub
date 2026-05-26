@@ -82,6 +82,9 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
+                <footer className="mt-auto bg-[image:var(--gradient-hero)] text-primary-foreground py-6 text-center">
+                  <p className="text-sm">© 2026 Tanzania Advanced Socratic Schools Association. All Rights Reserved.</p>
+                </footer>
               </div>
             </div>
           </SidebarProvider>

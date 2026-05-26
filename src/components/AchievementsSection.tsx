@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Trophy, TrendingUp } from 'lucide-react';
+import { Trophy, TrendingUp, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 
 interface TopStudent {
@@ -30,6 +31,8 @@ const AchievementsSection = () => {
   const [topStudents, setTopStudents] = useState<TopStudent[]>([]);
   const [bestSchools, setBestSchools] = useState<BestSchool[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showStudents, setShowStudents] = useState(false);
+  const [showSchools, setShowSchools] = useState(false);
 
   useEffect(() => {
     fetchPublishedData();
@@ -85,12 +88,21 @@ const AchievementsSection = () => {
 
         {/* Top Students */}
         <div className="mb-16">
-          <div className="flex items-center gap-3 mb-6 animate-fade-in">
-            <Trophy className="h-8 w-8 text-yellow-500" />
-            <h3 className="text-2xl font-bold text-blue-900">Top Performing Students</h3>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <Trophy className="h-8 w-8 text-yellow-500" />
+              <h3 className="text-2xl font-bold text-blue-900">Top Performing Students</h3>
+            </div>
+            <Button
+              variant={showStudents ? 'secondary' : 'default'}
+              onClick={() => setShowStudents((v) => !v)}
+              className="gap-2"
+            >
+              {showStudents ? <><EyeOff className="h-4 w-4" /> Hide</> : <><Eye className="h-4 w-4" /> View Top Performing Students</>}
+            </Button>
           </div>
 
-          {topStudents.length > 0 ? (
+          {showStudents && (topStudents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {topStudents.map((student) => (
                 <Card key={student.id} className="bg-gradient-to-br from-yellow-50 to-white border-2 border-yellow-200 hover:shadow-lg transition-shadow">
@@ -123,17 +135,26 @@ const AchievementsSection = () => {
                 </p>
               </CardContent>
             </Card>
-          )}
+          ))}
         </div>
 
         {/* Best Schools */}
         <div>
-          <div className="flex items-center gap-3 mb-6 animate-fade-in">
-            <TrendingUp className="h-8 w-8 text-blue-600" />
-            <h3 className="text-2xl font-bold text-blue-900">Top Performing Schools</h3>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <TrendingUp className="h-8 w-8 text-blue-600" />
+              <h3 className="text-2xl font-bold text-blue-900">Top Performing Schools</h3>
+            </div>
+            <Button
+              variant={showSchools ? 'secondary' : 'default'}
+              onClick={() => setShowSchools((v) => !v)}
+              className="gap-2"
+            >
+              {showSchools ? <><EyeOff className="h-4 w-4" /> Hide</> : <><Eye className="h-4 w-4" /> View Top Performing Schools</>}
+            </Button>
           </div>
 
-          {bestSchools.length > 0 ? (
+          {showSchools && (bestSchools.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {bestSchools.map((school) => (
                 <Card key={school.id} className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 hover:shadow-lg transition-shadow">
@@ -168,7 +189,7 @@ const AchievementsSection = () => {
                 </p>
               </CardContent>
             </Card>
-          )}
+          ))}
         </div>
       </div>
     </section>
