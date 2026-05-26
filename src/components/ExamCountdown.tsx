@@ -103,18 +103,7 @@ const ExamCountdown = () => {
   const examDate = new Date(examSetting.exam_date);
 
   if (isExpired) {
-    return (
-      <Card className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 rounded-2xl shadow-xl">
-        <div className="flex items-center justify-center gap-3">
-          <Trophy className="h-8 w-8 animate-bounce" />
-          <div className="text-center">
-            <h3 className="text-xl font-bold">Exam Day is Here!</h3>
-            <p className="text-emerald-100">Good luck to all TASSA students!</p>
-          </div>
-          <Trophy className="h-8 w-8 animate-bounce" />
-        </div>
-      </Card>
-    );
+    return null;
   }
 
   return (
