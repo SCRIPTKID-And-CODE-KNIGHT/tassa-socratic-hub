@@ -554,6 +554,171 @@ export default function CertificateGeneratorPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Hidden printable certificates — captured by html2canvas at high fidelity */}
+      <div style={{ position: "fixed", left: "-10000px", top: 0, pointerEvents: "none" }} aria-hidden>
+        {/* Appreciation Certificate (A4 landscape 1123x794 px) */}
+        <div
+          ref={appreciationPrintRef}
+          style={{
+            width: "1123px",
+            height: "794px",
+            backgroundImage: `url(${bgDataUrl || certificateTemplateBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundColor: "#ffffff",
+            fontFamily: "Georgia, 'Times New Roman', serif",
+            position: "relative",
+            color: "#1a2a4a",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              padding: "60px 90px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            {logoDataUrl && (
+              <img src={logoDataUrl} alt="" style={{ height: "100px", objectFit: "contain", marginBottom: "12px" }} />
+            )}
+            <h1 style={{ fontSize: "64px", fontWeight: 800, letterSpacing: "8px", margin: 0, color: "#14254f" }}>
+              {certTitle}
+            </h1>
+            <p style={{ fontSize: "28px", letterSpacing: "6px", margin: "6px 0 0", color: "#1a5276", fontWeight: 500 }}>
+              {certSubtitle}
+            </p>
+            <p style={{ fontSize: "18px", margin: "32px 0 14px", color: "#444", fontFamily: "Georgia, serif", fontStyle: "italic" }}>
+              {certIntro}
+            </p>
+            <p
+              style={{
+                fontSize: "44px",
+                fontWeight: 700,
+                margin: "8px 0 4px",
+                color: "#111",
+                borderBottom: "2px solid #444",
+                padding: "0 30px 8px",
+              }}
+            >
+              {recipientName.toUpperCase()}
+            </p>
+            <p
+              style={{
+                fontSize: "18px",
+                margin: "26px auto 0",
+                color: "#333",
+                maxWidth: "820px",
+                lineHeight: 1.6,
+                whiteSpace: "pre-line",
+                fontFamily: "Arial, sans-serif",
+              }}
+            >
+              {certBody}
+            </p>
+            {(certEvent || certLocation) && (
+              <p style={{ fontSize: "16px", marginTop: "18px", color: "#555", fontStyle: "italic" }}>
+                {[certEvent, certLocation].filter(Boolean).join(" — ")}
+              </p>
+            )}
+
+            <div
+              style={{
+                marginTop: "auto",
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                paddingTop: "30px",
+              }}
+            >
+              <div style={{ textAlign: "left" }}>
+                <p style={{ margin: 0, fontSize: "16px", color: "#333" }}>Date: {certDate}</p>
+                <div style={{ borderTop: "1.5px solid #333", width: "240px", marginTop: "6px" }} />
+                <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#666" }}>Date Issued</p>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <p style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#14254f" }}>{certSignName}</p>
+                <p style={{ margin: "2px 0 0", fontSize: "14px", color: "#1a5276" }}>{certSignTitle}</p>
+                <div style={{ borderTop: "1.5px solid #333", width: "280px", marginTop: "6px", marginLeft: "auto" }} />
+                <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#666" }}>Signature</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* School Certificate (A4 landscape) */}
+        <div
+          ref={schoolPrintRef}
+          style={{
+            width: "1123px",
+            height: "794px",
+            backgroundImage: `url(${bgDataUrl || certificateTemplateBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundColor: "#ffffff",
+            fontFamily: "Georgia, 'Times New Roman', serif",
+            position: "relative",
+            color: "#1a2a4a",
+            marginTop: "40px",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              padding: "60px 90px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            {logoDataUrl && (
+              <img src={logoDataUrl} alt="" style={{ height: "100px", objectFit: "contain", marginBottom: "12px" }} />
+            )}
+            <h1 style={{ fontSize: "64px", fontWeight: 800, letterSpacing: "8px", margin: 0, color: "#14254f" }}>
+              {schoolCertTitle}
+            </h1>
+            <p style={{ fontSize: "28px", letterSpacing: "6px", margin: "6px 0 0", color: "#b8860b", fontWeight: 600 }}>
+              {schoolCertSubtitle}
+            </p>
+            <p style={{ fontSize: "18px", margin: "26px 0 10px", color: "#444", fontStyle: "italic" }}>
+              {schoolCertIntro}
+            </p>
+            <p
+              style={{
+                fontSize: "40px",
+                fontWeight: 700,
+                margin: "4px 0",
+                color: "#1a5276",
+                borderBottom: "2px solid #b8860b",
+                padding: "0 30px 8px",
+              }}
+            >
+              {schoolName.toUpperCase()}
+            </p>
+            <p style={{ fontSize: "16px", color: "#666", margin: "8px 0 0" }}>{schoolRegion} Region</p>
+            <p style={{ fontSize: "28px", fontWeight: 700, color: "#b8860b", margin: "18px 0 0" }}>
+              {schoolPosition}
+              {schoolPosition === "1" ? "st" : schoolPosition === "2" ? "nd" : schoolPosition === "3" ? "rd" : "th"} BEST SCHOOL — Series {schoolSeries}
+            </p>
+            <p style={{ fontSize: "18px", margin: "20px auto 0", color: "#333", maxWidth: "820px", lineHeight: 1.6, fontFamily: "Arial, sans-serif" }}>
+              {schoolCertBody}
+            </p>
+
+            <div style={{ marginTop: "auto", paddingTop: "30px" }}>
+              <p style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#14254f" }}>{certSignName}</p>
+              <p style={{ margin: "2px 0 0", fontSize: "14px", color: "#1a5276" }}>{certSignTitle}</p>
+              <div style={{ borderTop: "1.5px solid #333", width: "260px", marginTop: "6px", marginInline: "auto" }} />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
