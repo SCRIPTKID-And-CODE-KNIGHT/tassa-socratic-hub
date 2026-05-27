@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TopNav } from "@/components/TopNav";
+import { SiteFooter } from "@/components/SiteFooter";
 import CertificateGeneratorPage from './pages/admin/CertificateGeneratorPage';
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -41,7 +42,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen flex flex-col bg-background">
+          <div className="flex min-h-screen flex-col bg-background">
             <TopNav />
             <main className="flex-1 flex flex-col">
               <Routes>
@@ -75,9 +76,7 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
-            <footer className="mt-auto bg-[image:var(--gradient-hero)] text-primary-foreground py-6 px-4 text-center">
-              <p className="text-sm">© 2026 Tanzania Advanced Socratic Schools Association. All Rights Reserved.</p>
-            </footer>
+            <SiteFooter />
           </div>
         </BrowserRouter>
       </TooltipProvider>
