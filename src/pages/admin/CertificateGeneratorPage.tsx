@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Award, IdCard, School, ArrowLeft, Download, Users, Upload, Image as ImageIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import certificateTemplateBg from "@/assets/certificate-template-bg.png";
 
 export default function CertificateGeneratorPage() {
@@ -25,6 +26,10 @@ export default function CertificateGeneratorPage() {
   const [bgDataUrl, setBgDataUrl] = useState<string | null>(null);
   const [bgFileName, setBgFileName] = useState<string>("");
   const bgInputRef = useRef<HTMLInputElement>(null);
+
+  // Hidden printable refs (used for html2canvas → PDF capture)
+  const appreciationPrintRef = useRef<HTMLDivElement>(null);
+  const schoolPrintRef = useRef<HTMLDivElement>(null);
 
   // Appreciation Certificate State
   const [recipientType, setRecipientType] = useState<"teacher" | "student">("teacher");
@@ -89,14 +94,18 @@ export default function CertificateGeneratorPage() {
     reader.readAsDataURL(file);
   };
 
-  const loadImage = (src: string): Promise<HTMLImageElement> => {
-    return new Promise((resolve, reject) => {
-      const img = new window.Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = src;
+  const captureToPdf = async (el: HTMLElement, filename: string) => {
+    const canvas = await html2canvas(el, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      logging: false,
     });
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    // A4 landscape: 297 x 210 mm
+    pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
+    pdf.save(filename);
   };
 
   const generateAppreciationCertificate = async () => {
@@ -104,97 +113,17 @@ export default function CertificateGeneratorPage() {
       toast({ title: "Missing Information", description: "Please enter recipient name", variant: "destructive" });
       return;
     }
-
-    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-
-    // Add template background (custom upload or default)
+    if (!appreciationPrintRef.current) return;
     try {
-      const bgImg = await loadImage(bgDataUrl || certificateTemplateBg);
-      doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
-    } catch {
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, 297, 210, "F");
-      doc.setDrawColor(0, 188, 212);
-      doc.setLineWidth(8);
-      doc.rect(6, 6, 285, 198);
+      await captureToPdf(
+        appreciationPrintRef.current,
+        `Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`
+      );
+      toast({ title: "Certificate Generated", description: "Certificate has been downloaded" });
+    } catch (err) {
+      console.error(err);
+      toast({ title: "Generation failed", description: "Could not render certificate", variant: "destructive" });
     }
-
-    // Add logo if uploaded
-    if (logoDataUrl) {
-      try {
-        const logoImg = await loadImage(logoDataUrl);
-        doc.addImage(logoImg, "PNG", 128.5, 18, 40, 40);
-      } catch { /* skip logo */ }
-    }
-
-    const logoOffset = logoDataUrl ? 60 : 30;
-
-    // Main title
-    doc.setFontSize(42);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(20, 40, 80);
-    doc.text(certTitle, 148.5, logoOffset + 10, { align: "center" });
-
-    // Subtitle
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(26, 82, 118);
-    doc.text(certSubtitle, 148.5, logoOffset + 22, { align: "center" });
-
-    // Intro text
-    doc.setFontSize(13);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(60, 60, 60);
-    doc.text(certIntro, 148.5, logoOffset + 38, { align: "center" });
-
-    // Recipient name with underline
-    doc.setFontSize(28);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(20, 20, 20);
-    doc.text(recipientName.toUpperCase(), 148.5, logoOffset + 56, { align: "center" });
-    const nameWidth = doc.getTextWidth(recipientName.toUpperCase());
-    doc.setDrawColor(40, 40, 40);
-    doc.setLineWidth(0.6);
-    doc.line(148.5 - nameWidth / 2 - 10, logoOffset + 60, 148.5 + nameWidth / 2 + 10, logoOffset + 60);
-
-    // Body text - split by newlines and wrap
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    const bodyLines = doc.splitTextToSize(certBody, 200);
-    doc.text(bodyLines, 148.5, logoOffset + 72, { align: "center" });
-
-    // Optional event/location line
-    if (certEvent || certLocation) {
-      doc.setFontSize(11);
-      doc.setTextColor(80, 80, 80);
-      doc.text([certEvent, certLocation].filter(Boolean).join(" — "), 148.5, logoOffset + 92, { align: "center" });
-    }
-
-    // Signature section at bottom
-    const sigY = 180;
-    // Date (left)
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    doc.text(`Date: ${certDate}`, 30, sigY);
-    doc.line(30, sigY + 2, 100, sigY + 2);
-
-    // Coordinator signature (right)
-    doc.setFontSize(13);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(20, 40, 80);
-    doc.text(certSignName, 240, sigY, { align: "center" });
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(26, 82, 118);
-    doc.text(certSignTitle, 240, sigY + 6, { align: "center" });
-    doc.line(195, sigY + 2, 285, sigY + 2);
-
-    const filename = `Certificate_${recipientName.replace(/\s+/g, "_")}.pdf`;
-    doc.save(filename);
-
-    toast({ title: "Certificate Generated", description: "Certificate has been downloaded" });
   };
 
   const generateSchoolCertificate = async () => {
@@ -202,85 +131,17 @@ export default function CertificateGeneratorPage() {
       toast({ title: "Missing Information", description: "Please fill in all fields", variant: "destructive" });
       return;
     }
-
-    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-
+    if (!schoolPrintRef.current) return;
     try {
-      const bgImg = await loadImage(bgDataUrl || certificateTemplateBg);
-      doc.addImage(bgImg, "PNG", 0, 0, 297, 210);
-    } catch {
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, 297, 210, "F");
-      doc.setDrawColor(184, 134, 11);
-      doc.setLineWidth(8);
-      doc.rect(6, 6, 285, 198);
+      await captureToPdf(
+        schoolPrintRef.current,
+        `School_Certificate_${schoolName.replace(/\s+/g, "_")}.pdf`
+      );
+      toast({ title: "Certificate Generated", description: "School certificate has been downloaded" });
+    } catch (err) {
+      console.error(err);
+      toast({ title: "Generation failed", description: "Could not render certificate", variant: "destructive" });
     }
-
-    // Add logo if uploaded
-    if (logoDataUrl) {
-      try {
-        const logoImg = await loadImage(logoDataUrl);
-        doc.addImage(logoImg, "PNG", 128.5, 18, 40, 40);
-      } catch { /* skip logo */ }
-    }
-
-    const logoOffset = logoDataUrl ? 60 : 30;
-
-    // Title
-    doc.setFontSize(42);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(20, 40, 80);
-    doc.text(schoolCertTitle, 148.5, logoOffset + 10, { align: "center" });
-
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(184, 134, 11);
-    doc.text(schoolCertSubtitle, 148.5, logoOffset + 22, { align: "center" });
-
-    // Intro
-    doc.setFontSize(13);
-    doc.setTextColor(60, 60, 60);
-    doc.text(schoolCertIntro, 148.5, logoOffset + 38, { align: "center" });
-
-    // School name
-    doc.setFontSize(28);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(26, 82, 118);
-    doc.text(schoolName.toUpperCase(), 148.5, logoOffset + 56, { align: "center" });
-
-    // Region
-    doc.setFontSize(13);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text(`${schoolRegion} Region`, 148.5, logoOffset + 65, { align: "center" });
-
-    // Position
-    const positionSuffix = schoolPosition === "1" ? "st" : schoolPosition === "2" ? "nd" : schoolPosition === "3" ? "rd" : "th";
-    doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(184, 134, 11);
-    doc.text(`${schoolPosition}${positionSuffix} BEST SCHOOL - Series ${schoolSeries}`, 148.5, logoOffset + 78, { align: "center" });
-
-    // Body
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    const bodyLines = doc.splitTextToSize(schoolCertBody, 200);
-    doc.text(bodyLines, 148.5, logoOffset + 90, { align: "center" });
-
-    // Signature
-    const sigY = 175;
-    doc.setFontSize(13);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(20, 40, 80);
-    doc.text(certSignName, 148.5, sigY, { align: "center" });
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(26, 82, 118);
-    doc.text(certSignTitle, 148.5, sigY + 7, { align: "center" });
-
-    doc.save(`School_Certificate_${schoolName.replace(/\s+/g, "_")}.pdf`);
-    toast({ title: "Certificate Generated", description: "School certificate has been downloaded" });
   };
 
   const generateIdCard = () => {
