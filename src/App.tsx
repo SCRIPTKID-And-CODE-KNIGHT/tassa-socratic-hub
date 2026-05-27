@@ -3,8 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { TopNav } from "@/components/TopNav";
 import CertificateGeneratorPage from './pages/admin/CertificateGeneratorPage';
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -42,17 +41,10 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <SidebarProvider>
-            <div className="min-h-screen flex w-full bg-background">
-              <AppSidebar />
-              <div className="flex-1 flex flex-col min-h-screen min-w-0">
-                <header className="h-14 flex items-center gap-2 border-b border-border bg-card/95 backdrop-blur sticky top-0 z-40 px-3 sm:px-4 shadow-sm">
-                  <SidebarTrigger className="h-9 w-9 shrink-0 text-primary hover:bg-primary/10" />
-                  <span className="text-xs sm:hidden font-medium text-muted-foreground">Menu</span>
-                  <span className="font-semibold text-foreground truncate">TASSA Socratic Schools</span>
-                </header>
-                <main className="flex-1 flex flex-col">
-                  <Routes>
+          <div className="min-h-screen flex flex-col bg-background">
+            <TopNav />
+            <main className="flex-1 flex flex-col">
+              <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/results" element={<ResultsPage />} />
@@ -81,14 +73,12 @@ const App = () => {
               <Route path="/auth" element={<AuthPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <footer className="mt-auto bg-[image:var(--gradient-hero)] text-primary-foreground py-6 px-4 text-center">
-                  <p className="text-sm">© 2026 Tanzania Advanced Socratic Schools Association. All Rights Reserved.</p>
-                </footer>
-              </div>
-            </div>
-          </SidebarProvider>
+              </Routes>
+            </main>
+            <footer className="mt-auto bg-[image:var(--gradient-hero)] text-primary-foreground py-6 px-4 text-center">
+              <p className="text-sm">© 2026 Tanzania Advanced Socratic Schools Association. All Rights Reserved.</p>
+            </footer>
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
