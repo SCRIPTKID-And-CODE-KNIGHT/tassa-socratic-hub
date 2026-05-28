@@ -42,9 +42,9 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex min-h-screen flex-col bg-background">
+          <div className="flex flex-col bg-background">
             <TopNav />
-            <main className="flex-1 flex flex-col">
+            <main className="flex flex-col">
               <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
