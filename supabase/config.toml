@@ -2,3 +2,6 @@ project_id = "vwsrareoyrrtjcbqevop"
 
 [functions.assign-all-admins]
 verify_jwt = true
+
+[functions.tassa-ai-chat]
+verify_jwt = false
