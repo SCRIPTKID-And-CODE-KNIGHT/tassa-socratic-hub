@@ -187,7 +187,7 @@ const HomePage = () => {
       {/* Co-Founder Section */}
       <section className="py-16 bg-secondary/40">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <Reveal as="div"><h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2></Reveal>
+          <Reveal><h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2></Reveal>
           <Reveal variant="scale" delay={120} className="flex flex-col items-center">
             <div className="relative mb-6 animate-float-slow">
               <img
