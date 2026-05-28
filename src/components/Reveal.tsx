@@ -5,7 +5,6 @@ type RevealProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
-  as?: keyof JSX.IntrinsicElements;
   variant?: "up" | "left" | "right" | "scale" | "fade";
 };
 
@@ -13,10 +12,9 @@ export function Reveal({
   children,
   className,
   delay = 0,
-  as: Tag = "div",
   variant = "up",
 }: RevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -41,14 +39,13 @@ export function Reveal({
   const variantClass = `reveal-${variant}`;
 
   return (
-    <Tag
-      // @ts-expect-error – generic ref for polymorphic tag
+    <div
       ref={ref}
       className={cn(base, variantClass, visible && "reveal-in", className)}
       style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}
     >
       {children}
-    </Tag>
+    </div>
   );
 }
 
