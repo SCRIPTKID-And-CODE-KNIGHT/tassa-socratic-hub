@@ -87,7 +87,7 @@ export function SiteFooter() {
   };
 
   return (
-    <footer className="mt-auto bg-[image:var(--gradient-hero)] text-primary-foreground border-t border-primary-foreground/10">
+    <footer className="bg-[image:var(--gradient-hero)] text-primary-foreground border-t border-primary-foreground/10">
       {/* Gradient separator */}
       <div className="h-1 bg-gradient-to-r from-transparent via-accent to-transparent" />
 
