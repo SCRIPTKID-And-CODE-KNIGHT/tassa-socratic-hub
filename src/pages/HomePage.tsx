@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { BookOpen, Users, Trophy, FileText, ArrowRight, ExternalLink, Building2, Sparkles } from 'lucide-react';
-import VoiceGreeting from '@/components/VoiceGreeting';
+import TassaAI from '@/components/TassaAI';
+import { Reveal } from '@/components/Reveal';
 import AchievementsSection from '@/components/AchievementsSection';
 import ExamCountdown from '@/components/ExamCountdown';
 import geographyBooks from '@/assets/geography-books.jpg';
@@ -45,8 +46,8 @@ const HomePage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <VoiceGreeting />
+    <div className="bg-background">
+      <TassaAI />
 
       {/* Top Study Materials Bar */}
       <div className="bg-[image:var(--gradient-hero)] text-primary-foreground py-4 text-center shadow-lg">
@@ -112,7 +113,7 @@ const HomePage = () => {
       <section className="py-16 bg-secondary/40">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {quickStats.map((stat, index) => (
-            <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 80}ms` }}>
+            <Reveal key={index} variant="up" delay={index * 80}>
               <Card className="rounded-2xl border-border shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 text-center bg-card">
                 <div className="mx-auto mb-3 h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <stat.icon className="h-6 w-6" />
@@ -122,7 +123,7 @@ const HomePage = () => {
                 </CardHeader>
                 <CardContent className="text-muted-foreground font-medium">{stat.label}</CardContent>
               </Card>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -130,7 +131,7 @@ const HomePage = () => {
       {/* Trusted By Section */}
       <section className="py-16 bg-background overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-10 animate-fade-in">
+          <Reveal className="text-center mb-10">
             <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-3">Trusted By</p>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
               {schools.length || '25+'} Schools Across Tanzania
@@ -138,7 +139,7 @@ const HomePage = () => {
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Joining hands with the nation's leading institutions to deliver world-class academic competitions.
             </p>
-          </div>
+          </Reveal>
 
           {schools.length > 0 ? (
             <div className="space-y-4">
@@ -186,8 +187,8 @@ const HomePage = () => {
       {/* Co-Founder Section */}
       <section className="py-16 bg-secondary/40">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2>
-          <div className="flex flex-col items-center">
+          <Reveal as="div"><h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2></Reveal>
+          <Reveal variant="scale" delay={120} className="flex flex-col items-center">
             <div className="relative mb-6 animate-float-slow">
               <img
                 src={founderImage}
@@ -206,7 +207,7 @@ const HomePage = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
