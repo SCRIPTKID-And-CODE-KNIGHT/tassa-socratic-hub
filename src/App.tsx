@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TopNav } from "@/components/TopNav";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import CertificateGeneratorPage from './pages/admin/CertificateGeneratorPage';
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -44,6 +45,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <div className="flex flex-col min-h-screen bg-background">
+            <ScrollProgress />
             <TopNav />
             <main className="flex flex-1 flex-col">
               <Routes>
