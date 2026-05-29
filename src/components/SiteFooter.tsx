@@ -87,11 +87,11 @@ export function SiteFooter() {
   };
 
   return (
-    <footer className="bg-[image:var(--gradient-hero)] text-primary-foreground border-t border-primary-foreground/10">
+    <footer className="bg-[image:var(--gradient-hero)] text-primary-foreground border-t border-primary-foreground/10 flex-grow flex flex-col">
       {/* Gradient separator */}
       <div className="h-1 bg-gradient-to-r from-transparent via-accent to-transparent" />
 
-      <div className="container mx-auto sm:px-6 lg:py-16 px-[2px] py-[6px]">
+      <div className="container mx-auto sm:px-6 lg:py-16 px-[2px] py-[6px] flex-grow flex flex-col">
         {/* Top: brand + newsletter */}
         <div className="grid gap-10 lg:grid-cols-3 mb-12 pb-10 border-b border-primary-foreground/10">
           <div className="lg:col-span-2">

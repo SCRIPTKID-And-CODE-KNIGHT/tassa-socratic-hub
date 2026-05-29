@@ -44,7 +44,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex flex-col min-h-screen bg-background">
+          <div className="flex flex-col min-h-[100dvh] bg-background">
             <ScrollProgress />
             <TopNav />
             <main className="flex flex-1 flex-col">
@@ -80,7 +80,9 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
-            <SiteFooter />
+            <div className="mt-auto">
+              <SiteFooter />
+            </div>
           </div>
         </BrowserRouter>
       </TooltipProvider>
