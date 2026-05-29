@@ -109,11 +109,11 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Quick Stats */}
+      {/* Quick Stats - staggered side reveals */}
       <section className="py-16 bg-secondary/40">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {quickStats.map((stat, index) => (
-            <Reveal key={index} variant="up" delay={index * 80}>
+            <Reveal key={index} variant={index % 2 === 0 ? "left" : "right"} delay={index * 100}>
               <Card className="rounded-2xl border-border shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 text-center bg-card">
                 <div className="mx-auto mb-3 h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <stat.icon className="h-6 w-6" />
@@ -128,10 +128,10 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Trusted By Section */}
+      {/* Trusted By Section - zoom scale reveal */}
       <section className="py-16 bg-background overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <Reveal className="text-center mb-10">
+          <Reveal className="text-center mb-10" variant="scale">
             <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-3">Trusted By</p>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
               {schools.length || '25+'} Schools Across Tanzania
@@ -184,10 +184,10 @@ const HomePage = () => {
       {/* Achievements Section */}
       <AchievementsSection />
 
-      {/* Co-Founder Section */}
+      {/* Co-Founder Section - combined effects */}
       <section className="py-16 bg-secondary/40">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <Reveal><h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2></Reveal>
+          <Reveal variant="fade"><h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2></Reveal>
           <Reveal variant="scale" delay={120} className="flex flex-col items-center">
             <div className="relative mb-6 animate-float-slow">
               <img
@@ -201,12 +201,14 @@ const HomePage = () => {
             </div>
             <h3 className="text-xl font-bold text-foreground mt-4">Sir Daudi Musula Manumba</h3>
             <p className="text-primary mt-2">Co-Founder & Supervisor</p>
-            <Link to="/about" className="mt-4">
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                Learn More About Us
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+            <Reveal variant="up" delay={240}>
+              <Link to="/about" className="mt-4 inline-block">
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                  Learn More About Us
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </Reveal>
           </Reveal>
         </div>
       </section>
