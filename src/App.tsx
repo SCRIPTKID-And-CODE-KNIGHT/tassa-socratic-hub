@@ -80,7 +80,9 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
-            <SiteFooter className="mt-auto" />
+            <div className="mt-auto">
+              <SiteFooter />
+            </div>
           </div>
         </BrowserRouter>
       </TooltipProvider>
