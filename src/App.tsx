@@ -18,6 +18,7 @@ import ParticipationConfirmationPage from "./pages/ParticipationConfirmationPage
 import ContactPage from "./pages/ContactPage";
 import StorePage from "./pages/StorePage";
 import AlmanacPage from "./pages/AlmanacPage";
+import LegalPage from "./pages/LegalPage";
 import AdminPaymentStatusPage from './pages/admin/PaymentStatusPage';
 import StoreMaterialsPage from './pages/admin/StoreMaterialsPage';
 import HallOfExcellenceManagementPage from './pages/admin/HallOfExcellenceManagementPage';
@@ -42,9 +43,9 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex flex-col bg-background">
+          <div className="flex flex-col min-h-screen bg-background">
             <TopNav />
-            <main className="flex flex-col">
+            <main className="flex flex-1 flex-col">
               <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
@@ -58,6 +59,7 @@ const App = () => {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/store" element={<StorePage />} />
               <Route path="/almanac" element={<AlmanacPage />} />
+              <Route path="/legal" element={<LegalPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/admin/payments" element={<AdminPaymentStatusPage />} />
               <Route path="/admin/store" element={<StoreMaterialsPage />} />

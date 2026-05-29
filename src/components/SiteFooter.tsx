@@ -169,11 +169,11 @@ export function SiteFooter() {
                 className="flex items-start gap-2 hover:text-primary-foreground transition-colors"
               >
                 <Phone className="h-4 w-4 mt-0.5 shrink-0" />
-                <span>+255 000 000 000</span>
+                <span>+255 752 837 561</span>
               </a>
               <div className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
-                <span>Dar es Salaam, Tanzania</span>
+                <span>Geita - Tanzania</span>
               </div>
             </address>
           </div>
