@@ -91,7 +91,7 @@ export function SiteFooter() {
       {/* Gradient separator */}
       <div className="h-1 bg-gradient-to-r from-transparent via-accent to-transparent" />
 
-      <div className="container mx-auto px-4 sm:px-6 py-12 lg:py-16">
+      <div className="container mx-auto sm:px-6 lg:py-16 px-[2px] py-[6px]">
         {/* Top: brand + newsletter */}
         <div className="grid gap-10 lg:grid-cols-3 mb-12 pb-10 border-b border-primary-foreground/10">
           <div className="lg:col-span-2">
