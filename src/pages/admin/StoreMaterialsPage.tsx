@@ -25,6 +25,7 @@ interface StoreMaterial {
   is_published: boolean;
   created_at: string;
   harakapay_link: string | null;
+  image_url?: string | null;
 }
 
 const StoreMaterialsPage = () => {
@@ -45,7 +46,8 @@ const StoreMaterialsPage = () => {
     subject: '',
     grade_level: '',
     is_published: false,
-    harakapay_link: ''
+    harakapay_link: '',
+    image_url: ''
   });
 
   const materialTypes = [
@@ -97,6 +99,7 @@ const StoreMaterialsPage = () => {
         subject: formData.subject || null,
         grade_level: formData.grade_level || null,
         harakapay_link: formData.harakapay_link || null,
+        image_url: formData.image_url || null,
         published_by: user.id
       };
 
@@ -170,7 +173,8 @@ const StoreMaterialsPage = () => {
       subject: '',
       grade_level: '',
       is_published: false,
-      harakapay_link: ''
+      harakapay_link: '',
+      image_url: ''
     });
   };
 
@@ -185,7 +189,8 @@ const StoreMaterialsPage = () => {
       subject: material.subject || '',
       grade_level: material.grade_level || '',
       is_published: material.is_published,
-      harakapay_link: material.harakapay_link || ''
+      harakapay_link: material.harakapay_link || '',
+      image_url: material.image_url || ''
     });
     setShowAddDialog(true);
   };
@@ -264,6 +269,43 @@ const StoreMaterialsPage = () => {
                     placeholder="Material description"
                     rows={3}
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="image_url">Cover Image</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="image_upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        try {
+                          const ext = file.name.split('.').pop();
+                          const path = `store/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+                          const { error: upErr } = await supabase.storage
+                            .from('store-images')
+                            .upload(path, file, { upsert: true, contentType: file.type });
+                          if (upErr) throw upErr;
+                          const { data } = supabase.storage.from('store-images').getPublicUrl(path);
+                          setFormData({ ...formData, image_url: data.publicUrl });
+                          toast({ title: 'Image uploaded' });
+                        } catch (err: any) {
+                          toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
+                        }
+                      }}
+                    />
+                  </div>
+                  <Input
+                    className="mt-2"
+                    value={formData.image_url}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    placeholder="Or paste an image URL"
+                  />
+                  {formData.image_url && (
+                    <img src={formData.image_url} alt="Preview" className="mt-2 h-32 w-32 object-cover rounded border" />
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
