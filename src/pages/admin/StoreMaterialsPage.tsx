@@ -273,36 +273,14 @@ const StoreMaterialsPage = () => {
 
                 <div>
                   <Label htmlFor="image_url">Cover Image</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="image_upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        try {
-                          const ext = file.name.split('.').pop();
-                          const path = `store/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-                          const { error: upErr } = await supabase.storage
-                            .from('store-images')
-                            .upload(path, file, { upsert: true, contentType: file.type });
-                          if (upErr) throw upErr;
-                          const { data } = supabase.storage.from('store-images').getPublicUrl(path);
-                          setFormData({ ...formData, image_url: data.publicUrl });
-                          toast({ title: 'Image uploaded' });
-                        } catch (err: any) {
-                          toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
-                        }
-                      }}
-                    />
-                  </div>
                   <Input
-                    className="mt-2"
                     value={formData.image_url}
                     onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    placeholder="Or paste an image URL"
+                    placeholder="Paste image URL (https://...)"
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Tip: upload your photo to Imgur, Google Drive (public), or any image host and paste the direct link.
+                  </p>
                   {formData.image_url && (
                     <img src={formData.image_url} alt="Preview" className="mt-2 h-32 w-32 object-cover rounded border" />
                   )}
