@@ -5,6 +5,15 @@ import { Badge } from '@/components/ui/badge';
 import { BookOpen, FileText, Video, Package, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -36,6 +45,8 @@ const StorePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedForm, setSelectedForm] = useState('all');
+  const [orderMaterial, setOrderMaterial] = useState<StoreMaterial | null>(null);
+  const [orderForm, setOrderForm] = useState({ name: '', school: '', phone: '' });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -72,7 +83,33 @@ const StorePage = () => {
     }
   };
 
-  const handleOrder = (material: StoreMaterial) => {
+  const openOrderDialog = (material: StoreMaterial) => {
+    setOrderMaterial(material);
+    setOrderForm({ name: '', school: '', phone: '' });
+  };
+
+  const submitOrder = () => {
+    if (!orderMaterial) return;
+    const name = orderForm.name.trim();
+    const school = orderForm.school.trim();
+    const phone = orderForm.phone.trim();
+    if (!name || !school || !phone) {
+      toast({
+        title: 'Missing details',
+        description: 'Please fill in your name, school, and phone number.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (!/^(0[67]\d{8}|\+255[67]\d{8})$/.test(phone.replace(/\s/g, ''))) {
+      toast({
+        title: 'Invalid phone number',
+        description: 'Enter a valid Tanzanian phone (e.g. 0756377013 or +255756377013).',
+        variant: 'destructive',
+      });
+      return;
+    }
+    const material = orderMaterial;
     const price = material.price ? `TZS ${material.price.toLocaleString()}` : 'Free';
     const lines = [
       `Hello TASSA, I would like to order the following item:`,
@@ -83,10 +120,15 @@ const StorePage = () => {
       material.grade_level ? `🎓 Level: ${material.grade_level}` : '',
       `💰 Price: ${price}`,
       ``,
+      `👤 Student Name: ${name}`,
+      `🏫 School: ${school}`,
+      `📞 Phone: ${phone}`,
+      ``,
       `Please share payment and delivery instructions. Asante!`,
     ].filter(Boolean).join('\n');
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+    setOrderMaterial(null);
   };
 
   const filteredMaterials = materials.filter((material) => {
@@ -206,7 +248,7 @@ const StorePage = () => {
                     {material.price !== null && material.price > 0 ? (
                       <Button
                         className="w-full bg-[#25D366] hover:bg-[#1da851] text-white"
-                        onClick={() => handleOrder(material)}
+                        onClick={() => openOrderDialog(material)}
                       >
                         <MessageCircle className="h-4 w-4 mr-2" />
                         Order Now
@@ -219,7 +261,7 @@ const StorePage = () => {
                       <Button
                         variant="outline"
                         className="w-full"
-                        onClick={() => handleOrder(material)}
+                        onClick={() => openOrderDialog(material)}
                       >
                         <MessageCircle className="h-4 w-4 mr-2" />
                         Request via WhatsApp
@@ -232,6 +274,59 @@ const StorePage = () => {
           </div>
         )}
       </div>
+
+      <Dialog open={!!orderMaterial} onOpenChange={(open) => !open && setOrderMaterial(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Order: {orderMaterial?.title}</DialogTitle>
+            <DialogDescription>
+              Enter your details. We'll prefill them in a WhatsApp message to TASSA.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="order-name">Student Name</Label>
+              <Input
+                id="order-name"
+                placeholder="Your full name"
+                value={orderForm.name}
+                onChange={(e) => setOrderForm((f) => ({ ...f, name: e.target.value }))}
+                maxLength={100}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="order-school">School</Label>
+              <Input
+                id="order-school"
+                placeholder="Your school name"
+                value={orderForm.school}
+                onChange={(e) => setOrderForm((f) => ({ ...f, school: e.target.value }))}
+                maxLength={150}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="order-phone">Phone Number</Label>
+              <Input
+                id="order-phone"
+                placeholder="0756377013"
+                value={orderForm.phone}
+                onChange={(e) => setOrderForm((f) => ({ ...f, phone: e.target.value }))}
+                maxLength={20}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOrderMaterial(null)}>Cancel</Button>
+            <Button
+              className="bg-[#25D366] hover:bg-[#1da851] text-white"
+              onClick={submitOrder}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Continue to WhatsApp
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
     </div>
   );
