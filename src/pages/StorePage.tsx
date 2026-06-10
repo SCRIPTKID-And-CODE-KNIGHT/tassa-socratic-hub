@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, FileText, Video, Package, ShoppingCart, ExternalLink, Smartphone, Building2, Copy, Check } from 'lucide-react';
+import { BookOpen, FileText, Video, Package, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,14 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 
 interface StoreMaterial {
@@ -33,13 +25,17 @@ interface StoreMaterial {
   grade_level: string | null;
   is_published: boolean | null;
   harakapay_link: string | null;
+  image_url: string | null;
 }
+
+const WHATSAPP_NUMBER = '255752837561';
 
 const StorePage = () => {
   const [materials, setMaterials] = useState<StoreMaterial[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
+  const [selectedForm, setSelectedForm] = useState('all');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -76,37 +72,33 @@ const StorePage = () => {
     }
   };
 
-  const handleHarakaPay = (material: StoreMaterial) => {
-    if (material.harakapay_link) {
-      window.open(material.harakapay_link, '_blank', 'noopener,noreferrer');
-    } else {
-      toast({ title: 'HarakaPay not configured', description: 'Please choose another payment method.', variant: 'destructive' });
-    }
-  };
-
-  const handleMpesa = (material: StoreMaterial) => {
-    const code = `*150*00*1*1*0756377013*${Math.round(material.price || 0)}#`;
-    toast({ title: 'M-Pesa payment', description: `Dial ${code} from your phone to send TZS ${material.price?.toLocaleString()} to 0756377013.` });
-    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-      window.location.href = `tel:${encodeURIComponent(code)}`;
-    }
-  };
-
-  const copyBankDetails = async () => {
-    const details = 'TASSA — CRDB Bank\nAccount: 0150-5634-7800\nName: Tanzania Advanced Socratic Schools Association';
-    try {
-      await navigator.clipboard.writeText(details);
-      toast({ title: 'Bank details copied', description: 'Paste into your banking app to complete the transfer.' });
-    } catch {
-      toast({ title: 'Bank details', description: details });
-    }
+  const handleOrder = (material: StoreMaterial) => {
+    const price = material.price ? `TZS ${material.price.toLocaleString()}` : 'Free';
+    const lines = [
+      `Hello TASSA, I would like to order the following item:`,
+      ``,
+      `📚 Title: ${material.title}`,
+      `🏷️ Type: ${material.material_type}`,
+      material.subject ? `📘 Subject: ${material.subject}` : '',
+      material.grade_level ? `🎓 Level: ${material.grade_level}` : '',
+      `💰 Price: ${price}`,
+      ``,
+      `Please share payment and delivery instructions. Asante!`,
+    ].filter(Boolean).join('\n');
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const filteredMaterials = materials.filter((material) => {
     const matchesSearch = material.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       material.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === 'all' || material.material_type === selectedType;
-    return matchesSearch && matchesType;
+    const grade = (material.grade_level || '').toLowerCase();
+    const matchesForm =
+      selectedForm === 'all' ||
+      (selectedForm === 'form5' && (grade.includes('form 5') || grade.includes('form five') || grade.includes('form v'))) ||
+      (selectedForm === 'form6' && (grade.includes('form 6') || grade.includes('form six') || grade.includes('form vi')));
+    return matchesSearch && matchesType && matchesForm;
   });
 
   if (loading) {
@@ -134,6 +126,16 @@ const StorePage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          <Select value={selectedForm} onValueChange={setSelectedForm}>
+            <SelectTrigger className="w-full md:w-[180px]">
+              <SelectValue placeholder="All Levels" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Levels</SelectItem>
+              <SelectItem value="form5">Form Five</SelectItem>
+              <SelectItem value="form6">Form Six</SelectItem>
+            </SelectContent>
+          </Select>
           <Select value={selectedType} onValueChange={setSelectedType}>
             <SelectTrigger className="w-full md:w-[200px]">
               <SelectValue placeholder="Filter by type" />
@@ -165,10 +167,21 @@ const StorePage = () => {
               <Card key={material.id} className="group overflow-hidden border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
                 {/* Cover */}
                 <div className="relative aspect-[4/3] bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,hsl(var(--primary)/0.15),transparent_60%)]" />
-                  <div className="relative h-20 w-20 rounded-2xl bg-card shadow-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                    {getMaterialIcon(material.material_type)}
-                  </div>
+                  {material.image_url ? (
+                    <img
+                      src={material.image_url}
+                      alt={material.title}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,hsl(var(--primary)/0.15),transparent_60%)]" />
+                      <div className="relative h-20 w-20 rounded-2xl bg-card shadow-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        {getMaterialIcon(material.material_type)}
+                      </div>
+                    </>
+                  )}
                   <Badge variant="secondary" className="absolute top-3 left-3 backdrop-blur bg-card/80">{material.material_type}</Badge>
                   {material.price !== null && material.price > 0 ? (
                     <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground font-bold shadow">
@@ -191,40 +204,27 @@ const StorePage = () => {
 
                   <div className="mt-auto">
                     {material.price !== null && material.price > 0 ? (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button className="w-full">
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            Buy Now
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                          <DropdownMenuLabel>Choose payment method</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => handleHarakaPay(material)}>
-                            <ExternalLink className="h-4 w-4 mr-2" /> HarakaPay (Card/Mobile)
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleMpesa(material)}>
-                            <Smartphone className="h-4 w-4 mr-2" /> M-Pesa direct
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={copyBankDetails}>
-                            <Building2 className="h-4 w-4 mr-2" /> Bank transfer
-                          </DropdownMenuItem>
-                          {material.file_url && (
-                            <>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => window.open(material.file_url!, '_blank')}>
-                                Preview material
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Button
+                        className="w-full bg-[#25D366] hover:bg-[#1da851] text-white"
+                        onClick={() => handleOrder(material)}
+                      >
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        Order Now
+                      </Button>
                     ) : material.file_url ? (
                       <Button className="w-full" onClick={() => window.open(material.file_url!, '_blank')}>
                         View Material
                       </Button>
-                    ) : null}
+                    ) : (
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => handleOrder(material)}
+                      >
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        Request via WhatsApp
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
