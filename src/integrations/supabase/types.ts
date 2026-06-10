@@ -570,6 +570,7 @@ export type Database = {
           grade_level: string | null
           harakapay_link: string | null
           id: string
+          image_url: string | null
           is_published: boolean | null
           material_type: string
           price: number | null
@@ -585,6 +586,7 @@ export type Database = {
           grade_level?: string | null
           harakapay_link?: string | null
           id?: string
+          image_url?: string | null
           is_published?: boolean | null
           material_type: string
           price?: number | null
@@ -600,6 +602,7 @@ export type Database = {
           grade_level?: string | null
           harakapay_link?: string | null
           id?: string
+          image_url?: string | null
           is_published?: boolean | null
           material_type?: string
           price?: number | null
