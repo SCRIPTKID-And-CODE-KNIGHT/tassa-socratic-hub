@@ -54,13 +54,15 @@ const HomePage = () => {
         <div className="flex items-center justify-center gap-3 flex-wrap px-4">
           <span className="text-xs font-medium bg-warning text-warning-foreground px-3 py-1 rounded-full">NEW 2026</span>
           <Button
-            onClick={() => window.open('https://tassageoacademy.vercel.app', '_blank', 'noopener,noreferrer')}
+            asChild
             className="bg-warning text-warning-foreground font-bold hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg"
             size="lg"
           >
-            <BookOpen className="mr-2 h-5 w-5" />
-            STUDY MATERIALS AND RESOURCES
-            <ExternalLink className="ml-2 h-5 w-5" />
+            <Link to="/store">
+              <BookOpen className="mr-2 h-5 w-5" />
+              STUDY MATERIALS AND RESOURCES
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
           </Button>
         </div>
       </div>
