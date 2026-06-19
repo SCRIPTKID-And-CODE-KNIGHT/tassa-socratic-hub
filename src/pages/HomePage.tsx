@@ -130,6 +130,35 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Co-Founder Section - combined effects */}
+      <section className="py-16 bg-secondary/40">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <Reveal variant="fade"><h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2></Reveal>
+          <Reveal variant="scale" delay={120} className="flex flex-col items-center">
+            <div className="relative mb-6 animate-float-slow">
+              <img
+                src={founderImage}
+                alt="Sir Daudi Musula Manumba - Co-Founder of TASSA"
+                className="rounded-xl shadow-xl w-48 h-56 object-cover object-top border-4 border-primary/20"
+              />
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg whitespace-nowrap">
+                <p className="text-xs font-semibold">Co-Founder</p>
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-foreground mt-4">Sir Daudi Musula Manumba</h3>
+            <p className="text-primary mt-2">Co-Founder & Supervisor</p>
+            <Reveal variant="up" delay={240}>
+              <Link to="/about" className="mt-4 inline-block">
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                  Learn More About Us
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </Reveal>
+          </Reveal>
+        </div>
+      </section>
+
       {/* Trusted By Section - zoom scale reveal */}
       <section className="py-16 bg-background overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
@@ -185,35 +214,6 @@ const HomePage = () => {
 
       {/* Achievements Section */}
       <AchievementsSection />
-
-      {/* Co-Founder Section - combined effects */}
-      <section className="py-16 bg-secondary/40">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <Reveal variant="fade"><h2 className="text-3xl font-bold text-foreground mb-8">Our Leadership</h2></Reveal>
-          <Reveal variant="scale" delay={120} className="flex flex-col items-center">
-            <div className="relative mb-6 animate-float-slow">
-              <img
-                src={founderImage}
-                alt="Sir Daudi Musula Manumba - Co-Founder of TASSA"
-                className="rounded-xl shadow-xl w-48 h-56 object-cover object-top border-4 border-primary/20"
-              />
-              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg whitespace-nowrap">
-                <p className="text-xs font-semibold">Co-Founder</p>
-              </div>
-            </div>
-            <h3 className="text-xl font-bold text-foreground mt-4">Sir Daudi Musula Manumba</h3>
-            <p className="text-primary mt-2">Co-Founder & Supervisor</p>
-            <Reveal variant="up" delay={240}>
-              <Link to="/about" className="mt-4 inline-block">
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                  Learn More About Us
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </Reveal>
-          </Reveal>
-        </div>
-      </section>
 
     </div>
   );
