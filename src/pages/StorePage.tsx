@@ -37,7 +37,7 @@ interface StoreMaterial {
   image_url: string | null;
 }
 
-const WHATSAPP_NUMBER = '255752837561';
+const WHATSAPP_NUMBER = '255638242297';
 
 const StorePage = () => {
   const [materials, setMaterials] = useState<StoreMaterial[]>([]);
@@ -157,6 +157,9 @@ const StorePage = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-primary mb-2">Educational Materials Store</h1>
           <p className="text-muted-foreground">Browse our collection of books, documents, and learning resources</p>
+          <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-foreground">
+            ✅ After payment is confirmed, you will receive your requested material on time via WhatsApp or email.
+          </div>
         </div>
 
         {/* Filters */}
@@ -283,6 +286,9 @@ const StorePage = () => {
               Enter your details. We'll prefill them in a WhatsApp message to TASSA.
             </DialogDescription>
           </DialogHeader>
+          <div className="rounded-md bg-primary/5 border border-primary/20 px-3 py-2 text-xs text-muted-foreground">
+            After payment is confirmed, your material will be delivered to you on time.
+          </div>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
               <Label htmlFor="order-name">Student Name</Label>
