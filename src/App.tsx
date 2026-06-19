@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TopNav } from "@/components/TopNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { ContactNoticePopup } from "@/components/ContactNoticePopup";
 import CertificateGeneratorPage from './pages/admin/CertificateGeneratorPage';
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -47,6 +48,7 @@ const App = () => {
           <div className="flex flex-col min-h-[100dvh] bg-background">
             <ScrollProgress />
             <TopNav />
+            <ContactNoticePopup />
             <main className="flex flex-1 flex-col">
               <Routes>
               <Route path="/" element={<HomePage />} />
