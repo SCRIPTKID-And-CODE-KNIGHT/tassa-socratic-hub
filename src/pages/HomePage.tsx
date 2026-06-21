@@ -7,6 +7,7 @@ import TassaAI from '@/components/TassaAI';
 import { Reveal } from '@/components/Reveal';
 import AchievementsSection from '@/components/AchievementsSection';
 import ExamCountdown from '@/components/ExamCountdown';
+import LeadershipSection from '@/components/LeadershipSection';
 import geographyBooks from '@/assets/geography-books.jpg';
 import founderImage from '@/assets/founder-daudi-manumba.jpg';
 import { supabase } from '@/integrations/supabase/client';
@@ -158,6 +159,9 @@ const HomePage = () => {
           </Reveal>
         </div>
       </section>
+
+      {/* Committees / Academic Secretariat */}
+      <LeadershipSection />
 
       {/* Trusted By Section - zoom scale reveal */}
       <section className="py-16 bg-background overflow-hidden">

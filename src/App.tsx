@@ -32,6 +32,7 @@ import SchoolManagementPage from './pages/admin/SchoolManagementPage';
 import ExamSettingsPage from './pages/admin/ExamSettingsPage';
 import AlmanacManagementPage from './pages/admin/AlmanacManagementPage';
 import SecurityLogsPage from './pages/admin/SecurityLogsPage';
+import SecretariatManagementPage from './pages/admin/SecretariatManagementPage';
 import AdminPage from "./pages/AdminPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
@@ -77,6 +78,7 @@ const App = () => {
               <Route path="/admin/almanac" element={<AlmanacManagementPage />} />
               <Route path="/admin/security-logs" element={<SecurityLogsPage />} />
               <Route path="/admin/certificates" element={<CertificateGeneratorPage />} />
+              <Route path="/admin/secretariat" element={<SecretariatManagementPage />} />
               <Route path="/auth" element={<AuthPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
