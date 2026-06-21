@@ -137,6 +137,104 @@ export type Database = {
         }
         Relationships: []
       }
+      committee_members: {
+        Row: {
+          biography: string | null
+          committee_id: string
+          created_at: string
+          display_order: number
+          email: string | null
+          full_name: string
+          id: string
+          is_active: boolean
+          is_chairperson: boolean
+          phone: string | null
+          position: string
+          profile_image_url: string | null
+          profile_link: string | null
+          region: string | null
+          school: string | null
+          updated_at: string
+        }
+        Insert: {
+          biography?: string | null
+          committee_id: string
+          created_at?: string
+          display_order?: number
+          email?: string | null
+          full_name: string
+          id?: string
+          is_active?: boolean
+          is_chairperson?: boolean
+          phone?: string | null
+          position?: string
+          profile_image_url?: string | null
+          profile_link?: string | null
+          region?: string | null
+          school?: string | null
+          updated_at?: string
+        }
+        Update: {
+          biography?: string | null
+          committee_id?: string
+          created_at?: string
+          display_order?: number
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          is_chairperson?: boolean
+          phone?: string | null
+          position?: string
+          profile_image_url?: string | null
+          profile_link?: string | null
+          region?: string | null
+          school?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "committee_members_committee_id_fkey"
+            columns: ["committee_id"]
+            isOneToOne: false
+            referencedRelation: "committees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      committees: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
