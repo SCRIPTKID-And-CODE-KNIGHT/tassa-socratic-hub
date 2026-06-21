@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings, Upload, Clock, Calendar, ShieldAlert, Award } from 'lucide-react';
+import { Shield, Users, FileText, Store, DollarSign, BarChart3, LogOut, Settings, Upload, Clock, Calendar, ShieldAlert, Award, Crown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -316,6 +316,24 @@ const AdminPage = () => {
               </p>
               <Button className="w-full btn-educational">
                 Generate Certificates
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Academic Secretariat */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/secretariat')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Crown className="h-5 w-5 text-primary" />
+                <span>Academic Secretariat</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Manage committee members, chairperson & leadership groups
+              </p>
+              <Button className="w-full btn-educational">
+                Manage Committees
               </Button>
             </CardContent>
           </Card>
