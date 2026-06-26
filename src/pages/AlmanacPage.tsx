@@ -76,7 +76,7 @@ const AlmanacPage = () => {
     };
   };
 
-  const seriesList = [5, 6, 7, 8];
+  const seriesList = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const getEventIcon = (eventName: string) => {
     const name = eventName.toLowerCase();
@@ -141,7 +141,7 @@ const AlmanacPage = () => {
               TASSA 2026 Examination Almanac
             </h1>
             <p className="text-xl opacity-90 max-w-2xl mx-auto">
-              Complete schedule for Series 5, 6, 7 & 8 examinations and related activities
+              Complete schedule for Series 1 – 8 examinations and related activities
             </p>
           </div>
         </div>
@@ -149,7 +149,7 @@ const AlmanacPage = () => {
 
       {/* Series Overview Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
           {seriesList.map((series) => {
             const summary = getSeriesSummary(series);
             return (
@@ -238,7 +238,7 @@ const AlmanacPage = () => {
               </div>
             ) : (
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-4 mb-6">
+                <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-6">
                   {seriesList.map((series) => (
                     <TabsTrigger 
                       key={series} 
