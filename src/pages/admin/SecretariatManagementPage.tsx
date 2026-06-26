@@ -87,14 +87,16 @@ export default function SecretariatManagementPage() {
     setUploading(true);
     try {
       const blob = await resizeImage(file);
-      const path = `${activeCommitteeId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
-      const { error } = await supabase.storage.from(BUCKET).upload(path, blob, { contentType: 'image/jpeg', upsert: true });
-      if (error) throw error;
-      const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-      setEditing((e) => ({ ...e!, profile_image_url: data.publicUrl }));
-      toast({ title: 'Image uploaded' });
+      const dataUrl: string = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+      });
+      setEditing((e) => ({ ...e!, profile_image_url: dataUrl }));
+      toast({ title: 'Image ready', description: 'Click Save to publish to the site.' });
     } catch (e: any) {
-      toast({ title: 'Upload failed', description: e.message + ' — make sure the "committee-images" storage bucket exists.', variant: 'destructive' });
+      toast({ title: 'Upload failed', description: e.message, variant: 'destructive' });
     } finally { setUploading(false); }
   };
 
